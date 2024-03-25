@@ -4,15 +4,26 @@ import { useNavigate, Link } from 'react-router-dom';
 function Login() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [userType, setUserType] = useState('unknown');
+  const [user, setUser] = useState('');
+  const [userType, setUserType] = useState('');
   const navigate = useNavigate();
 
+  const fetchUser = async () => {
+    const response = await fetch(`/api/user/${username}`)
+    const json = await response.json()
+
+    if (response.ok) {
+      setUser(json)
+    }
+    return json;
+  }
+
   const handleSubmit = (event) => {
-    const fetchedUserType = 'admin';
-    setUserType(fetchedUserType);
+    const fetchedUserType='admin'
+//    const fetchedUser = await fetchUser();
+    navigate("/dashboard", {state: {userType: fetchedUserType}});
+      
     //authentication
-    
-    navigate("/dashboard/"+fetchedUserType);
   }
 
   return (
@@ -20,8 +31,8 @@ function Login() {
       <div>
         Login
       </div>
+      <h2>usertype: {userType}</h2>
       <form onSubmit={handleSubmit}>
-        <h2>User Type: {userType}</h2>
         <label>Username:</label>
         <input
           value = {username}

@@ -2,12 +2,11 @@ import React, {useEffect, useState} from 'react';
 import AdminDash from "./dash/AdminDash";
 import AmbassadorDash from "./dash/AmbassadorDash";
 import EmployeeDash from "./dash/EmployeeDash";
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 function Dashboard() {
-  const {userType} = useParams()
-//  const {state} = useLocation();
-//  const {userType} = state;
+const location = useLocation();
+const {userType} = location.state;
   
   return (
     <>
