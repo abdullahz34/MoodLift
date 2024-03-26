@@ -1,53 +1,57 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useLogin } from '../hooks/useLogin'
 
 function Login() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState('');
-  const [userType, setUserType] = useState('');
-  const navigate = useNavigate();
+  const [type, setType] = useState('');
+  const {login, error, isLoading} = useLogin()
 
-  const fetchUser = async () => {
-    const response = await fetch(`/api/user/${username}`)
-    const json = await response.json()
+//  const fetchUser = async () => {
+//    const response = await fetch(`/api/user/${username}`)
+//    const json = await response.json()
 
-    if (response.ok) {
-      setUser(json)
-    }
-    return json;
-  }
+//    if (response.ok) {
+//      setUser(json)
+//    }
+//    return json;
+//  }
 
-  const handleSubmit = (event) => {
-    const fetchedUserType='admin'
+//  const handleSubmit = (event) => {
+//    const fetchedUserType='admin'
 //    const fetchedUser = await fetchUser();
-    navigate("/dashboard", {state: {userType: fetchedUserType}});
+//    navigate("/dashboard", {state: {userType: fetchedUserType}});
       
     //authentication
+//  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    await login(username, password)
   }
 
   return (
-    <>
-      <div>
-        Login
-      </div>
-      <h2>usertype: {userType}</h2>
-      <form onSubmit={handleSubmit}>
-        <label>Username:</label>
-        <input
-          value = {username}
-          onChange = {(event) => setUsername(event.target.value)}
-          placeholder = "Enter username"
-        />
-        <label>Password:</label>
-        <input
-          value = {password}
-          onChange = {(event) => setPassword(event.target.value)}
-          placeholder = "Enter password"
-        />
-        <button onClick={() => handleSubmit()}>Log in</button>
-      </form>
-    </>
+    <form className="login" onSubmit={handleSubmit}>
+      <h3>Log in</h3>
+
+      <label>Username:</label>
+      <input
+        type="username"
+        onChange={(e) => setUsername(e.target.value)}
+        value={username}
+      />
+
+      <label>Password:</label>
+      <input
+        type="password"
+        onChange={(e) => setPassword(e.target.value)}
+        value={password}
+      />
+
+      <button disabled={isLoading}>Log in</button>
+      {error && <div className="error">{error}</div>}
+    </form>
   );
 }
 
