@@ -40,7 +40,7 @@ export const CreateRecipe = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try{
-            await axios.post("http://localhost:3001/recipes", recipe);
+            await axios.post("http://localhost:3001/recipes/post", recipe);
             navigate("/view-recipe");
         }
 
