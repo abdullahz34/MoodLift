@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from 'axios';
+import { useNavigate } from "react-router-dom";
 
 export const ViewRecipe = () => {
 
@@ -7,18 +8,18 @@ export const ViewRecipe = () => {
 
     useEffect(() => {
         fetchRecipes();
-      }, []);
+    }, []);
 
-      const fetchRecipes = async () => {
+    const fetchRecipes = async () => {
         try {
-          const res = await axios.get("http://localhost:3001/recipes/read");
-          setRecipes(res.data);
+            const res = await axios.get("http://localhost:3001/recipes/read");
+            setRecipes(res.data);
         } catch (err) {
-          console.log(err);
+            console.log(err);
         }
-      };
+    };
 
-      const handleDelete = async (id) => {
+    const handleDelete = async (id) => {
         try{
             axios.delete(`http://localhost:3001/recipes/delete/${id}`);
             fetchRecipes();
@@ -27,7 +28,13 @@ export const ViewRecipe = () => {
         catch (err){
             console.log(err);
         }
-      }
+    }
+
+    const navigate = useNavigate();
+
+    const handleEdit = (id) => {
+        navigate(`/edit-recipe/${id}`);
+    };
 
     return (
         <div>
@@ -55,7 +62,9 @@ export const ViewRecipe = () => {
                                     <li key={instruction}>{instruction}</li>
                                 ))}
                             </ol>
-                            <button onClick={() => {handleDelete(recipe._id)}}>Delete</button>
+
+                            <button onClick = {() => {handleEdit(recipe._id)}}>Edit</button>
+                            <button onClick = {() => {handleDelete(recipe._id)}}>Delete</button>
 
                         </div>
                     </li>
