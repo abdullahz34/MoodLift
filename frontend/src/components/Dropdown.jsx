@@ -6,12 +6,10 @@ const Dropdown = (props) => {
   const [selection, setSelection] = useState(null)
   const dropdownRef = useRef(null)
 
-  const handleTypeChange = (e) => {
-    props.setType(selection)
-  }
 
   useEffect(() => {
     function handler(e) {
+      e.preventDefault()
       if (dropdownRef.current) {
         if (!dropdownRef.current.contains(e.target)) {
           setToggled(false)
@@ -23,7 +21,13 @@ const Dropdown = (props) => {
     return () => {
       document.removeEventListener('click', handler)
     }
-  })
+  },)
+
+  const handleTypeChange = (option) => {
+    setSelection(option)
+    props.setType(option.value)
+    setToggled(false)
+  }
 
   const dropdownOptions = [
     {
@@ -50,14 +54,13 @@ const Dropdown = (props) => {
         onChange={handleTypeChange}
       >
         <span>{selection ? selection.label : "type"}</span>
-        <span>{toggled ? '^' : 'v'}</span>
+        <span>{toggled ? '-' : '+'}</span>
       </button>
       <div className={`options ${toggled ? "visible" : ""}`}>
         {dropdownOptions.map((option, index) => {
           return (
-            <button onClick={() => {
-              setSelection(option)
-              setToggled(false)
+            <button key={option.id} onClick={() => {
+                handleTypeChange(option)
             }}>{option.label}</button>
           )
         })}

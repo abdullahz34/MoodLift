@@ -8,9 +8,13 @@ const Signup = () => {
   const [type, setType] = useState('')
   const {signup, error, isLoading} = useSignup()
 
+  // useEffect(() => {
+
+  // }, [type])
+
+
   const handleSubmit = async (e) => {
-    //e.preventDefault()
-    setType("employee")
+    e.preventDefault()
     await signup(username, password, type)
   }
 
@@ -31,7 +35,7 @@ const Signup = () => {
         value={password}
       />
       <Dropdown type={type} setType={setType}/>
-      <button disabled={isLoading} onClick={(e) => handleSubmit()}>Sign up</button>
+      <button disabled={isLoading} onClick={(e) => handleSubmit(e)}>Sign up</button>
       {error && <div className="error">{error}</div>}
     </form>
   )
