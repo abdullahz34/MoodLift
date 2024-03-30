@@ -1,7 +1,17 @@
+'use client' // client side rendering
 import React from 'react'
 import Link from 'next/link'
+import { render } from 'react-dom'
 
 const Navbar = () => {
+
+  const closeDropdown = () => {
+    const detailsElement = document.querySelector('details');
+    if (detailsElement) {
+      detailsElement.removeAttribute('open');
+    }
+  }
+
   return (
     <nav className="navbar bg-base-100 px-12">
       <div className="flex-1">
@@ -9,23 +19,24 @@ const Navbar = () => {
       </div>
       <div className="flex-none">
         <ul className="menu menu-horizontal px-1">
-          <li><Link href="/resources">Resources</Link></li>
-          <li><Link href="/logbook">Logbook</Link></li>
-          <li><Link href="/insights">Insights</Link></li>
-          <li><Link href="/survey">Survey</Link></li>
-          <li><Link href="/appointments">Appointments</Link></li>
-          <li><Link href="/moodbot">MoodBot</Link></li>
-          <li>
+        <li>
             <details>
               <summary>
-                Placeholder
+                Logbook
               </summary>
               <ul className="p-2 bg-base-100 rounded-t-none">
-                <li><a>Link 1</a></li>
-                <li><a>Link 2</a></li>
+                <li><Link href="/logbook/nutritionTracker" onClick={closeDropdown}>Nutrition</Link></li>
+                <li><Link href="/logbook/fitnessTracker" onClick={closeDropdown}>Fitness</Link></li>
+                <li><Link href="/logbook/sleepTracker" onClick={closeDropdown}>Sleep</Link></li>
+                <li><Link href="/logbook/hydrationTracker" onClick={closeDropdown}>Hydration</Link></li>
               </ul>
             </details>
           </li>
+          <li><Link href="/insights">Insights</Link></li>
+          <li><Link href="/resources">Resources</Link></li>
+          <li><Link href="/survey">Survey</Link></li>
+          <li><Link href="/appointments">Appointments</Link></li>
+          <li><Link href="/moodbot">MoodBot</Link></li>
         </ul>
         <div className="dropdown dropdown-end" id="login">
           <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
