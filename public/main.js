@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const socket = io();
     let selectedUser = null;
 
-    // Fetch user list
     fetch('/users')
         .then(response => response.json())
         .then(users => {
@@ -14,7 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     const listItem = document.createElement('li');
                     listItem.textContent = user.name + ' (' + user.username + ')';
                     listItem.addEventListener('click', () => {
-                        // Handle user selection
                         selectUser(user.username);
                     });
                     userList.appendChild(listItem);
@@ -27,7 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
                             const listItem = document.createElement('li');
                             listItem.textContent = ambassador.name + ' (' + ambassador.username + ')';
                             listItem.addEventListener('click', () => {
-                                // Handle user selection
                                 selectUser(ambassador.username);
                             });
                             userList.appendChild(listItem);
@@ -38,7 +35,6 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch(error => console.error('Error fetching users:', error));
 
-    // Search functionality
     const searchInput = document.getElementById('search-input');
     searchInput.addEventListener('input', () => {
         const query = searchInput.value.trim();
@@ -67,7 +63,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         const listItem = document.createElement('li');
                         listItem.textContent = ambassador.name + ' (' + ambassador.username + ')';
                         listItem.addEventListener('click', () => {
-                            // Handle user selection
                             selectUser(ambassador.username);
                         });
                         userList.appendChild(listItem);
@@ -91,7 +86,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Function to handle user selection
     function selectUser(user) {
         selectedUser = user;
         console.log('Selected user:', selectedUser, ', fetching chat history...');
@@ -120,8 +114,6 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(response => response.json())
             .then(appointments => {
                 appointments.forEach(appointment => {
-                    // check the schedule of the appointment, compare with current time
-                    // if the current time is between 30 minutes before the appointment or 240 minutes after the appointment, then add to the list
                     const currentTime = new Date();
                     const thirtyMinutesBefore = new Date(appointment.schedule);
                     thirtyMinutesBefore.setMinutes(thirtyMinutesBefore.getMinutes() - 30);
@@ -142,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
     sendMessageButton.addEventListener('click', () => {
         sendMessage();
     })
-    // Function to send message
+
     function sendMessage() {
         const messageInput = document.getElementById('message-input');
         const message = messageInput.value.trim();
@@ -156,7 +148,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    //get currentUser by extracting cookie 'username'
     const currentUser = document.cookie.split('username=')[1].split(';')[0];
 
     function retrieveUserName(currentUserId) {
@@ -186,7 +177,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     socket.on('message', (message) => {
-        // Update chat in real-time
         if ((message.user === currentUser && message.recipient === selectedUser) || (message.user === selectedUser && message.recipient === currentUser)) {
             const messageList = document.getElementById('message-list');
             const messageElement = document.createElement('li');
