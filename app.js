@@ -12,13 +12,12 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "*", // Adjust according to your security requirements
+    origin: "*",
   },
 });
 
 const MONGODB_URI = "mongodb+srv://mlhmytran:541AxS8g7jm9EEy9@cluster0.uthobww.mongodb.net/"
 
-// Connect to MongoDB
 mongoose.connect(MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -28,19 +27,17 @@ mongoose.connect(MONGODB_URI, {
     console.error('MongoDB connection error:', error);
 });
 
-const Message = require('./models/message'); // Your existing message model
-const User = require('./models/user'); // Make sure to create this model
-const Appointments = require('./models/appointments'); // Make sure to create this model
+const Message = require('./models/message');
+const User = require('./models/user');
+const Appointments = require('./models/appointments');
 const { all } = require('axios');
 
-// Middlewares
 app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
 app.use(cookieParser());
 
-// API Routes
-// Fetch chat history between two users
+// All APIs routes
 app.get('/api/messages/:user1/:user2', async (req, res) => {
     try {
         const messages = await Message.find({
@@ -55,7 +52,6 @@ app.get('/api/messages/:user1/:user2', async (req, res) => {
     }
 });
 
-// Fetch the list of users excluding the current user
 app.get('/api/users/:currentUser', async (req, res) => {
     try {
         const users = await User.find({ username: { $ne: req.params.currentUser } });
@@ -74,7 +70,6 @@ app.get('/api/ambassador/:currentUser/:userAppointment/appointments', async (req
     }
 });
 
-// Fetch the list of users excluding the current user
 app.get('/api/names/:currentUser', async (req, res) => {
     try {
         const users = await User.find({ name: { $ne: req.params.currentUser } });
@@ -120,11 +115,9 @@ app.get('/ambassadors', async (req, res) => {
     }
 });
 
-// Socket.io event handling
 io.on('connection', (socket) => {
     console.log('A user connected');
 
-    // Handle incoming chat messages
     socket.on('chatMessage', async (data) => {
         const { user, recipient, content } = data;
         const message = new Message ({
@@ -133,8 +126,8 @@ io.on('connection', (socket) => {
             content: content,
         });
 
-        await message.save(); // Save message to MongoDB
-        io.emit('message', data); // Broadcast message to all clients
+        await message.save(); 
+        io.emit('message', data);
     });
     
     socket.on('disconnect', () => {
