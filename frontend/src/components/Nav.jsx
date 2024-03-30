@@ -25,8 +25,7 @@ const Nav = () => {
           )}
           {!user && (
             <div>
-              <Link to="/login">Login</Link>
-              <Link to="/signup">Signup</Link>
+              <Link href="/login">Login</Link>
             </div>
           )}
         </nav>
