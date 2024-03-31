@@ -1,5 +1,6 @@
 'use client' // client side rendering
 import { useState } from 'react';
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation"
 
 function Signup() {
@@ -8,7 +9,12 @@ function Signup() {
   const [type, setType] = useState('')
   const [error, setError] = useState('')
 
+  const { data: session, status } = useSession();
   const router = useRouter();
+
+  if (status==="loading") return null
+
+  if(status!=="loading" && session) return router.replace("dashboard")
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
