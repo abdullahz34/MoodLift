@@ -1,16 +1,34 @@
 'use client' // client side rendering
 import React, { useState } from 'react';
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 function Login() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
 
-//  const {login, error, isLoading} = useLogin()
+  const router = useRouter()
 
-  const handleSubmit = async () => {
-    // e.preventDefault()
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-    // await login(username, password)
+    try {
+      const res = await signIn("credentials", {
+        username,
+        password,
+        redirect: false,
+      });
+
+      // if (res && res.error) {
+      //   setError("Invalid credentials")
+      //   return;
+      // }
+
+      router.replace("dashboard")
+    } catch (error) {
+       console.log(error)
+    }
   }
 
   return (
@@ -25,7 +43,6 @@ function Login() {
               type="username"
               placeholder="Username"
               onChange={(e) => setUsername(e.target.value)}
-              value={username}
             />
           </label>
 
@@ -35,9 +52,11 @@ function Login() {
                 type="password"
                 placeholder="Password"
                 onChange={(e) => setPassword(e.target.value)}
-                value={password}
             />
           </label>
+          {error && (
+            <div className="text-sm font-medium text-error">{error}</div>
+          )}
           <div>
             <a href="#" className="text-sm font-medium text-primary hover:underline">Forgot password?</a>
           </div>

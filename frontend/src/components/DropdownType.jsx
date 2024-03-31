@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react"
 import "./dropdown.css"
 
-const Dropdown = (props) => {
+const DropdownType = (props) => {
   const [toggled, setToggled] = useState(false)
   const [selection, setSelection] = useState(null)
   const dropdownRef = useRef(null)
@@ -69,4 +69,4 @@ const Dropdown = (props) => {
   )
 }
 
-export default Dropdown
+export default DropdownType
