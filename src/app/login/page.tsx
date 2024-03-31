@@ -1,5 +1,5 @@
 'use client' // client side rendering
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSession } from "next-auth/react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -11,6 +11,20 @@ function Login() {
 
   const { data: session, status } = useSession();
   const router = useRouter()
+
+  useEffect(() => {
+    validateLogin();
+  }, [username, password]);
+
+  const validateLogin = () => {
+    if(password.length<8) {
+      setError("Password must be at least 8 characters.")
+    }
+    
+    if(!username || !password) {
+      setError("All fields are required")
+    }
+  };
 
   if (status==="loading") return null
 
