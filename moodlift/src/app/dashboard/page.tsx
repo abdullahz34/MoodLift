@@ -1,9 +1,11 @@
 'use client' // client side rendering
 import { signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 
 function Dashboard() {
+  const { data: session } = useSession();
 
-  const handleClick = async (e) => {
+  const handleClick = async (e: { preventDefault: () => void; }) => {
     e.preventDefault()
     signOut()
   }
@@ -14,10 +16,10 @@ function Dashboard() {
         <h1 className="card-title text-xl font-bold text-gray-900 justify-center">User details</h1>
         <div className="card-body space-y-4">
           <div>
-            Username: <span className="font-bold">waow</span>
+            Username: <span className="font-bold">{session?.user?.username}</span>
           </div>
           <div>
-            Type: <span className="font-bold">crazzyyy</span>
+            Type: <span className="font-bold">{session?.user?.type}</span>
           </div>
           <div className="card-actions">
             <button 

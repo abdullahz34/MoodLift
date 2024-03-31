@@ -20,11 +20,11 @@ function Login() {
         redirect: false,
       });
 
-      // if (res && res.error) {
-      //   setError("Invalid credentials")
-      //   return;
-      // }
-
+      if (res && res.error) {
+        setError("Invalid credentials")
+        return;
+      }
+      
       router.replace("dashboard")
     } catch (error) {
        console.log(error)
