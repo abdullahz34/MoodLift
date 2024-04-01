@@ -110,6 +110,26 @@ header {
       border-width: 10px;
       margin-left: -10px;
     }
+
+    .sent {
+        /* Create a small box in blue on the right covered the text, make curve on the edge */
+        background-color: #79c6fe;
+        float: right;
+        border-radius: 10px 0 10px 10px;
+        &:after {
+            border-bottom-color: #79c6fe;
+        }
+    }
+
+    .receive {
+        /* Create a small box in white on the left covered the text, make curve on the edge */
+        background-color: #79c6fe;
+        float: left;
+        border-radius: 0 10px 10px 10px;
+        &:after {
+            border-bottom-color: #79c6fe;
+        }
+    }
     
 
 }
