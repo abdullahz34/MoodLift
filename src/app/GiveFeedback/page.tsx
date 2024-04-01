@@ -3,31 +3,29 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+
+
 export default function GiveFeedback() {
 
-    const [msg, setMsg] = useState('')
-    const [isLoading, setIsLoading] = useState(false)
-    const router = useRouter()
-  
+    const [message, setMessage] = useState("")
+    const [error, setError] = useState([])
 
     const handleSubmit = async () => {
+      console.log("message :", message)
+      const res = await fetch('api\feedback',{
+        method: "POST",
+        headers: {
+          "Content-type":"application/json"
+        },
+        body: JSON.stringify({
+          message
+        })
+      });
       
-      setIsLoading(true)
-      const feedback = {
-        msg
-      }
-
-      const res = await fetch("http://localhost:3000/GiveFeedback",{
-        method:"POST",
-        headers: {"Content-Type":"application/json"},
-        body:JSON.stringify(feedback)
-      })
-
-      if (res.status === 201) {
-        router.push('/GiveFeedback')
-      }
-
-    }
+      const { msg } = await res.json();
+      setError(msg);
+    };
+    
 
     
 
@@ -41,14 +39,13 @@ export default function GiveFeedback() {
             cols={100}
             maxLength={300}
             className="text-[darkblue]"
-            onChange={(e) => setMsg(e.target.value)}
-            value={msg}
+            onChange={(e) => setMessage(e.target.value)}
+            value={message}
             />
             
         </label>
       <button
         className="btn-primary, text-[white]"
-        disabled={isLoading}
       >
         Enter
       </button>
