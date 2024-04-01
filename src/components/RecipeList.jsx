@@ -1,3 +1,4 @@
+
 import Link from "next/link"
 import DeleteButton from "./DeleteButton"
 
@@ -23,34 +24,34 @@ export default async function RecipeList() {
   const { recipes } = await getRecipes();
 
   return (
-    <>
-      {recipes.map((recipe) => (
-        <div key={recipe._id} className="p-4 border border-slate-300 my-3 flex justify-between gap-5 items-start">
-          <div>
-              <h2 className="font-bold text-2xl">{recipe.title}</h2>
-              <div>Prep Time: {recipe.prep}</div>
-              <div>Calories: {recipe.calories}</div>
-              <img src={recipe.imgURL} alt={recipe.title}/>
-              <h3>Ingredients</h3>
-              <ul className="ingredientsList">
-                  {recipe.ingredients.map((ingredient) => (
-                      <li key={ingredient}>{ingredient}</li>
-                  ))}
-              </ul>
-              
-              <h3>Instructions</h3>
-              <ol>
-                  {recipe.instructions.map((instruction) => (
-                      <li key={instruction}>{instruction}</li>
-                  ))}
-              </ol>
+    <div className="flex flex-col w-1/3">
+      <>
+        {recipes.map((recipe) => (
+          <div key={recipe._id} className="p-4 border border-slate-300 rounded my-3 flex justify-between gap-5 items-start">
+            <div>
+                <h2 className="font-bold text-2xl">{recipe.title}</h2>
+                <div>Prep Time: {recipe.prep}</div>
+                <div>Calories: {recipe.calories}</div>
+                <img src={recipe.imgURL} alt={recipe.title}/>
+                <h3 className="font-bold">Ingredients</h3>
+                <ul className="list-disc list-inside">
+                    {recipe.ingredients.map((ingredient) => (
+                        <li key={ingredient}>{ingredient}</li>
+                    ))}
+                </ul>
+                
+                <h3 className="font-bold">Instructions</h3>
+                <ol className="list-decimal list-inside">
+                    {recipe.instructions.map((instruction) => (
+                        <li key={instruction}>{instruction}</li>
+                    ))}
+                </ol>
+                <Link href={`./edit-recipe/${recipe._id}`}><button className="btn">Edit</button></Link>
+                <DeleteButton id={recipe._id} route={"recipes"} className="btn"/>
+            </div>
           </div>
-
-          <Link href={`resources/edit-recipe/${recipe._id}`}>Edit</Link>
-          <DeleteButton id={recipe._id}/>
-
-        </div>
-      ))}
-    </>
+        ))}
+      </>
+    </div>
   );
 }

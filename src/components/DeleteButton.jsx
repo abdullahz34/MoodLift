@@ -1,10 +1,10 @@
 "use client";
 import {useRouter} from "next/navigation";
 
-export default function DeleteButton({id}){
+export default function DeleteButton({id, route}){
     const router = useRouter();
     const handleDelete = async () =>  {
-        const res = await fetch(`http://localhost:3000/api/recipes?id=${id}`, {
+        const res = await fetch(`http://localhost:3000/api/${route}?id=${id}`, {
           method: "DELETE",
         });
       
@@ -13,6 +13,6 @@ export default function DeleteButton({id}){
         }
     }
     return(
-        <button onClick={() => {handleDelete()}}>Delete</button>
+        <button onClick={() => {handleDelete()}} className="btn">Delete</button>
     )
 }

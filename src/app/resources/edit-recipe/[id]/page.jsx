@@ -19,7 +19,6 @@ const getRecipeById = async (id) => {
 export default async function EditRecipe({ params }){
     const {id} = params;
     const {recipe} = await getRecipeById(id);
-    console.log(recipe);
     const {title, prep, calories, ingredients, instructions, imgURL} = recipe;
 
     return(

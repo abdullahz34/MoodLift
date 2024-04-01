@@ -49,21 +49,19 @@ export default function EditRecipeForm({id, newTitle, newPrep, newCalories, newI
         try{
             const res = await fetch(`http://localhost:3000/api/recipes/${id}`, {
                 method: "PUT",
-                body: JSON.stringify({formData}),
+                body: JSON.stringify(formData),
                 headers: {
                     "Content-Type": "application/json",
                 }
             });
 
-            console.log(res)
-            console.log(JSON.stringify({formData}))
-
             if (res.ok){
-                router.push("/resources");
+                router.push("/resources/view-recipes");
+                router.refresh();
             }
 
             else{
-                throw new Error("Failed to create recipe");
+                throw new Error("Failed to edit recipe");
             }
         }
 
@@ -72,36 +70,53 @@ export default function EditRecipeForm({id, newTitle, newPrep, newCalories, newI
         }
     };
 
+    const handleDelete = (i) => {
+        setFormData(prevRecipe => {
+            const updatedInstructions = [...prevRecipe.instructions];
+            updatedInstructions.splice(i, 1);
+            return {
+                ...prevRecipe,
+                instructions: updatedInstructions
+            };
+        });
+    };
+
     return(
-        <div>
-            <h2>Edit recipe</h2>
-            <form onSubmit={handleSubmit}>
+        <div className="flex justify-center">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-3 w-1/3">
+                <h2>Edit recipe</h2>
                 <label htmlFor="title">Title</label>
-                <input type="text" id="title" name="title" value={formData.title} onChange={handleChange}/>
+                <input type="text" id="title" name="title" value={formData.title} onChange={handleChange} className="input input-bordered"/>
 
-                <label htmlFor="prep">Prep Time (minutes)</label>
-                <input type="text" id="prep" name="prep" value={formData.prep} onChange={handleChange}/>
+                <label htmlFor="prep">Prep Time</label>
+                <input type="text" id="prep" name="prep" value={formData.prep} onChange={handleChange} className="input input-bordered"/>
 
-                <label htmlFor="calories">Calories (kJ)</label>
-                <input type="text" id="calories" name="calories" value={formData.calories} onChange={handleChange}/>
+                <label htmlFor="calories">Calories</label>
+                <input type="text" id="calories" name="calories" value={formData.calories} onChange={handleChange} className="input input-bordered"/>
 
                 <label htmlFor="ingredients">Ingredients</label>
                 {formData.ingredients.map((ingredient, i) => (
-                    <input key={i} type="text" name="ingredients" id={`ingredient-${i}`} value={ingredient} onChange={(event) => handleArrayItem(event, i, "ingredients")}/>
+                    <div>
+                        <input key={i} type="text" name="ingredients" id={`ingredient-${i}`} value={ingredient} onChange={(event) => handleArrayItem(event, i, "ingredients")} className="input input-bordered"/>
+                        <button onClick={() => handleDelete(i)} type="button">x</button>
+                    </div>
                 ))}
-                <button onClick={() => addArrayItem("ingredients")} type="button">Add Ingredient</button>
+                <button onClick={() => addArrayItem("ingredients")} type="button" className="btn">Add Ingredient</button>
 
 
                 <label htmlFor="instructions">Instructions</label>
                 {formData.instructions.map((instruction, i) =>(
-                    <input key={i} type="text" name="instructions" id={`instruction-${i}`} value={instruction} onChange={(event) => handleArrayItem(event,i, "instructions")}/>
+                    <div>
+                        <input key={i} type="text" name="instructions" id={`instruction-${i}`} value={instruction} onChange={(event) => handleArrayItem(event,i, "instructions")} className="input input-bordered"/>
+                        <button onClick={() => handleDelete(i)} type="button">x</button>
+                    </div>
                 ))}
-                <button onClick={() => addArrayItem("instructions")} type="button">Add instruction</button>
+                <button onClick={() => addArrayItem("instructions")} type="button" className="btn">Add instruction</button>
 
                 <label htmlFor="imgURL">Image URL</label>
-                <input type="text" id="imgURL" name="imgURL" value={formData.imgURL} onChange={handleChange}/>
+                <input type="text" id="imgURL" name="imgURL" value={formData.imgURL} onChange={handleChange} className="input input-bordered"/>
 
-                <button type="submit">Add Recipe</button>
+                <button type="submit" className="btn">Edit Recipe</button>
             </form>
         </div>
     )
