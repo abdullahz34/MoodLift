@@ -73,13 +73,13 @@ const CreateRecipe = () => {
         }
     };
 
-    const handleDelete = (i) => {
+    const handleDelete = (i, type) => {
         setFormData(prevRecipe => {
-            const updatedInstructions = [...prevRecipe.instructions];
-            updatedInstructions.splice(i, 1);
+            const updatedArray = [...prevRecipe[type]];
+            updatedArray.splice(i, 1);
             return {
                 ...prevRecipe,
-                instructions: updatedInstructions
+                [type]: updatedArray
             };
         });
     };
@@ -103,7 +103,7 @@ const CreateRecipe = () => {
                 {formData.ingredients.map((ingredient, i) => (
                     <div>
                         <input key={i} type="text" name="ingredients" id={`ingredient-${i}`} value={ingredient} onChange={(event) => handleArrayItem(event, i, "ingredients")} className="input input-bordered"/>
-                        <button onClick={() => handleDelete(i)} type="button">x</button>
+                        <button onClick={() => handleDelete(i, "ingredients")} type="button">x</button>
                     </div>
                 ))}
                 <button onClick={() => addArrayItem("ingredients")} type="button" className="btn">Add Ingredient</button>
@@ -113,7 +113,7 @@ const CreateRecipe = () => {
                 {formData.instructions.map((instruction, i) =>(
                     <div>
                         <input key={i} type="text" name="instructions" id={`instruction-${i}`} value={instruction} onChange={(event) => handleArrayItem(event,i, "instructions")} className="input input-bordered"/>
-                        <button onClick={() => handleDelete(i)} type="button">x</button>
+                        <button onClick={() => handleDelete(i, "instructions")} type="button">x</button>
                     </div>
                 ))}
                 <button onClick={() => addArrayItem("instructions")} type="button" className="btn">Add instruction</button>
