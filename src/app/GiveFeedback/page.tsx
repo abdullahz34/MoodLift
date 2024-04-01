@@ -1,13 +1,14 @@
 "use client"
 
 import { useState } from "react";
-import { Router, useRouter } from "next/router";
+import { useRouter } from "next/router";
 
 export default function GiveFeedback() {
 
     const [msg, setMsg] = useState('')
     const [isLoading, setIsLoading] = useState(false)
     const router = useRouter()
+  
 
     const handleSubmit = async () => {
       
