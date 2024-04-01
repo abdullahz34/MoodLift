@@ -14,7 +14,7 @@ function Signup() {
 
   if (status==="loading") return null
 
-  if(status!=="loading" && session) return router.replace("dashboard")
+  if(status!=="loading" && session?.user?.type!=="Admin" ) return router.replace("dashboard")
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
