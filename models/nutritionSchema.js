@@ -21,4 +21,4 @@ const nutritionSchema = new Schema({
   }
 });
 
-export default mongoose.models.Nutrition ||mongoose.model('Nutrition', nutritionSchema);
+module.exports = nutritionSchema;

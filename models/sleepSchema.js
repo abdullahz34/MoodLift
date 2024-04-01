@@ -13,4 +13,5 @@ const sleepSchema = new Schema({
   }
 });
 
-export default mongoose.models.Sleep ||mongoose.model('Sleep', nutritionSchema);
+module.exports = sleepSchema;
+

@@ -15,18 +15,10 @@ const logbookSchema = new Schema({
     type: Date,
     required: true
   },
-  fitness: {
-    type: fitnessSchema
-  },
-  nutrition: {
-    type: nutritionSchema
-  },
-  hydration: {
-    type: hydrationSchema
-  },
-  sleep: {
-    type: sleepSchema
-  }
+  fitness: fitnessSchema, 
+  nutrition: nutritionSchema,
+  hydration: hydrationSchema,
+  sleep: sleepSchema
 });
 
 export default mongoose.models.Logbook || mongoose.model('Logbook', logbookSchema);
