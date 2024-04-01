@@ -117,18 +117,38 @@ header {
         float: right;
         border-radius: 10px 0 10px 10px;
         &:after {
+            content: ""; /* Ensure the pseudo-element is displayed */
+            display: block; /* This makes the pseudo-element a block-level element, effectively "clearing" the float */
+            clear: both; /* This clears the float, ensuring elements after .sent start on a new line */
             border-bottom-color: #79c6fe;
         }
+        text-align: center;
+        min-width: 50px;
+        min-height: 30px;
+        padding: 7px 15px; /* Adds padding: 10px top and bottom, 20px left and right */
+        margin-bottom: 10px; /* Optional: adds space between each box if you need it */
+        width: auto; /* Ensures the width adjusts based on the content, considering the padding */
+        box-sizing: border-box; /* Ensures padding and border are included in the total width and height */
     }
-
+    
     .receive {
-        /* Create a small box in white on the left covered the text, make curve on the edge */
+        /* Create a small box in blue on the right covered the text, make curve on the edge */
         background-color: #79c6fe;
         float: left;
-        border-radius: 0 10px 10px 10px;
+        border-radius: 10px 0 10px 10px;
         &:after {
+            content: ""; /* Ensure the pseudo-element is displayed */
+            display: block; /* This makes the pseudo-element a block-level element, effectively "clearing" the float */
+            clear: both; /* This clears the float, ensuring elements after .sent start on a new line */
             border-bottom-color: #79c6fe;
         }
+        text-align: center;
+        min-width: 50px;
+        min-height: 30px;
+        padding: 7px 15px; /* Adds padding: 10px top and bottom, 20px left and right */
+        margin-bottom: 10px; /* Optional: adds space between each box if you need it */
+        width: auto; /* Ensures the width adjusts based on the content, considering the padding */
+        box-sizing: border-box; /* Ensures padding and border are included in the total width and height */
     }
     
 

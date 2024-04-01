@@ -83,7 +83,15 @@ const Chat = () => {
       const messageElement = document.createElement('li');
       messageElement.textContent = `${message.content}`; // (${new Date(message.timestamp).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })})`;
       messageElement.className = message.username === currentUser ? 'sent' : 'received';
+      // set new line for each message by adding br tag
+      //const br = document.createElement('br');
+      //white-space: pre;messageElement.appendChild(br);
       messageList.appendChild(messageElement);
+      const br = document.createElement('br');
+      // close br
+      const br2 = document.createElement('br');
+      messageList.appendChild(br);
+      messageList.appendChild(br2);
     });
   };
 
@@ -93,7 +101,14 @@ const Chat = () => {
     const messageElement = document.createElement('li');
     messageElement.textContent = `${message.content}`; // (${new Date(message.timestamp).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })})`;
     messageElement.className = message.user === currentUser ? 'sent' : 'received';
+    //const br = document.createElement('br');
+    //messageElement.appendChild(br);
     messageList.appendChild(messageElement);
+    const br = document.createElement('br');
+    // close br
+    const br2 = document.createElement('br');
+    messageList.appendChild(br);
+    messageList.appendChild(br2);
     console.log("messageElement", messageElement);
   }
 
