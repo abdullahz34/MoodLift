@@ -9,4 +9,4 @@ const hydrationSchema = new Schema({
   }
 });
 
-module.exports = hydrationSchema;
+export default mongoose.model('Hydration', hydrationSchema);

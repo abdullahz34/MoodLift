@@ -18,4 +18,4 @@ const fitnessSchema = new Schema({
   }
 });
 
-module.exports = fitnessSchema;
+export default mongoose.model('Fitness', fitnessSchema);
