@@ -79,7 +79,7 @@ export default function LoginForm() {
             <div className="text-sm font-medium text-error">{error}</div>
           )}
           <div>
-            <a href="#" className="text-sm font-medium text-primary hover:underline">Forgot password?</a>
+            <a href="/login/forgot-password" className="text-sm font-medium text-primary hover:underline">Forgot password?</a>
           </div>
           <div className="card-actions">
             <button className="btn btn-primary w-full">Log in</button>

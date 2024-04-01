@@ -109,10 +109,6 @@ export default function SignupForm() {
           {error && (
             <div className="text-sm font-medium text-error">{error}</div>
           )}
-          
-          <div>
-            <a href="#" className="text-sm font-medium text-primary hover:underline">Forgot password?</a>
-          </div>
           <div className="card-actions">
             <button className="btn btn-primary w-full">Add user</button>
           </div>
