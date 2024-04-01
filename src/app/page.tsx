@@ -1,17 +1,13 @@
-'use client' // client side rendering
-import React from 'react'
-import  Link from 'next/link';
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+import { authOptions } from "./api/auth/[...nextauth]/route";
 
-export default function Home() {
-  const { data: session, status } = useSession();
-  const router = useRouter()
+export default async function Home() {
 
-  if (status==="loading") return null
+  const session = await getServerSession(authOptions);
 
-  if(status!=="loading" && session) return router.replace("dashboard")
-  
-  return router.replace("login")
+  if (session) return redirect("/dashboard")
+
+  return redirect("/login")
 
 }

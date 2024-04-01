@@ -1,18 +1,14 @@
-'use client' // client side rendering
-import { signOut } from "next-auth/react";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+import { authOptions } from "../api/auth/[...nextauth]/route";
 import AdminDash from "../../components/adminDash"
 import AmbassadorDash from "../../components/AmbassadorDash"
 import EmployeeDash from "../../components/EmployeeDash"
 
-function Dashboard() {
-  const { data: session, status } = useSession();
-  const router = useRouter();
+export default async function Dashboard() {
+  const session = await getServerSession(authOptions);
 
-  if (status==="loading") return null
-
-  if(status!=="loading" && !session) return router.replace("login")
+  if (!session) redirect("/login");
 
   return (
     <>
@@ -28,5 +24,3 @@ function Dashboard() {
     </>
   )
 }
-
-export default Dashboard;

@@ -7,10 +7,6 @@ const AmbassadorDash = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
 
-  // if (status==="loading") return null
-
-  // if(status!=="loading" && session?.user?.type!=="Ambassador" ) return router.replace("login")
-
   const handleClick = async (e) => {
     e.preventDefault()
     signOut()
