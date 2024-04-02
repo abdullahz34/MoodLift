@@ -1,6 +1,6 @@
-import connect from "../../../../db"
-import User from "../../../../models/userSchema"
-import { NextResponse } from "next/server"
+import connect from "../../../../db";
+import User from "../../../../models/userSchema";
+import { NextResponse } from "next/server";
 
 export async function POST(req) {
   try {
