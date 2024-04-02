@@ -1,4 +1,4 @@
-import Recipe from "@/models/recipe";
+import Recipe from "../../../../models/recipe";
 import connectMongoDB from "@/libs/mongodb";
 import { NextResponse } from "next/server";
 

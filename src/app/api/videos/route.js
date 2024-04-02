@@ -1,4 +1,4 @@
-import Video from "@/models/video";
+import Video from "../../../../models/video";
 import connectMongoDB from "@/libs/mongodb";
 import { NextResponse } from "next/server";
 

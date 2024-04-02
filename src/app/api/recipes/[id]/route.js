@@ -1,5 +1,5 @@
 import connectMongoDB from "@/libs/mongodb";
-import Recipe from "@/models/recipe";
+import Recipe from "../../../../../models/recipe";
 import { NextResponse } from "next/server";
 
 export async function PUT(request, { params }) {
