@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react'
 async function getData(date) {
   const response = await fetch(`http://localhost:3000/api/logging?date=${date}`, { cache: "no-store" });
   if (!response.ok) {
-    throw new Error('Response for the logging API call failed! (nutrition)');
+    throw new Error('Response for the logging API call failed! (sleep)');
   }
   const data = await response.json();
   console.log('Data from getData:', data);
