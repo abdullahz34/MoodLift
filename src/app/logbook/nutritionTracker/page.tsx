@@ -1,12 +1,18 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
-async function getData() {
-  const response = await fetch('http://localhost:3000/api/logging', { cache: "no-store" });
+async function getData(date) {
+  const response = await fetch(`http://localhost:3000/api/logging?date=${date}`, { cache: "no-store" });
   if (!response.ok) {
     throw new Error('Response for the logging API call failed! (nutrition)');
   }
-  return response.json()
+  const data = await response.json();
+  console.log('Data from getData:', data);
+  // Find the object for the selected date
+  const item = data.find(item => new Date(item.date).toDateString() === new Date(date).toDateString());
+
+  // Return the nutrition object of the found item, or null if no item was found
+  return item ? item.nutrition : null;
 }
 
 const username = "testuser"
@@ -19,6 +25,8 @@ const NutritionTracker = () => {
   const [protein, setProtein] = useState(0);
   const [fats, setFats] = useState(0);
   const [carbs, setCarbs] = useState(0);
+  const [nutritionData, setNutritionData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -55,6 +63,27 @@ const NutritionTracker = () => {
     return `${year}-${month}-${day}`;
   }
 
+  useEffect(() => {
+    console.log('Current date:', date);
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const dataPromise = getData(date);
+        const timeoutPromise = new Promise(resolve => setTimeout(resolve, 500)); // 500ms minimum loading time
+        await Promise.all([dataPromise, timeoutPromise]);
+        const data = await dataPromise;
+        setNutritionData(data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    if (date) {
+      fetchData();
+    }
+  }, [date]);
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-primary">
       {submitted && (
@@ -63,29 +92,50 @@ const NutritionTracker = () => {
           <span>Your nutrition has been successfully tracked for this day!</span>
         </div>
       )}
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block text-gray-700">Calories</label>
-          <input type="number" value={calories || ''} onChange={(e) => setCalories(e.target.value)} placeholder="Type here" className="input input-bordered w-full max-w-xs" required />
+      <div className="flex">
+        <div className="w-1/2 mr-20">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-gray-700">Calories</label>
+              <input type="number" value={calories || ''} onChange={(e) => setCalories(e.target.value)} placeholder="Type here" className="input input-bordered w-full max-w-xs" required />
+            </div>
+            <div>
+              <label className="block text-gray-700">Protein</label>
+              <input type="number" value={protein || ''} onChange={(e) => setProtein(e.target.value)} placeholder="Type here" className="input input-bordered w-full max-w-xs" required />
+            </div>
+            <div>
+              <label className="block text-gray-700">Fats</label>
+              <input type="number" value={fats || ''} onChange={(e) => setFats(e.target.value)} placeholder="Type here" className="input input-bordered w-full max-w-xs" required />
+            </div>
+            <div>
+              <label className="block text-gray-700">Carbs</label>
+              <input type="number" value={carbs || ''} onChange={(e) => setCarbs(e.target.value)} placeholder="Type here" className="input input-bordered w-full max-w-xs" required />
+            </div>
+            <div>
+              <label className="block text-gray-700">Date</label>
+              <input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="input input-bordered w-full max-w-xs" />
+            </div>
+            <button type="submit" className="btn btn-secondary">Submit</button>
+          </form>
         </div>
-        <div>
-          <label className="block text-gray-700">Protein</label>
-          <input type="number" value={protein || ''} onChange={(e) => setProtein(e.target.value)} placeholder="Type here" className="input input-bordered w-full max-w-xs" required />
+        <div className="w-1/2">
+          {loading ? (
+            <span className="loading loading-dots loading-md"></span>
+          ) : nutritionData ? (
+            <div>
+              <h2>Data logged on this date for nutrition:</h2>
+              <ul>
+                <li>Calories: {nutritionData.calories}</li>
+                <li>Protein: {nutritionData.protein}</li>
+                <li>Fats: {nutritionData.fats}</li>
+                <li>Carbs: {nutritionData.carbs}</li>
+              </ul>
+            </div>
+          ) : (
+            <p>No logs on this date!</p>
+          )}
         </div>
-        <div>
-          <label className="block text-gray-700">Fats</label>
-          <input type="number" value={fats || ''} onChange={(e) => setFats(e.target.value)} placeholder="Type here" className="input input-bordered w-full max-w-xs" required />
-        </div>
-        <div>
-          <label className="block text-gray-700">Carbs</label>
-          <input type="number" value={carbs || ''} onChange={(e) => setCarbs(e.target.value)} placeholder="Type here" className="input input-bordered w-full max-w-xs" required />
-        </div>
-        <div>
-          <label className="block text-gray-700">Date</label>
-          <input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="input input-bordered w-full max-w-xs" />
-        </div>
-        <button type="submit" className="btn btn-secondary">Submit</button>
-      </form>
+      </div>
     </div>
   )
 }
