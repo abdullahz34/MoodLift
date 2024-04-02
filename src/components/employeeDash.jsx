@@ -18,9 +18,6 @@ const EmployeeDash = () => {
         <h1 className="card-title text-xl font-bold text-gray-900 justify-center">Employee details</h1>
         <div className="card-body space-y-4">
           <div>
-            in the employee dash
-          </div>
-          <div>
             Username: <span className="font-bold">{session?.user?.username}</span>
           </div>
           <div>
