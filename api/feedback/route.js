@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import connectMongoDB from "../../libs/mongodb"
 import Feedback from "../../models/feedbackSchema";
+import mongoose from "mongoose";
 
 export async function POST(req) {
     const { message } = await req.json()
@@ -15,9 +16,9 @@ export async function POST(req) {
         if (error instanceof mongoose.error.ValidationError){
             let errorList = []
             for (let e in error.errors){
-                errorList.push(e.message)
+                errorList.push(error.errors[e].message)
             }
-            return NextResponse.json({msg: errorList})
+            return NextResponse.json({ msg: errorList })
 
         }
         else{
