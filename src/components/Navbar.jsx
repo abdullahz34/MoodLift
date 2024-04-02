@@ -45,6 +45,7 @@ const Navbar = () => {
             <li><Link href="/resources">Resources</Link></li>
             <li><Link href="/survey">Survey</Link></li>
             <li><Link href="/appointments">Appointments</Link></li>
+            <li><Link href="/chat">Messages</Link></li>
             <li><Link href="/moodbot">MoodBot</Link></li>
           </ul>
           <div className="dropdown dropdown-end" id="login">
