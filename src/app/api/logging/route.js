@@ -25,7 +25,7 @@ export const POST = async (request) => {
     await Logbook.findOneAndUpdate(
       { username, date }, // find a document with this filter
       { username, date, fitness, nutrition, hydration, sleep }, // document to insert when nothing was found
-      { upsert: true, new: true, runValidators: true } // options
+      { upsert: true, new: true, runValidators: true } // options (upsert: insert if not exists, new: return the modified document, runValidators: validate the document before inserting)
     );
     return NextResponse.json({ message: "Logbook entry created or updated successfully" }, { status: 201 });
   } catch (error) {
