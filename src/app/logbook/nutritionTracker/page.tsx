@@ -2,7 +2,7 @@
 import React, { useState } from 'react'
 
 async function getData() {
-  const response = await fetch('http://localhost:3000/api/logging', {cache: "no-store"});
+  const response = await fetch('http://localhost:3000/api/logging', { cache: "no-store" });
   if (!response.ok) {
     throw new Error('Response for the logging API call failed! (nutrition)');
   }
@@ -15,12 +15,36 @@ const username = "testuser"
 const NutritionTracker = () => {
   const [submitted, setSubmitted] = useState(false);
   const [date, setDate] = useState(getFormattedCurrentDate());
+  const [calories, setCalories] = useState(0);
+  const [protein, setProtein] = useState(0);
+  const [fats, setFats] = useState(0);
+  const [carbs, setCarbs] = useState(0);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     setSubmitted(true);
     setTimeout(() => setSubmitted(false), 3000); // Hide the message after 3 seconds
-    // Here you can add your logic to send the form data to the server
+
+    const nutrition = { calories, protein, fats, carbs };
+
+    const response = await fetch('http://localhost:3000/api/logging', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        username,
+        date,
+        nutrition,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Response for the logging API call failed! (nutrition)');
+    }
+
+    const responseData = await response.json();
+    console.log(responseData);
   }
 
   function getFormattedCurrentDate() {
@@ -42,19 +66,19 @@ const NutritionTracker = () => {
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-gray-700">Calories</label>
-          <input type="number" placeholder="Type here" className="input input-bordered w-full max-w-xs" required/>
+          <input type="number" value={calories || ''} onChange={(e) => setCalories(e.target.value)} placeholder="Type here" className="input input-bordered w-full max-w-xs" required />
         </div>
         <div>
           <label className="block text-gray-700">Protein</label>
-          <input type="number" placeholder="Type here" className="input input-bordered w-full max-w-xs" required/>
+          <input type="number" value={protein || ''} onChange={(e) => setProtein(e.target.value)} placeholder="Type here" className="input input-bordered w-full max-w-xs" required />
         </div>
         <div>
           <label className="block text-gray-700">Fats</label>
-          <input type="number" placeholder="Type here" className="input input-bordered w-full max-w-xs" required/>
+          <input type="number" value={fats || ''} onChange={(e) => setFats(e.target.value)} placeholder="Type here" className="input input-bordered w-full max-w-xs" required />
         </div>
         <div>
           <label className="block text-gray-700">Carbs</label>
-          <input type="number" placeholder="Type here" className="input input-bordered w-full max-w-xs" required/>
+          <input type="number" value={carbs || ''} onChange={(e) => setCarbs(e.target.value)} placeholder="Type here" className="input input-bordered w-full max-w-xs" required />
         </div>
         <div>
           <label className="block text-gray-700">Date</label>
