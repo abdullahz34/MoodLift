@@ -5,6 +5,7 @@ import './styles.css'; // Assuming you're using CSS modules
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { set } from 'mongoose';
+import { User } from 'next-auth';
 
 const socket = io.connect('https://socketio-server-moodlift-6d8efa596f7a.herokuapp.com/');
 
@@ -120,10 +121,10 @@ const Chat = () => {
     }
   }, [searchQuery, currentUser]);
 
-  const handleUserSelect = (username: string) => {
-    setSelectedUser(username);
+  const handleUserSelect = (user: User) => {
+    setSelectedUser(user.username);
     // Fetch chat history with selected user
-    fetchChatHistory(username);
+    fetchChatHistory(user.username);
   };
 
   const fetchChatHistory = async (username: string) => {
@@ -173,6 +174,16 @@ const Chat = () => {
     }
   }; */
 
+  /* update chat by every 3 seconds */
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (selectedUser) {
+        fetchChatHistory(selectedUser);
+      }
+    }, 500);
+    return () => clearInterval(interval);
+  }, [selectedUser]);
+
   const getAppointments = async (user: string, ambassador: string) => {
     const aptsResponse = await fetch(`/api/ambassadors/${ambassador}/${user}/appointments`);
     const appointments: Appointments[] = await aptsResponse.json();
@@ -198,14 +209,16 @@ const Chat = () => {
     messageList.innerHTML = '';
     chatHistory.forEach((message) => {
       const messageElement = document.createElement('li');
+      /*const timestamp = new Date(message.timestamp);
+      const timeLocal = timestamp.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+      const timeElement = document.createElement('span');
+      timeElement.textContent = timeLocal;
+      timeElement.className = 'time';
+      messageList.appendChild(timeElement);*/
       messageElement.textContent = `${message.content}`; // (${new Date(message.timestamp).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })})`;
       messageElement.className = message.username === currentUser ? 'sent' : 'received';
-      // set new line for each message by adding br tag
-      //const br = document.createElement('br');
-      //white-space: pre;messageElement.appendChild(br);
       messageList.appendChild(messageElement);
       const br = document.createElement('br');
-      // close br
       const br2 = document.createElement('br');
       messageList.appendChild(br);
       messageList.appendChild(br2);
@@ -216,13 +229,17 @@ const Chat = () => {
     const messageList = document.getElementById('message-list');
     console.log("messageList", messageList);
     const messageElement = document.createElement('li');
+    /*const timestamp = new Date();
+    const timeLocal = timestamp.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+    const timeElement = document.createElement('span');
+    timeElement.textContent = timeLocal;
+    console.log("timeElement", timeLocal);
+    timeElement.className = 'time';
+    messageList.appendChild(timeElement);*/
     messageElement.textContent = `${message.content}`; // (${new Date(message.timestamp).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })})`;
     messageElement.className = message.user === currentUser ? 'sent' : 'received';
-    //const br = document.createElement('br');
-    //messageElement.appendChild(br);
     messageList.appendChild(messageElement);
     const br = document.createElement('br');
-    // close br
     const br2 = document.createElement('br');
     messageList.appendChild(br);
     messageList.appendChild(br2);
@@ -262,7 +279,7 @@ const Chat = () => {
           </div>
           <ul id="user-list">
             {users.map(user => (
-              <li key={user.username} onClick={() => handleUserSelect(user.username)}>
+              <li key={user.username} onClick={() => handleUserSelect(user)}>
                 {user.name} ({user.username}) <br/> {user.type}
               </li>
             ))}

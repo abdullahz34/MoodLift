@@ -75,15 +75,16 @@ header {
     padding: 20px;
     background-color: #FFFFFF;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 20px;
 }
 
 .user-info {
-    font-size: 10px;
+    font-size: 17px;
 }
 
 #chat {
     flex-grow: 1;
-    padding: 20px;
+    padding: 20px 30px;
     overflow-y: auto;
 }
 
@@ -110,6 +111,7 @@ header {
       border-width: 10px;
       margin-left: -10px;
     }
+
 
     .sent {
         /* Create a small box in blue on the right covered the text, make curve on the edge */
