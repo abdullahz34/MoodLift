@@ -25,7 +25,7 @@ const FitnessPage = () => {
   const [exercise, setExercise] = useState('');
   const [sets, setSets] = useState(0);
   const [reps, setReps] = useState(0);
-  const [duration, setDuration] = useState(0);
+  const [steps, setSteps] = useState(0);
 
   const fetchData = async () => {
     try {
@@ -59,7 +59,7 @@ const FitnessPage = () => {
     setSubmitted(true);
     setTimeout(() => setSubmitted(false), 3000); // Hide the message after 3 seconds
 
-    const fitness = { exercise, sets, reps, duration };
+    const fitness = { exercise, sets, reps, steps };
 
     const response = await fetch('http://localhost:3000/api/logging', {
       method: 'POST',
@@ -105,8 +105,8 @@ const FitnessPage = () => {
               <input type="number" value={reps || ''} onChange={(e) => setReps(e.target.value)} placeholder="Type here" className="input input-bordered w-full max-w-xs" required />
             </div>
             <div>
-              <label className="block text-gray-700">Duration (seconds)</label>
-              <input type="number" value={duration || ''} onChange={(e) => setDuration(e.target.value)} placeholder="Type here" className="input input-bordered w-full max-w-xs" required />
+              <label className="block text-gray-700">Steps</label>
+              <input type="number" value={steps || ''} onChange={(e) => setSteps(e.target.value)} placeholder="Type here" className="input input-bordered w-full max-w-xs" required />
             </div>
             <div>
               <label className="block text-gray-700">Date</label>
@@ -125,7 +125,7 @@ const FitnessPage = () => {
                 <li>Exercise: {fitnessData.exercise}</li>
                 <li>Sets: {fitnessData.sets}</li>
                 <li>Reps: {fitnessData.reps}</li>
-                <li>Duration (seconds): {fitnessData.duration}</li>
+                <li>Steps: {fitnessData.steps}</li>
               </ul>
             </div>
           ) : (

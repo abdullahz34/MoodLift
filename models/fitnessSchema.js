@@ -13,7 +13,7 @@ const fitnessSchema = new Schema({
   reps: {
     type: Number
   },
-  duration: {
+  steps: {
     type: Number
   }
 });
