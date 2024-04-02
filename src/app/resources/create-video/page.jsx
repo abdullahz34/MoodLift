@@ -63,7 +63,7 @@ const CreateVideo = () => {
                 <input type="text" id="title" name="title" onChange={handleChange} className="input input-bordered"/>
 
 
-                <label htmlFor="videoURL">Video URL</label>
+                <label htmlFor="videoURL">Youtube URL</label>
                 <input type="text" id="videoURL" name="videoURL" onChange={handleChange} className="input input-bordered"/>
 
                 <label htmlFor="description">Description</label>

@@ -58,7 +58,7 @@ export default function EditVideoForm({id, newTitle, newVideoURL, newDescription
                 <label htmlFor="title">Title</label>
                 <input type="text" id="title" name="title" value={formData.title} onChange={handleChange} className="input input-bordered"/>
 
-                <label htmlFor="videoURL">Video URL</label>
+                <label htmlFor="videoURL">Youtube URL</label>
                 <input type="text" id="videoURL" name="videoURL" value={formData.videoURL} onChange={handleChange} className="input input-bordered"/>
 
                 <label htmlFor="description">Description</label>
