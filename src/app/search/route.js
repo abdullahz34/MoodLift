@@ -18,8 +18,8 @@ export async function GET(req) {
         const query = req.url.split('query=')[1].split('&')[0];
         //console.log(req.url.split('query=')[1]);
         const allUsers = [];
-        const users = await User.find({ username: { $regex: query, $options: 'i' }, isEmployee: true});
-        const usersByName = await User.find({ name: { $regex: query, $options: 'i' }, isEmployee: true });
+        const users = await User.find({ username: { $regex: query, $options: 'i' }, type: "Employee"});
+        const usersByName = await User.find({ name: { $regex: query, $options: 'i' }, type: "Employee"});
         allUsers.push(...users);
         usersByName.forEach(user => {
             if (!(allUsers.includes(user.username))) {

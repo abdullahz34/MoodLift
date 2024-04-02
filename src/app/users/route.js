@@ -6,7 +6,7 @@ import { NextResponse } from 'next/server';
 export async function GET() {
     try {
         await connect();
-        const users = await User.find({ username: { $regex: '', $options: 'i' }, isEmployee: true});
+        const users = await User.find({ username: { $regex: '', $options: 'i' }, type: "Employee"});
         return NextResponse.json(users);
     } catch (error) {
         console.error('Error fetching ambassadors: ', error);

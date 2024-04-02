@@ -1,10 +1,9 @@
 'use client' // client side rendering
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import * as io from 'socket.io-client';
 import './styles.css'; // Assuming you're using CSS modules
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { set } from 'mongoose';
 import { User } from 'next-auth';
 
 const socket = io.connect('https://socketio-server-moodlift-6d8efa596f7a.herokuapp.com/');
@@ -13,6 +12,7 @@ const Chat = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
 
+  const divRef = useRef(null);
   const [currentUser, setCurrentUser] = useState(null);
   const [currentUserRole, setCurrentUserRole] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -22,9 +22,9 @@ const Chat = () => {
   const [appointments, setAppointments] = useState([]);
   const [messageInput, setMessageInput] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  let lastSender = null;
 
   useEffect(() => {
-    // Fetch current user
     const fetchCurrentUser = async () => {
       try {
         const response = await fetch('/api/auth/session', {
@@ -34,6 +34,7 @@ const Chat = () => {
         });
         const data = await response.json();
         setCurrentUser(data.user.username);
+        setCurrentUserRole(data.user.type);
       } catch (error) {
         console.error('Error fetching current user:', error);
       }
@@ -56,18 +57,24 @@ const Chat = () => {
         const ambassadorsResponse = await fetch('/ambassadors');
         const ambassadorsData = await ambassadorsResponse.json();
         let listReturn = [];
-        for (let i = 0; i < ambassadorsData.length; i++) {
-          if (true) {
-            console.log('User role:', currentUserRole);
-            const apptStatus = await getAppointments(currentUser, ambassadorsData[i].username);
-            console.log('Appointment status:', apptStatus);
-            if (apptStatus) {
-              listReturn.push(ambassadorsData[i]);
-            }
+        if (currentUserRole !== 'Employee') {
+          for (let i = 0; i < ambassadorsData.length; i++) {
+            listReturn.push(ambassadorsData[i]);
           }
-        };
-        for (let i = 0; i < listReturn.length; i++) {
-          listAllUsersFound.push(listReturn[i]);
+        } else {
+          for (let i = 0; i < ambassadorsData.length; i++) {
+            if (true) {
+              console.log('User role:', currentUserRole);
+              const apptStatus = await getAppointments(currentUser, ambassadorsData[i].username);
+              console.log('Appointment status:', apptStatus);
+              if (apptStatus) {
+                listReturn.push(ambassadorsData[i]);
+              }
+            }
+          };
+          for (let i = 0; i < listReturn.length; i++) {
+            listAllUsersFound.push(listReturn[i]);
+          }
         }
         setUsers(listAllUsersFound.filter(user => user.username !== currentUser).sort((a, b) => a.name.localeCompare(b.name)));
         //setUsers(results.filter(user => user.username !== currentUser).sort((a, b) => a.name.localeCompare(b.name)));
@@ -174,6 +181,15 @@ const Chat = () => {
     }
   }; */
 
+  useEffect(() => {
+    // check if the divRef is set
+    if (divRef.current) {
+      divRef.current.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      console.log('divRef not set');
+    }
+  });
+  
   /* update chat by every 3 seconds */
   useEffect(() => {
     const interval = setInterval(() => {
@@ -204,47 +220,63 @@ const Chat = () => {
   };
 
 
-  const setMessages = (chatHistory: Message[]) => {
-    const messageList = document.getElementById('message-list');
-    messageList.innerHTML = '';
-    chatHistory.forEach((message) => {
-      const messageElement = document.createElement('li');
-      /*const timestamp = new Date(message.timestamp);
-      const timeLocal = timestamp.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-      const timeElement = document.createElement('span');
-      timeElement.textContent = timeLocal;
-      timeElement.className = 'time';
-      messageList.appendChild(timeElement);*/
-      messageElement.textContent = `${message.content}`; // (${new Date(message.timestamp).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })})`;
-      messageElement.className = message.username === currentUser ? 'sent' : 'received';
-      messageList.appendChild(messageElement);
-      const br = document.createElement('br');
-      const br2 = document.createElement('br');
-      messageList.appendChild(br);
-      messageList.appendChild(br2);
-    });
+  const setMessages = (chatHistory) => {
+      const messageList = document.getElementById('message-list');
+      messageList.innerHTML = '';
+      chatHistory.forEach((message) => {
+          const messageElement = document.createElement('li');
+
+          // Add timestamp only when the sender changes.
+          if (lastSender !== message.username) {
+              const timestamp = new Date(message.timestamp);
+              const timeLocal = timestamp.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+              const timeElement = document.createElement('li');
+              timeElement.textContent = `${message.username} ${timeLocal}`;
+              timeElement.className = message.username === currentUser ? 'time-received' : 'time-sent';
+              messageList.appendChild(timeElement);
+          }
+
+          messageElement.textContent = `${message.content}`;
+          messageElement.className = message.username === currentUser ? 'sent' : 'received';
+          messageList.appendChild(messageElement);
+          const br = document.createElement('br');
+          const br2 = document.createElement('br');
+          messageList.appendChild(br);
+          messageList.appendChild(br2);
+
+          // Update the lastSender with the current message's username.
+          lastSender = message.username;
+      });
   };
 
   const setMsgSent = (message) => {
     const messageList = document.getElementById('message-list');
     console.log("messageList", messageList);
     const messageElement = document.createElement('li');
-    /*const timestamp = new Date();
-    const timeLocal = timestamp.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-    const timeElement = document.createElement('span');
-    timeElement.textContent = timeLocal;
-    console.log("timeElement", timeLocal);
-    timeElement.className = 'time';
-    messageList.appendChild(timeElement);*/
-    messageElement.textContent = `${message.content}`; // (${new Date(message.timestamp).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })})`;
-    messageElement.className = message.user === currentUser ? 'sent' : 'received';
+
+    // Add timestamp only when the sender changes.
+    if (lastSender !== message.username) {
+        const timestamp = new Date();
+        const timeLocal = timestamp.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+        const timeElement = document.createElement('li');
+        timeElement.textContent = `${message.username} ${timeLocal}`;
+        console.log("timeElement", timeLocal);
+        timeElement.className = message.username === currentUser ? 'time-received' : 'time-sent';
+        messageList.appendChild(timeElement);
+    }
+
+    messageElement.textContent = `${message.content}`;
+    messageElement.className = message.username === currentUser ? 'sent' : 'received';
     messageList.appendChild(messageElement);
     const br = document.createElement('br');
     const br2 = document.createElement('br');
     messageList.appendChild(br);
     messageList.appendChild(br2);
     console.log("messageElement", messageElement);
-  }
+
+    // Update the lastSender with the current message's username.
+    lastSender = message.username;
+  };
 
   const handleSendMessage = () => {
     if (messageInput.trim() !== '' && selectedUser) {
@@ -268,10 +300,6 @@ const Chat = () => {
 
   return (
     <div className="MoodLift">
-      <header>
-        <h1>Inbox</h1>
-        <a href="/logout">Logout</a>
-      </header>
       <div className="container">
         <aside className="sidebar">
           <div className="search-container">
@@ -295,6 +323,7 @@ const Chat = () => {
           <div id="chat">
             <ul id="message-list">
             </ul>
+            <div ref={divRef}></div>
           </div>
           <div className="message-box">
             <input

@@ -41,7 +41,7 @@ const AdminDash = () => {
           <h1 className="card-title text-xl font-bold text-gray-900 justify-center">Manage Users</h1>
           <div className="card-body space-y-4">
             <div className="card-actions">
-              <Link href="/signup" className="btn btn-secondary w-full">Go</Link>
+              <Link href="/manage-users" className="btn btn-secondary w-full">Go</Link>
             </div>
           </div>
         </div>
