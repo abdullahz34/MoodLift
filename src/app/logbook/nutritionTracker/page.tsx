@@ -53,6 +53,7 @@ const NutritionTracker = () => {
 
     const responseData = await response.json();
     console.log(responseData);
+    await fetchData();
   }
 
   function getFormattedCurrentDate() {
@@ -63,22 +64,22 @@ const NutritionTracker = () => {
     return `${year}-${month}-${day}`;
   }
 
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const dataPromise = getData(date);
+      const timeoutPromise = new Promise(resolve => setTimeout(resolve, 500)); // 500ms minimum loading time
+      await Promise.all([dataPromise, timeoutPromise]);
+      const data = await dataPromise;
+      setNutritionData(data);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+  
   useEffect(() => {
     console.log('Current date:', date);
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const dataPromise = getData(date);
-        const timeoutPromise = new Promise(resolve => setTimeout(resolve, 500)); // 500ms minimum loading time
-        await Promise.all([dataPromise, timeoutPromise]);
-        const data = await dataPromise;
-        setNutritionData(data);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
     if (date) {
       fetchData();
     }
