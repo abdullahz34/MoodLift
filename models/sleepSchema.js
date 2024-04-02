@@ -3,11 +3,11 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const sleepSchema = new Schema({
-  duration: {
+  hoursSlept: {
     type: Number,
     required: true
   },
-  quality: {
+  sleepQuality: {
     type: String,
     enum: ['good', 'fair', 'poor']
   }

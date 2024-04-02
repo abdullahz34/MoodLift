@@ -26,10 +26,18 @@ const SleepTracker = () => {
   const [loading, setLoading] = useState(true);
 
   const fetchData = async () => {
-    setLoading(true);
-    const data = await getData(date);
-    setSleepData(data);
-    setLoading(false);
+    try {
+      setLoading(true);
+      const dataPromise = getData(date);
+      const timeoutPromise = new Promise(resolve => setTimeout(resolve, 500)); // 500ms minimum loading time
+      await Promise.all([dataPromise, timeoutPromise]);
+      const data = await dataPromise;
+      setSleepData(data);
+      setLoading(false);
+      console.log("Data for sleepData",sleepData)
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   };
 
   useEffect(() => {
@@ -41,6 +49,8 @@ const SleepTracker = () => {
     setSubmitted(true);
     setTimeout(() => setSubmitted(false), 3000); // Hide the message after 3 seconds
 
+    const sleep = { hoursSlept, sleepQuality};
+
     const response = await fetch('http://localhost:3000/api/logging', {
       method: 'POST',
       headers: {
@@ -49,10 +59,7 @@ const SleepTracker = () => {
       body: JSON.stringify({
         username,
         date,
-        sleep: {
-          duration: hoursSlept, // replace this with your actual sleep duration
-          quality: sleepQuality,
-        },
+        sleep,
       }),
     });
     if (!response.ok) {
