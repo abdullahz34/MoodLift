@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import connectMongoDB from "../../libs/mongodb"
-import Feedback from "../../models/feedbackSchema";
+import connectMongoDB from "../../../../mongodb";
+import Feedback from "../../../../models/feedbackSchema";
 import mongoose from "mongoose";
 
 export async function POST(req) {
