@@ -9,8 +9,10 @@ export default function CreateForm() {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+
         console.log("message :", message)
-        const res = await fetch('api\feedback',{
+
+        const res = await fetch("api/feedback",{
           method: "POST",
           headers: {
             "Content-type":"application/json"

@@ -7,7 +7,7 @@ export async function POST(req) {
     const { message } = await req.json()
     try{
         await connectMongoDB();
-        await Feedback.create()
+        await Feedback.create({ message })
         return NextResponse.json({
             msg: ["feedback message sent successfully"],
             success: true,
