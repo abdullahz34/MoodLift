@@ -1,5 +1,5 @@
 import mongoose, {Schema} from "mongoose";
-import connectMongoDB from "@/libs/mongodb";
+import connectMongoDB from "../libs/mongodb";
 
 await connectMongoDB()
 mongoose.Promise = global.Promise;
