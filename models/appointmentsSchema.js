@@ -7,7 +7,6 @@ const appointmentSchema = new mongoose.Schema({
   schedule: { type: Date, default: Date.now },
 });
 
-//export default mongoose.models.Appointments || mongoose.model('Appointments', appointmentSchema);
 const Appointments =  mongoose.models.Appointments || mongoose.model("Appointments", appointmentSchema)
 
 export default Appointments;

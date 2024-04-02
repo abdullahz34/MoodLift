@@ -5,11 +5,11 @@ import bcrypt from "bcryptjs"
 
 export async function POST(req) {
   try {
-    const {username, password, type} = await req.json();
+    const {username, name, password, type} = await req.json();
     const hashedPassword = await bcrypt.hash(password, 10);
 
     await connect();
-    await User.create({username, password: hashedPassword, type})
+    await User.create({username, name: name, password: hashedPassword, type})
 
     return NextResponse.json(
       { message: "user signed up" },

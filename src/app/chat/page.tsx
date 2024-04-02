@@ -4,6 +4,7 @@ import * as io from 'socket.io-client';
 import './styles.css'; // Assuming you're using CSS modules
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { set } from 'mongoose';
 
 const socket = io.connect('https://socketio-server-moodlift-6d8efa596f7a.herokuapp.com/');
 
@@ -12,11 +13,14 @@ const Chat = () => {
   const router = useRouter();
 
   const [currentUser, setCurrentUser] = useState(null);
+  const [currentUserRole, setCurrentUserRole] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
   const [users, setUsers] = useState([]);
   const [ambassadors, setAmbassadors] = useState([]);
   const [message, setMessage] = useState([]);
+  const [appointments, setAppointments] = useState([]);
   const [messageInput, setMessageInput] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     // Fetch current user
@@ -43,11 +47,29 @@ const Chat = () => {
       try {
         const usersResponse = await fetch('/users');
         const usersData = await usersResponse.json();
-        setUsers(usersData.filter(user => user.username !== currentUser));
-
+        //setUsers(usersData.filter(user => user.username !== currentUser));
+        const listAllUsersFound = [];
+        for (let i = 0; i < usersData.length; i++) {
+          listAllUsersFound.push(usersData[i]);
+        }
         const ambassadorsResponse = await fetch('/ambassadors');
         const ambassadorsData = await ambassadorsResponse.json();
-        setAmbassadors(ambassadorsData); // You might want to filter these as well
+        let listReturn = [];
+        for (let i = 0; i < ambassadorsData.length; i++) {
+          if (true) {
+            console.log('User role:', currentUserRole);
+            const apptStatus = await getAppointments(currentUser, ambassadorsData[i].username);
+            console.log('Appointment status:', apptStatus);
+            if (apptStatus) {
+              listReturn.push(ambassadorsData[i]);
+            }
+          }
+        };
+        for (let i = 0; i < listReturn.length; i++) {
+          listAllUsersFound.push(listReturn[i]);
+        }
+        setUsers(listAllUsersFound.filter(user => user.username !== currentUser).sort((a, b) => a.name.localeCompare(b.name)));
+        //setUsers(results.filter(user => user.username !== currentUser).sort((a, b) => a.name.localeCompare(b.name)));
       } catch (error) {
         console.error('Error fetching users or ambassadors:', error);
       }
@@ -55,6 +77,48 @@ const Chat = () => {
 
     fetchUsersAndAmbassadors();
   }, [currentUser]);
+
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value.trim());
+  };
+
+  useEffect(() => {
+    if (searchQuery !== '') {
+      const fetchSearchResults = async () => {
+        try {
+          const response = await fetch(`/search?query=${searchQuery}`);
+          const results: User[] = await response.json();
+          //setUsers(results.filter(user => user.username !== currentUser));
+          const ambassadorsResponse = await fetch(`/ambassadors`);
+          const ambassadorsData = await ambassadorsResponse.json();
+          let listReturn = [];
+          for (let i = 0; i < ambassadorsData.length; i++) {
+            // filter
+            if (ambassadorsData[i].username.toLowerCase().includes(searchQuery) || ambassadorsData[i].name.toLowerCase().includes(searchQuery)) {
+              if (true) {
+                const apptStatus = await getAppointments(currentUser, ambassadorsData[i].username);
+                console.log('Appointment status:', apptStatus);
+                if (apptStatus) {
+                  listReturn.push(ambassadorsData[i]);
+                }
+              }
+            };
+          };
+          for (let i = 0; i < listReturn.length; i++) {
+            results.push(listReturn[i]);
+          }
+          setUsers(results.filter(user => user.username !== currentUser).sort((a, b) => a.name.localeCompare(b.name)));
+        } catch (error) {
+          console.error('Error searching users:', error);
+        }
+      };
+
+      fetchSearchResults();
+      // Optionally search for ambassadors
+      // Add your fetch call here following the same pattern as above
+    }
+  }, [searchQuery, currentUser]);
 
   const handleUserSelect = (username: string) => {
     setSelectedUser(username);
@@ -69,12 +133,65 @@ const Chat = () => {
       const response = await fetch(`/api/messages/${currentUser}/${username}`);
       //console.log(await response.json());
       const chatHistory: Message[] = await response.json();
-      console.log(chatHistory);
       setMessages(chatHistory);
     } catch (error) {
       console.error('Error fetching chat history:', error);
     }
   };
+
+  /* const searchAmbassador = async (query: string) => {
+    try {
+      const response = await fetch(`/ambassadors`);
+      const ambassador: Ambassador = await response.json();
+      const listReturn = [];
+      for (let i = 0; i < ambassador.length; i++) {
+        const apptStatus = await getAppointments(currentUser, ambassador[i].username);
+        console.log('Appointment status:', apptStatus);
+        if (apptStatus) {
+          listReturn.push(ambassador[i]);
+        }
+      }
+      return listReturn;
+    } catch (error) {
+      console.error('Error fetching ambassador:', error);
+    }
+  }; */
+
+  /* const handleSearch = () => {
+    const searchInput = document.getElementById('search-input') as HTMLInputElement;
+    const searchValue = searchInput.value.toLowerCase();
+    if (searchValue === '') {
+      setUsers(users);
+      return;
+    } else {
+      const user = searchUser(searchValue);
+      const ambassador = searchAmbassador(searchValue);
+      const listReturn = [];
+      listReturn.push(user);
+      listReturn.push(ambassador);
+      setUsers(listReturn);
+    }
+  }; */
+
+  const getAppointments = async (user: string, ambassador: string) => {
+    const aptsResponse = await fetch(`/api/ambassadors/${ambassador}/${user}/appointments`);
+    const appointments: Appointments[] = await aptsResponse.json();
+    let appointmentFound = false;
+    appointments.forEach(appointment => {
+      const currentTime = new Date();
+      const thirtyMinutesBefore = new Date(appointment.schedule);
+      thirtyMinutesBefore.setMinutes(thirtyMinutesBefore.getMinutes() - 30);
+      const fourHoursAfter = new Date(appointment.schedule);
+      fourHoursAfter.setHours(fourHoursAfter.getHours() + 4);
+      if (currentTime >= thirtyMinutesBefore && currentTime <= fourHoursAfter) {
+        console.log('Appointment:', appointment);
+        appointmentFound = true;
+      }
+      if (appointmentFound) return appointmentFound;
+    });
+    return appointmentFound;
+  };
+
 
   const setMessages = (chatHistory: Message[]) => {
     const messageList = document.getElementById('message-list');
@@ -141,12 +258,12 @@ const Chat = () => {
       <div className="container">
         <aside className="sidebar">
           <div className="search-container">
-            <input type="text" id="search-input" placeholder="Search..." />
+            <input type="text" id="search-input" placeholder="Search..." onChange={handleSearchChange} />
           </div>
           <ul id="user-list">
             {users.map(user => (
               <li key={user.username} onClick={() => handleUserSelect(user.username)}>
-                {user.name} ({user.username})
+                {user.name} ({user.username}) <br/> {user.type}
               </li>
             ))}
           </ul>

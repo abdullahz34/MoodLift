@@ -131,11 +131,11 @@ header {
         box-sizing: border-box; /* Ensures padding and border are included in the total width and height */
     }
     
-    .receive {
+    .received {
         /* Create a small box in blue on the right covered the text, make curve on the edge */
         background-color: #79c6fe;
         float: left;
-        border-radius: 10px 0 10px 10px;
+        border-radius: 0 10px 10px 10px;
         &:after {
             content: ""; /* Ensure the pseudo-element is displayed */
             display: block; /* This makes the pseudo-element a block-level element, effectively "clearing" the float */
