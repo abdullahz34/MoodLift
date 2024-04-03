@@ -53,7 +53,7 @@ const SleepTracker = () => {
     setSubmitted(true);
     setTimeout(() => setSubmitted(false), 3000); // Hide the message after 3 seconds
 
-    const sleep = { hoursSlept, sleepQuality};
+    const sleep = { hoursSlept, sleepQuality };
 
     const response = await fetch('http://localhost:3000/api/logging', {
       method: 'POST',
