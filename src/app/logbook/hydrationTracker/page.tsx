@@ -1,9 +1,6 @@
 'use client'
 import React, { useState, useEffect } from 'react';
-import { useSession, signOut } from "next-auth/react";
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
-import { authOptions } from "../../api/auth/[...nextauth]/route";
+import { useSession } from "next-auth/react";
 
 
 async function getData(date, username) {
