@@ -1,8 +1,16 @@
 import mongoose from "mongoose"
 
-const feedbackSchema = new Schema(
+const feedbackSchema = mongoose.Schema(
     {
-        msg: String 
+        message: {
+            type: String,
+            required: [true]
+        },
+
+        creationDate: {
+            type: Date,
+            default: Date.now
+        }
     }
 )
 
