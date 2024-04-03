@@ -49,11 +49,7 @@ export default function CreateForm() {
               />
               
           </label>
-        <button
-          className="btn-primary, text-[white]" type="submit"
-        >
-          Enter
-        </button>
+          <button className="btn btn-secondary">Enter</button>        
         </form>
       )
 }

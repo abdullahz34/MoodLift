@@ -27,3 +27,14 @@ export async function POST(req) {
 
     }
 }
+
+export async function GET(req) {
+    try {
+        await connectMongoDB();
+        const allFeedback = await Feedback.find()
+        return NextResponse.json(allFeedback, {stauts:200})
+
+    } catch(error) {
+        return NextResponse.json({msg: "Error while fetching feedback"})
+    }
+}
