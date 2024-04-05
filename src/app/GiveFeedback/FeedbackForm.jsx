@@ -12,8 +12,6 @@ export default function CreateForm() {
 
         console.log("message :", message)
 
-        let date = new Date()
-        let creationDate = date.toJSON()
 
         const res = await fetch("api/feedback",{
           method: "POST",
@@ -22,7 +20,6 @@ export default function CreateForm() {
           },
           body: JSON.stringify({
             message,
-            creationDate
           }),
         });
         
