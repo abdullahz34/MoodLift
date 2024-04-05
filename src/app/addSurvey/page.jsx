@@ -39,12 +39,18 @@ export default function AddSurvey() {
 
     if (!title || !description) {
       setShowAlert(true);
+      setTimeout(() => {
+        setShowAlert(false);
+      }, 3000);
       return;
     }
 
     if(frequency === '') {
       
       setShowInfo(true);
+      setTimeout(() => {
+        setShowInfo(false);
+      }, 3000);
     }
     
 
@@ -105,8 +111,11 @@ const addNewChoiceQuestion = () => {
 
 const removeLastQuestion = () => {
   if (questions.length === 0) {
-    //alert('No questions to remove')
+    
     setShowError(true);
+    setTimeout(() => {
+      setShowError(false);
+    }, 3000);
   }
   setQuestions(questions.slice(0, -1));
 };

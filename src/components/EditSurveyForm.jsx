@@ -46,8 +46,8 @@ export default function EditSurveyForm({ id, title, description, frequency }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4 max-w-auto mr-auto">
-      <div className="px-4 py-2 bg-gray-100 rounded-lg">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4 max-w-auto mr-auto pl-4 pr-4 pt-2">
+      <div className="px-4 py-2 bg-neutral-content rounded-lg">
       <input 
         onChange={(e) => setNewTitle(e.target.value)}
         value={newTitle}
@@ -55,8 +55,9 @@ export default function EditSurveyForm({ id, title, description, frequency }) {
         type="text"
         placeholder="Survey Title"
       />
+      <p>Characters remaining: {50 - newTitle.length}</p>
 </div>
-<div className="px-4 py-2 bg-gray-100 rounded-lg">
+<div className="px-4 py-2 bg-neutral-content rounded-lg">
       <textarea maxLength={200} 
         rows={4} 
         cols={50} 
@@ -67,10 +68,10 @@ export default function EditSurveyForm({ id, title, description, frequency }) {
         style={{ maxHeight: "150px", minHeight: "40px"}}
         placeholder="Survey Description"
       />
-      <p>Characters remaining: {200 - description.length}</p>
+      <p>Characters remaining: {200 - newDescription.length}</p>
 </div>
 
-<div className="pl-4 pr-4">
+<div className="">
       <label htmlFor="frequency">Modify Frequency:</label>
       <select
         id="frequency"
@@ -86,15 +87,17 @@ export default function EditSurveyForm({ id, title, description, frequency }) {
         
       </select>
     </div>
-
+<div className="">
     <button 
       type="button"
       
-      className="btn btn-ghost font-bold text-border-slate-500 py-3 px-6 rounded-lg w-fit text-lg"
+      className="btn bg-success font-bold text-tertiary py-3 px-6 rounded-lg w-fit text-lg hover:bg-green-700 transition-colors duration-300"
       onClick={handleSubmit}
       >
       Update Survey
     </button>
+    </div>
     </form>
+    
   );
 }
