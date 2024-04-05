@@ -1,7 +1,7 @@
 'use client' // client side rendering
 import React, { useState, useEffect, useRef } from 'react';
 import * as io from 'socket.io-client';
-import './styles.css'; // Assuming you're using CSS modules
+import './styles.css'; 
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { User } from 'next-auth';

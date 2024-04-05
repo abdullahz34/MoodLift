@@ -2,7 +2,7 @@ import connect from "../../../../../db";
 import User from "../../../../../models/userSchema";
 import { NextResponse } from 'next/server';
 
-// Write a function that fetches all ambassadors from the database for /ambassadors and returns them as JSON
+
 export async function GET(req) {
     try {
         await connect();

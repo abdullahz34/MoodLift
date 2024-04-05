@@ -3,7 +3,7 @@ import Appointments from "../../../../../../../models/appointmentsSchema";
 import { NextResponse } from 'next/server';
 import { useSession } from "next-auth/react";
 
-// Write a function that fetches all ambassadors from the database for /ambassadors and returns them as JSON
+
 export async function GET(req) {
     try {
         await connect();
