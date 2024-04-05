@@ -1,21 +1,21 @@
 'use client'
 import React, { useState, useEffect } from 'react'
+import { useSession } from "next-auth/react";
 
-async function getData(date) {
-  const response = await fetch(`http://localhost:3000/api/logging?date=${date}`, { cache: "no-store" });
+
+async function getData(date, username) {
+  const response = await fetch(`http://localhost:3000/api/logging?date=${date}&username=${username}`, { cache: "no-store" });
   if (!response.ok) {
     throw new Error('Response for the logging API call failed! (sleep)');
   }
   const data = await response.json();
   console.log('Data from getData:', data);
-  // Find the object for the selected date
-  const item = data.find(item => new Date(item.date).toDateString() === new Date(date).toDateString());
+  // Find the object for the selected date and username
+  const item = data.find(item => new Date(item.date).toDateString() === new Date(date).toDateString() && item.username === username);
 
   // Return the sleep object of the found item, or null if no item was found
   return item ? item.sleep : null;
 }
-
-const username = "testuser"
 
 const SleepTracker = () => {
   const [submitted, setSubmitted] = useState(false);
@@ -25,10 +25,13 @@ const SleepTracker = () => {
   const [sleepData, setSleepData] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const { data: session } = useSession();
+  const username = session?.user?.name;
+
   const fetchData = async () => {
     try {
       setLoading(true);
-      const dataPromise = getData(date);
+      const dataPromise = getData(date, username);
       const timeoutPromise = new Promise(resolve => setTimeout(resolve, 500)); // 500ms minimum loading time
       await Promise.all([dataPromise, timeoutPromise]);
       const data = await dataPromise;
@@ -49,7 +52,7 @@ const SleepTracker = () => {
     setSubmitted(true);
     setTimeout(() => setSubmitted(false), 3000); // Hide the message after 3 seconds
 
-    const sleep = { hoursSlept, sleepQuality};
+    const sleep = { hoursSlept, sleepQuality };
 
     const response = await fetch('http://localhost:3000/api/logging', {
       method: 'POST',
