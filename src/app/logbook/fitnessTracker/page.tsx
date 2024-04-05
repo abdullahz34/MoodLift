@@ -17,7 +17,6 @@ async function getData(date, username) {
   return item ? item.fitness : null;
 }
 
-
 const FitnessPage = () => {
   const [fitnessData, setFitnessData] = useState(null);
   const [loading, setLoading] = useState(false);

@@ -17,7 +17,6 @@ async function getData(date, username) {
   return item ? item.sleep : null;
 }
 
-
 const SleepTracker = () => {
   const [submitted, setSubmitted] = useState(false);
   const [date, setDate] = useState(getFormattedCurrentDate());
