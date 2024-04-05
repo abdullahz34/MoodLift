@@ -1,6 +1,5 @@
-import connectMongoDB from "@/libs/mongodb";
-
-import Survey from "@/models/survey";
+import connectMongoDB from "../../../../../libs/mongodb";
+import Survey from "../../../../../models/survey";
 import { NextResponse } from "next/server";
 //import { useRouter } from "next/navigation";
 
