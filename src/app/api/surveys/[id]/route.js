@@ -1,7 +1,8 @@
-import connectMongoDB from "../../../../libs/mongodb";
+
+import connectMongoDB from "../../../../../libs/mongodb";
+import Survey from "../../../../../models/survey";
+
 import { NextResponse } from "next/server";
-import Survey from "../../../../models/survey";
-//import { useRouter } from "next/navigation";
 
 //const router = useRouter();
 
