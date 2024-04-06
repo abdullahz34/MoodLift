@@ -55,7 +55,11 @@ export default async function SurveyList() {
           </div>
           )}
 {session && (session.user.type === 'Employee') && (
-<Link className="btn btn-ghost text-lg text-bg-secondary font-bold" href="/completeSurvey">
+<Link className="btn btn-ghost text-lg text-bg-secondary font-bold" href={{
+      pathname: '/completeSurvey',
+      query: { id: s._id },
+    }}
+  >
             Complete Survey
           </Link>
 )}
