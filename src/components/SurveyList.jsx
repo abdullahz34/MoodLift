@@ -4,6 +4,7 @@ import RemoveBtn from "./RemoveBtn.jsx";
 import { HiPencilAlt, HiDotsHorizontal } from "react-icons/hi";
 import React from 'react';
 import { IoMenu } from "react-icons/io5";
+import { useSession } from "next-auth/react";
 
 
 
@@ -28,6 +29,7 @@ const getSurveys = async () => {
 };
 
 export default async function SurveyList() {
+  const { data: session, status } = useSession()
   const { surveys } = await getSurveys();
   
 
@@ -47,10 +49,16 @@ export default async function SurveyList() {
 </h3>
             <div className="card-actions justify-end">{s.description}</div>
           </div>
-
+          {(session && (session.user.type === 'Admin' || session.user.type === 'Ambassador')) && (
           <div className="  pt-3 absolute right-0 pr-3 ">
             <DropdownMenu id={s._id} />
           </div>
+          )}
+{session && (session.user.type === 'Employee') && (
+<Link className="btn btn-ghost text-lg text-bg-secondary font-bold" href="/completeSurvey">
+            Complete Survey
+          </Link>
+)}
         </div>
       
       ))}
