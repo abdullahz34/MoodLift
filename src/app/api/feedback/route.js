@@ -32,6 +32,7 @@ export async function GET(req) {
     try {
         await connectMongoDB();
         const allFeedback = await Feedback.find()
+        allFeedback.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt))
         return NextResponse.json(allFeedback, {stauts:200})
 
     } catch(error) {
