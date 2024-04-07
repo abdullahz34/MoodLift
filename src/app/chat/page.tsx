@@ -1,14 +1,14 @@
 'use client' // client side rendering
 import React, { useState, useEffect, useRef } from 'react';
 import * as io from 'socket.io-client';
-import './styles.css'; // Assuming you're using CSS modules
+import './styles.css'; 
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { User } from 'next-auth';
 
-const Chat = () => {
-  const socket = io.connect('https://socketio-server-moodlift-6d8efa596f7a.herokuapp.com/');
+const socket = io.connect('https://socketio-server-moodlift-6d8efa596f7a.herokuapp.com/');
 
+const Chat = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
 
@@ -22,8 +22,7 @@ const Chat = () => {
   const [appointments, setAppointments] = useState([]);
   const [messageInput, setMessageInput] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
-  const [lastSender, setLastSender] = useState(null);
-  let lastSender2 = null;
+  let lastSender = null;
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
@@ -96,7 +95,6 @@ const Chat = () => {
     if (searchQuery !== '') {
       const fetchSearchResults = async () => {
         try {
-          setUsers([]);
           const response = await fetch(`/search?query=${searchQuery}`);
           const results: User[] = await response.json();
           //setUsers(results.filter(user => user.username !== currentUser));
@@ -129,66 +127,6 @@ const Chat = () => {
       // Add your fetch call here following the same pattern as above
     }
   }, [searchQuery, currentUser]);
-
-  const handleSendMessage = () => {
-    if (messageInput.trim() !== '' && selectedUser) {
-      console.log('sending message', messageInput);
-      const id1 = Math.random().toString(36).substring(2, 10) + Math.random().toString(36).substring(2, 10);
-      socket.emit('chatMessage', { user: currentUser, recipient: selectedUser, content: messageInput, id: id1 });
-      setMsgSent({ user: currentUser, recipient: selectedUser, content: messageInput});
-      console.log("HEREEEEEE1");
-      setMessageInput('');
-      // Add message to local state if needed
-    }
-  };
-
-  useEffect(() => {
-    // Setup event listener for receiving messages
-    const handleMessageReceive = (message) => {
-      console.log("message", message);
-      if ((message.user === selectedUser && message.recipient === currentUser)) {
-              console.log("sainity check", message.id);
-              const messageList = document.getElementById('message-list');
-              const messageElement = document.createElement('li');
-          
-              // Add timestamp only when the sender changes.
-              console.log("1111currentSender", lastSender, message.user);
-              if (lastSender !== message.user) {
-                  setLastSender(message.user);
-                  console.log("2222currentSender", lastSender, message.user);
-                  const timestamp = new Date();
-                  const timeLocal = timestamp.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-                  const timeElement = document.createElement('li');
-                  timeElement.textContent = `${currentUser} ${timeLocal}`;
-                  console.log("timeElement", timeLocal);
-                  timeElement.className = message.user === currentUser ? 'time-received' : 'time-sent';
-                  messageList.appendChild(timeElement);
-              }
-          
-              messageElement.textContent = `${message.content}`;
-              messageElement.className = message.user === currentUser ? 'sent' : 'received';
-              messageList.appendChild(messageElement);
-              const br = document.createElement('br');
-              const br2 = document.createElement('br');
-              messageList.appendChild(br);
-              messageList.appendChild(br2);
-              console.log("messageElement", messageElement);
-              listMsgId.push(message.id);
-          
-              // Update the lastSender with the current message's username.
-              //setLastSender(message.user);
-              //lastSender2 = message.user;
-              console.log("lastSender", lastSender);
-      }
-    };
-
-    socket.on('message', handleMessageReceive);
-
-    // Cleanup function to remove the event listener
-    return () => {
-      socket.off('message', handleMessageReceive);
-    };
-  }, [selectedUser, currentUser, lastSender]);
 
   const handleUserSelect = (user: User) => {
     setSelectedUser(user.username);
@@ -253,14 +191,14 @@ const Chat = () => {
   });
   
   /* update chat by every 3 seconds */
-  /* useEffect(() => {
+  useEffect(() => {
     const interval = setInterval(() => {
       if (selectedUser) {
         fetchChatHistory(selectedUser);
       }
-    }, 5000);
+    }, 500);
     return () => clearInterval(interval);
-  }, [selectedUser]); */
+  }, [selectedUser]);
 
   const getAppointments = async (user: string, ambassador: string) => {
     const aptsResponse = await fetch(`/api/ambassadors/${ambassador}/${user}/appointments`);
@@ -289,10 +227,7 @@ const Chat = () => {
           const messageElement = document.createElement('li');
 
           // Add timestamp only when the sender changes.
-          console.log("currentSender [fetching]", lastSender2, message.content);
-          if (lastSender2 !== message.username) {
-              //setLastSender(message.username);
-              console.log("lastSender [fetching]", lastSender2, message.content);
+          if (lastSender !== message.username) {
               const timestamp = new Date(message.timestamp);
               const timeLocal = timestamp.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
               const timeElement = document.createElement('li');
@@ -300,6 +235,7 @@ const Chat = () => {
               timeElement.className = message.username === currentUser ? 'time-received' : 'time-sent';
               messageList.appendChild(timeElement);
           }
+
           messageElement.textContent = `${message.content}`;
           messageElement.className = message.username === currentUser ? 'sent' : 'received';
           messageList.appendChild(messageElement);
@@ -307,7 +243,9 @@ const Chat = () => {
           const br2 = document.createElement('br');
           messageList.appendChild(br);
           messageList.appendChild(br2);
-        lastSender2 = message.username;
+
+          // Update the lastSender with the current message's username.
+          lastSender = message.username;
       });
   };
 
@@ -317,19 +255,18 @@ const Chat = () => {
     const messageElement = document.createElement('li');
 
     // Add timestamp only when the sender changes.
-    console.log("currentSender", lastSender);
-    if (lastSender !== message.user) {
+    if (lastSender !== message.username) {
         const timestamp = new Date();
         const timeLocal = timestamp.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
         const timeElement = document.createElement('li');
-        timeElement.textContent = `${currentUser} ${timeLocal}`;
+        timeElement.textContent = `${message.username} ${timeLocal}`;
         console.log("timeElement", timeLocal);
-        timeElement.className = message.user === currentUser ? 'time-received' : 'time-sent';
+        timeElement.className = message.username === currentUser ? 'time-received' : 'time-sent';
         messageList.appendChild(timeElement);
     }
 
     messageElement.textContent = `${message.content}`;
-    messageElement.className = message.user === currentUser ? 'sent' : 'received';
+    messageElement.className = message.username === currentUser ? 'sent' : 'received';
     messageList.appendChild(messageElement);
     const br = document.createElement('br');
     const br2 = document.createElement('br');
@@ -338,10 +275,18 @@ const Chat = () => {
     console.log("messageElement", messageElement);
 
     // Update the lastSender with the current message's username.
-    setLastSender(message.user);
-    console.log("lastSender", lastSender);
+    lastSender = message.username;
   };
 
+  const handleSendMessage = () => {
+    if (messageInput.trim() !== '' && selectedUser) {
+      console.log('sending message', messageInput);
+      socket.emit('chatMessage', { user: currentUser, recipient: selectedUser, content: messageInput });
+      setMsgSent({ user: currentUser, recipient: selectedUser, content: messageInput });
+      setMessageInput('');
+      // Add message to local state if needed
+    }
+  };
 
   if (status==="loading") return null
 
@@ -351,45 +296,6 @@ const Chat = () => {
     e.preventDefault()
     signOut()
   }
-
-
-  // get message from server
-  /*socket.on('message111', (message111) => {
-    console.log("message", message111);
-    socket.off('message111');
-    
-    if (!(listMsgId.includes(message.id))) {
-      if ((message.user === currentUser && message.recipient === selectedUser) || (message.user === selectedUser && message.recipient === currentUser)) {
-          const messageList = document.getElementById('message-list');
-          const messageElement = document.createElement('li');
-      
-          // Add timestamp only when the sender changes.
-          if (lastSender !== message.user) {
-              const timestamp = new Date();
-              const timeLocal = timestamp.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-              const timeElement = document.createElement('li');
-              timeElement.textContent = `${currentUser} ${timeLocal}`;
-              console.log("timeElement", timeLocal);
-              timeElement.className = message.user === currentUser ? 'time-received' : 'time-sent';
-              messageList.appendChild(timeElement);
-          }
-      
-          messageElement.textContent = `${message.content}`;
-          messageElement.className = message.user === currentUser ? 'sent' : 'received';
-          messageList.appendChild(messageElement);
-          const br = document.createElement('br');
-          const br2 = document.createElement('br');
-          messageList.appendChild(br);
-          messageList.appendChild(br2);
-          console.log("messageElement", messageElement);
-          listMsgId.push(message.id);
-
-          lastSender = message.user;
-      }
-    };
-    */
-  //});
-
 
 
   return (
