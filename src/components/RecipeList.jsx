@@ -1,6 +1,6 @@
-
 import Link from "next/link"
 import DeleteButton from "./DeleteButton"
+
 
 const getRecipes = async () => {
   try {
@@ -17,6 +17,7 @@ const getRecipes = async () => {
     console.log("Error loading recipes: ", error);
   }
 };
+
 
 
 
@@ -46,8 +47,12 @@ export default async function RecipeList() {
                         <li key={instruction}>{instruction}</li>
                     ))}
                 </ol>
-                <Link href={`./edit-recipe/${recipe._id}`}><button className="btn">Edit</button></Link>
-                <DeleteButton id={recipe._id} route={"recipes"} className="btn"/>
+
+                  <Link href={`./edit-recipe/${recipe._id}`}>
+                    <button className="btn">Edit</button>
+                  </Link>
+                  <DeleteButton id={recipe._id} route={"recipes"} className="btn"/>
+
             </div>
           </div>
         ))}

@@ -56,13 +56,13 @@ export default function EditVideoForm({id, newTitle, newVideoURL, newDescription
             <form onSubmit={handleSubmit} className="flex flex-col gap-3 w-1/3">
                 <h2>Edit video</h2>
                 <label htmlFor="title">Title</label>
-                <input type="text" id="title" name="title" value={formData.title} onChange={handleChange} className="input input-bordered"/>
+                <input type="text" id="title" name="title" value={formData.title} onChange={handleChange} className="input input-bordered" required/>
 
                 <label htmlFor="videoURL">Youtube URL</label>
-                <input type="text" id="videoURL" name="videoURL" value={formData.videoURL} onChange={handleChange} className="input input-bordered"/>
+                <input type="text" id="videoURL" name="videoURL" value={formData.videoURL} onChange={handleChange} className="input input-bordered" required/>
 
                 <label htmlFor="description">Description</label>
-                <textarea id="description" name="description" value={formData.description} onChange={handleChange} className="textarea textarea-bordered"/>
+                <textarea id="description" name="description" value={formData.description} onChange={handleChange} className="textarea textarea-bordered" required/>
 
                 <button type="submit" className="btn">Edit Video</button>
             </form>
