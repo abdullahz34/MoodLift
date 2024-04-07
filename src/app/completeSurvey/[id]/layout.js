@@ -1,6 +1,5 @@
-// surveys/layout.js
 import React from 'react';
-import SurveyNavbar from "../../components/SurveyNavbar";
+import SurveyNavbar from "../../../components/SurveyNavbar";
 
 const SurveyLayout = ({ children }) => {
   
