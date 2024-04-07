@@ -13,17 +13,20 @@ const getFeedback = async() => {
     }
 }
 
-export default async function AllFeedback(req,res) {
+export default async function AllFeedback() {
     let  feedbackList = []
     const allFeedback = await getFeedback();
     let count = [0];
     allFeedback.forEach(f => {
         if (count > 10) {  }
         else {
-        feedbackList.push(f.message + " [" + f.updatedAt + "]" + "\n")
+        feedbackList.push("DATE: " + f.updatedAt + " MESSAGE: "+ f.message + ", " + "\n")
         }
         count = count + 1
 
     });
-    return (feedbackList);
-}
+    
+    return (
+        feedbackList)
+};
+
