@@ -24,3 +24,22 @@ export async function GET(request, { params }) {
   return NextResponse.json({ survey }, { status: 200 });
   //router.refresh();
 }
+
+//answer a specific survey
+export async function POST(request, { params }) {
+  const { id } = params;
+  const { answers } = await request.json();
+
+  await connectMongoDB();
+  const survey = await Survey.findById(id);
+
+  if (!survey) {
+    return NextResponse.json({ message: "Survey not found" }, { status: 404 });
+  }
+
+  const newResponse = { answers };
+  survey.responses.push(newResponse);
+  await survey.save();
+
+  return NextResponse.json({ message: "Survey response saved" }, { status: 200 });
+}
