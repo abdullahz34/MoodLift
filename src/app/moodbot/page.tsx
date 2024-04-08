@@ -4,12 +4,34 @@ import { useState, useEffect, useRef } from 'react'
 import { useSession } from "next-auth/react"
 const { OpenAIClient, AzureKeyCredential } = require("@azure/openai")
 
-async function main(userMessage) {
+
+async function getLogbookData(username) {
+  const response = await fetch(`http://localhost:3000/api/logging?username=${username}`, { cache: "no-store" });
+  if (!response.ok) {
+    throw new Error(`Response for the logging API call failed for username: ${username}`);
+  }
+  const data = await response.json();
+  console.log('Data from getData:', data);
+
+  // Find all objects for the selected username
+  const items = data.filter(item => item.username === username);
+
+  console.log('Items from getData:', items);
+
+  // Return the entire items array, or an empty array if no items were found
+  return items || [];
+}
+
+
+async function main(userMessage, username) {
   const endpoint = "https://testingpoc.openai.azure.com/"
   const client = new OpenAIClient(
     endpoint,
     new AzureKeyCredential("7d88a30a0aaa46beacc48b8dc23a95ef")
   )
+
+
+  const data = await getLogbookData(username);
 
   const deploymentId = "testing"
 
@@ -21,12 +43,15 @@ async function main(userMessage) {
     { role: "system", content: "Moodlift provides resources where users can view recipes and videos curated by professional mental health ambassadors." },
     { role: "system", content: "Moodlift has a messages channel where users can communicate with their appointed ambassadors. Once an appointment is booked, the ambassador will show up in the inbox 30 minutes prior." },
     { role: "system", content: "Moodlift includes a survey feature where users are prompted to fill out a survey either daily, weekly or monthly. Mental health ambassadors can see this information and directly reach out to users." },
+    { role: 'system', content: `Here is data from trackers: ${JSON.stringify(data, null, 2)}` },
     { role: "user", content: userMessage },
   ]
 
   if (!userMessage.trim()) {
     return ["Please enter a message."]
   }
+
+  console.log(`Messages: ${messages.map((m) => m.content).join("\n")}`);
 
   const events = await client.streamChatCompletions(deploymentId, messages, { maxTokens: 800 })
 
@@ -45,6 +70,7 @@ async function main(userMessage) {
 const Moodbot = () => {
   const { data: session } = useSession()
   const firstname = session?.user?.name
+  const username = session?.user?.username
   const [userInput, setUserInput] = useState('')
   const [messages, setMessages] = useState([
     {
@@ -63,7 +89,7 @@ const Moodbot = () => {
         { sender: 'user', text: userInput, timestamp: new Date().toLocaleString() },
       ])
       setLoading(true)
-      const response = await main(userInput)
+      const response = await main(userInput, username)
       if (response.length === 0) {
         setMessages((prevMessages) => [
           ...prevMessages,
