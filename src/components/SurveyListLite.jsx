@@ -1,13 +1,6 @@
-'use client'
+'use client';
 import Link from "next/link";
-import RemoveBtn from "./RemoveBtn.jsx";
-import { HiPencilAlt, HiDotsHorizontal } from "react-icons/hi";
 import React from 'react';
-import { IoMenu } from "react-icons/io5";
-
-
-
-
 
 const capitalFirst = (string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -30,10 +23,9 @@ const getSurveys = async () => {
 };
 
 export default async function SurveyList() {
-  
 
+    
   const { surveys } = await getSurveys();
-  
 
   return (
     <>
@@ -52,10 +44,6 @@ export default async function SurveyList() {
             <div className="card-actions justify-end">{s.description}</div>
           </div>
           
-          <div className="  pt-3 absolute right-0 pr-3 ">
-            <DropdownMenu id={s._id} />
-          </div>
-          
 
 <Link className="btn btn-ghost text-lg text-bg-secondary font-bold" 
         href={`/completeSurvey/${s._id}`}
@@ -70,31 +58,3 @@ export default async function SurveyList() {
     </>
   );
 }
-
-const DropdownMenu = ({ id }) => {
-  const [isOpen, setIsOpen] = React.useState(false);
-
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
-  };
-
-  React.useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  const dropdownRef = React.useRef(null);
-
-    
-   
-  
-};

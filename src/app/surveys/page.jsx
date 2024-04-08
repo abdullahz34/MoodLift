@@ -13,11 +13,13 @@ export default async function Home() {
 
   
   if (session && (session.user.type === 'Admin' || session.user.type === 'Ambassador')) {
+    
     return <SurveyList />;
   } else if (session && session.user.type === 'Employee') {
+    
     return <SurveyListLite />;
   }
-  else {
+  else if(!session) {
     return( <div className="flex items-center justify-center h-screen">
     <h1 className="text-2xl font-bold text-gray-800">
       You are not authorized to view surveys, please log in
