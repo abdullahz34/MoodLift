@@ -1,5 +1,6 @@
 'use client' // client side rendering
 import { useState } from 'react';
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation"
 
 export default function SignupForm() {
@@ -9,6 +10,7 @@ export default function SignupForm() {
   const [type, setType] = useState('')
   const [error, setError] = useState('')
 
+  const { data: session, status } = useSession();
   const router = useRouter();
 
   const handleSubmit = async (e) => {
@@ -117,6 +119,19 @@ export default function SignupForm() {
                 onChange={(e) => setType(e.target.value)} 
               />
             </label>
+            {session?.user?.type==='Superadmin' &&
+              <label className="label cursor-pointer">
+                <span className="label-text">Admin</span> 
+                <input 
+                  type="radio" 
+                  name="type" 
+                  className="radio checked:bg-success" 
+                  value="Admin"
+                  checked={type==='Admin'}
+                  onChange={(e) => setType(e.target.value)} 
+                />
+              </label>
+            }
           </div>    
 
           {error && (

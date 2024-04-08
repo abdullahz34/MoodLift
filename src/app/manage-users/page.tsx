@@ -6,7 +6,7 @@ import Link from 'next/link'
 export default async function ManageUsers() {
   const session = await getServerSession(authOptions);
 
-  if (session?.user?.type!=="Admin") redirect("/");
+  if (session?.user?.type!=="Admin" && session?.user?.type!=="Superadmin") redirect("/");
 
   return (
     <>
