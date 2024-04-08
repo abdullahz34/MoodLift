@@ -38,14 +38,27 @@ const NutritionTracker = () => {
     if (food) {
       axios.get(`https://api.edamam.com/api/food-database/v2/parser?app_id=7f5534d1&app_key=efc97b8f57bd6654484de2cbb3b140cb&ingr=${food}&nutrition-type=logging`)
         .then(response => {
-          const nutrients = response.data.hints[0].food.nutrients;
-          console.log('Response', response.data);
+          const foodId = response.data.hints[0].food.foodId;
+          const measureURI = response.data.hints[0].measures[0].uri;
+
+          return axios.post(`https://api.edamam.com/api/food-database/v2/nutrients?app_id=7f5534d1&app_key=efc97b8f57bd6654484de2cbb3b140cb`, {
+            ingredients: [
+              {
+                quantity: 1,
+                measureURI: measureURI,
+                foodId: foodId
+              }
+            ]
+          });
+        })
+        .then(response => {
+          const nutrients = response.data.totalNutrients;
           console.log('Nutrients:', nutrients);
           setNutrition(nutrients);
-          setCalories(nutrients.ENERC_KCAL.toFixed(2));
-          setProtein(nutrients.PROCNT.toFixed(2));
-          setFats(nutrients.FAT.toFixed(2));
-          setCarbs(nutrients.CHOCDF.toFixed(2));
+          setCalories(nutrients.ENERC_KCAL?.quantity?.toFixed(2));
+          setProtein(nutrients.PROCNT?.quantity?.toFixed(2));
+          setFats(nutrients.FAT?.quantity?.toFixed(2));
+          setCarbs(nutrients.CHOCDF?.quantity?.toFixed(2));
         })
         .catch(error => console.error(error));
     }
@@ -127,23 +140,23 @@ const NutritionTracker = () => {
               <div className="stats stats-vertical lg:stats-horizontal shadow">
                 <div className="stat">
                   <div className="stat-title">Calories</div>
-                  <div className="stat-value">{nutrition.ENERC_KCAL.toFixed(2)}</div>
+                  <div className="stat-value">{nutrition.ENERC_KCAL?.quantity?.toFixed(2)}</div>
                 </div>
                 <div className="stat">
                   <div className="stat-title">Protein</div>
-                  <div className="stat-value">{nutrition.PROCNT.toFixed(2)}</div>
+                  <div className="stat-value">{nutrition.PROCNT?.quantity?.toFixed(2)}</div>
                 </div>
                 <div className="stat">
                   <div className="stat-title">Fats</div>
-                  <div className="stat-value">{nutrition.FAT.toFixed(2)}</div>
+                  <div className="stat-value">{nutrition.FAT?.quantity?.toFixed(2)}</div>
                 </div>
                 <div className="stat">
                   <div className="stat-title">Carbs</div>
-                  <div className="stat-value">{nutrition.CHOCDF.toFixed(2)}</div>
+                  <div className="stat-value">{nutrition.CHOCDF?.quantity?.toFixed(2)}</div>
                 </div>
                 <div className="stat">
                   <div className="stat-title">Fiber</div>
-                  <div className="stat-value">{nutrition.FIBTG?.toFixed(2)}</div>
+                  <div className="stat-value">{nutrition.FIBTG?.quantity?.toFixed(2)}</div>
                 </div>
               </div>
             )}
