@@ -23,7 +23,7 @@ const articles = async () => {
     return (
     <div className="flex justify-center">
         {articles.map((post) =>(
-            <Link href={"articles/" + post._id}>
+            <Link href={"view-articles/" + post._id}>
                 <div className="card card-compact w-96 bg-base-100 shadow-xl">
                     <div className="card-body">
                         <h2 className="card-title">{post.title}</h2>
