@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
-import connectMongoDB from "../../../../mongodb";
+import connect from "../../../../db";
 import Feedback from "../../../../models/feedbackSchema";
 import mongoose from "mongoose";
 
 export async function POST(req) {
     const { message } = await req.json()
     try{
-        await connectMongoDB();
+        await connect();
         await Feedback.create({ message })
         return NextResponse.json({
             msg: ["feedback message sent successfully"],
@@ -30,7 +30,7 @@ export async function POST(req) {
 
 export async function GET(req) {
     try {
-        await connectMongoDB();
+        await connect();
         const allFeedback = await Feedback.find()
         allFeedback.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt))
         return NextResponse.json(allFeedback, {stauts:200})
