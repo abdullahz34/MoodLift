@@ -1,8 +1,6 @@
 "use client";
-import { useRouter } from "next/navigation";
 
 export default function DeleteUser({ id }) {
-  const router = useRouter();
 
   const handleDeleteUser = async () => {
     const confirmed = confirm("Are you sure you want to delete this user?");
