@@ -47,7 +47,7 @@ export default function AnswerSurveyForm({ id }) {
     e.preventDefault();
 
     try {
-      const res = await fetch(`http://localhost:3000/api/surveys/${id}/complete`, {
+      const res = await fetch(`http://localhost:3000/api/surveys/${id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -57,7 +57,7 @@ export default function AnswerSurveyForm({ id }) {
 
       if (res.ok) {
         
-        router.push('/dashboard');
+        router.push('/surveys');
       } else {
         console.error('Failed to save survey response');
       }
@@ -125,7 +125,9 @@ export default function AnswerSurveyForm({ id }) {
             )}
           </div>
         ))}
-        <button type="submit">Submit</button>
+        <button type="submit"
+        className="btn btn-ghost font-bold text-border-slate-500 py-3 px-6 rounded-lg w-fit text-lg hover:bg-success hover:text-white transition-colors duration-300"
+        >Submit</button>
       </form>
     </div>
   );

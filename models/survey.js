@@ -8,6 +8,7 @@ const questionSchema = new Schema({
     },
     text: String,
     choices: [String], 
+    
   });
 
   const responseSchema = new Schema({
