@@ -1,36 +1,36 @@
 .MoodLift {
     display: flex;
-    flex-direction: column; /* Aligns children vertically */
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     height: 100vh;
     font-family: 'Helvetica Neue', Arial, sans-serif;
-    /* set the bottom has to leave 20px*/
     padding-bottom: 7%;
   }
   
   .MoodLift header {
-    width: 100%; /* Adjusts width considering padding */
-    max-width: 100%; /* Ensures the header width aligns with the container below */
+    width: 100%;
+    max-width: 100%;
     padding: 18px;
     background-color: #f9f9f9;
     text-align: left;
     font-size: 20px;
     font-weight: bold;
     border-bottom: 1px solid #ddd;
-    border-radius: 8px 8px 0 0; /* Rounds the top corners */
+    border-radius: 8px 8px 0 0;
   }
   
   .container {
     display: flex;
+    height: 85%;
     width: 100%;
-    max-width: 900px; /* Adjust according to your layout's needs */
+    max-width: 900px;
     background-color: #ffffff;
     border: 1px solid #ddd;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    overflow: hidden; /* Keeps child elements from overflowing */
-    margin-top: 20px; /* Creates space between the header and the container */
+    overflow: hidden;
+    margin-top: 20px;
   }
   
   .sidebar {
@@ -46,7 +46,6 @@
     margin-bottom: 20px;
     border: 1px solid #ccc;
     border-radius: 20px;
-    /* set shadow for the input box */
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   }
   
@@ -70,7 +69,7 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    overflow: hidden; /* Ensures that the chat interface does not overflow */
+    overflow: hidden;
   }
   
   .chat-header {
@@ -81,7 +80,7 @@
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    font-size: 12px; /* Changed font size to 14px */
+    font-size: 12px;
 }
   
   .user-info h3 {
@@ -99,57 +98,55 @@
     margin: 0;
     padding: 0;
     .sent {
-        /* Create a small box in blue on the right covered the text, make curve on the edge */
         background-color: #79c6fe;
         float: right;
         border-radius: 10px 0 10px 10px;
         &:after {
-            content: ""; /* Ensure the pseudo-element is displayed */
-            display: block; /* This makes the pseudo-element a block-level element, effectively "clearing" the float */
-            clear: both; /* This clears the float, ensuring elements after .sent start on a new line */
+            content: "";
+            display: block;
+            clear: both;
             border-bottom-color: #79c6fe;
         }
         text-align: center;
         min-width: 50px;
         min-height: 30px;
-        padding: 7px 15px; /* Adds padding: 10px top and bottom, 20px left and right */
-        margin-bottom: 10px; /* Optional: adds space between each box if you need it */
-        width: auto; /* Ensures the width adjusts based on the content, considering the padding */
-        box-sizing: border-box; /* Ensures padding and border are included in the total width and height */
+        padding: 7px 15px;
+        margin-bottom: 10px;
+        width: auto;
+        box-sizing: border-box;
     }
     
     .received {
-        /* Create a small box in blue on the right covered the text, make curve on the edge */
         background-color: #79c6fe;
         float: left;
         border-radius: 0 10px 10px 10px;
         &:after {
-            content: ""; /* Ensure the pseudo-element is displayed */
-            display: block; /* This makes the pseudo-element a block-level element, effectively "clearing" the float */
-            clear: both; /* This clears the float, ensuring elements after .sent start on a new line */
+            content: "";
+            display: block;
+            clear: both;
             border-bottom-color: #79c6fe;
         }
         text-align: center;
         min-width: 50px;
         min-height: 30px;
-        padding: 7px 15px; /* Adds padding: 10px top and bottom, 20px left and right */
-        margin-bottom: 10px; /* Optional: adds space between each box if you need it */
-        width: auto; /* Ensures the width adjusts based on the content, considering the padding */
-        box-sizing: border-box; /* Ensures padding and border are included in the total width and height */
+        padding: 7px 15px;
+        margin-bottom: 10px;
+        width: auto;
+        box-sizing: border-box;
     }
 
     .time-sent {
         font-size: 10px;
-        clear: both; /* Ensures the element does not overlap with floated elements */
-        display: block; /* Ensures the element takes up the full width available */
-        text-align: left; /* Aligns the sent time to the right */
+        clear: both;
+        display: block;
+        text-align: left;
     }
       
     .time-received {
         font-size: 10px;
-        clear: both; /* Ensures the element does not overlap with floated elements */
-        display: block; /* Ensures the element takes up the full width available */
-        text-align: right; /* Aligns the sent time to the right */
+        clear: both;
+        display: block;
+        text-align: right;
     }
 
   }

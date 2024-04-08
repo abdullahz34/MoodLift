@@ -1,0 +1,25 @@
+.grid-container {
+    display: grid;
+    grid-template-columns: 70% 30%; /* 70% for logbook, 30% for appointments and surveys */
+    grid-template-rows: auto;
+    gap: 20px; /* Adjust the gap between grid items if needed */
+    padding: 20px; /* Optional: Adds some space around the grid */
+  }
+  
+  .logbook-section {
+    grid-column: 1;
+  }
+  
+  .appointments-section, .surveys-section {
+    grid-column: 2;
+  }
+  
+  /* Additional styling for appointments and surveys sections to stack them vertically */
+  .appointments-section {
+    grid-row: 1;
+  }
+  
+  .surveys-section {
+    grid-row: 2;
+  }
+  
