@@ -35,7 +35,7 @@ async function getData(endpoint) {
 }
 
 
-async function main(userMessage, username) {
+async function main(userMessage, username, firstname) {
   const endpoint = "https://testingpoc.openai.azure.com/"
   const client = new OpenAIClient(
     endpoint,
@@ -57,10 +57,11 @@ async function main(userMessage, username) {
     { role: "system", content: "Moodlift provides resources where users can view recipes and videos curated by professional mental health ambassadors." },
     { role: "system", content: "Moodlift has a messages channel where users can communicate with their appointed ambassadors. Once an appointment is booked, the ambassador will show up in the inbox 30 minutes prior." },
     { role: "system", content: "Moodlift includes a survey feature where users are prompted to fill out a survey either daily, weekly or monthly. Mental health ambassadors can see this information and directly reach out to users." },
-    { role: 'system', content: `Here is your logbook data: ${JSON.stringify(logbookData, null, 2)}` },
-    { role: 'system', content: `Here is your video data: ${JSON.stringify(videoData, null, 2)}` },
-    { role: 'system', content: `Here is your recipe data: ${JSON.stringify(recipeData, null, 2)}` },
+    { role: 'system', content: `Here is your logbook data, obtained from logbook trackers: ${JSON.stringify(logbookData, null, 2)}` },
+    { role: 'system', content: `Here is your video data, obtained from resources: ${JSON.stringify(videoData, null, 2)}` },
+    { role: 'system', content: `Here is your recipe data, obtained from resources : ${JSON.stringify(recipeData, null, 2)}` },
     { role: "user", content: userMessage },
+    { role: "system", content: `The current user is ${username}.` },
   ]
 
   if (!userMessage.trim()) {
@@ -105,7 +106,7 @@ const Moodbot = () => {
         { sender: 'user', text: userInput, timestamp: new Date().toLocaleString() },
       ])
       setLoading(true)
-      const response = await main(userInput, username)
+      const response = await main(userInput, username, firstname)
       if (response.length === 0) {
         setMessages((prevMessages) => [
           ...prevMessages,
