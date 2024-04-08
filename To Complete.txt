@@ -1,29 +1,31 @@
 calendar:
 
-    "update" button from daisy ui, button should post appointment information to mongoDB
-
-    trasfer old code  => mongoDB will be done
-
-    add appointment form option (add to schema)
+    when loading times grey out any booked time by fetching that day, then change the button to 2 buttons update/ delete
 
     if appointment is grey "update" button should be cancel for ambassador (delete route)
 
-    remove sat sun and public holidays
+    remove sat sun from calendar
 
     add background to time and button
 
 page:
 
-    make component for confirmed appointments
+    create a bookings component for usage by both employee and ambassador
 
     employee perspective and request ambassador
 
 styling:
 
-    daisyUI cupcake theme
-    scroll bar
+    scroll bar on bookings component
 
-authorisation (code from whatsapp)
+
+After merging:
+
+authorisation (code from dashboard)
+
+
+
+
 
 
 
