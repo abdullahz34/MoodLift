@@ -22,6 +22,18 @@ async function getLogbookData(username) {
   return items || [];
 }
 
+async function getData(endpoint) {
+  const response = await fetch(`http://localhost:3000/api/${endpoint}`, { cache: "no-store" });
+  if (!response.ok) {
+    throw new Error(`Response for the ${endpoint} API call failed.`);
+  }
+  const data = await response.json();
+  console.log(`Data from ${endpoint}:`, data);
+
+  // Return the entire data object, or an empty object if no data was found
+  return data || {};
+}
+
 
 async function main(userMessage, username) {
   const endpoint = "https://testingpoc.openai.azure.com/"
@@ -31,9 +43,11 @@ async function main(userMessage, username) {
   )
 
 
-  const data = await getLogbookData(username);
-
   const deploymentId = "testing"
+
+  const logbookData = await getLogbookData(username);
+  const videoData = await getData('videos');
+  const recipeData = await getData('recipes');
 
   const messages = [
     { role: "system", content: "You are Moodbot for the application Moodlift, a personal wellbeing assistant, helping users with their well being enquiries." },
@@ -43,7 +57,9 @@ async function main(userMessage, username) {
     { role: "system", content: "Moodlift provides resources where users can view recipes and videos curated by professional mental health ambassadors." },
     { role: "system", content: "Moodlift has a messages channel where users can communicate with their appointed ambassadors. Once an appointment is booked, the ambassador will show up in the inbox 30 minutes prior." },
     { role: "system", content: "Moodlift includes a survey feature where users are prompted to fill out a survey either daily, weekly or monthly. Mental health ambassadors can see this information and directly reach out to users." },
-    { role: 'system', content: `Here is data from trackers: ${JSON.stringify(data, null, 2)}` },
+    { role: 'system', content: `Here is your logbook data: ${JSON.stringify(logbookData, null, 2)}` },
+    { role: 'system', content: `Here is your video data: ${JSON.stringify(videoData, null, 2)}` },
+    { role: 'system', content: `Here is your recipe data: ${JSON.stringify(recipeData, null, 2)}` },
     { role: "user", content: userMessage },
   ]
 
