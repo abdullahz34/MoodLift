@@ -1,6 +1,7 @@
-
 import Link from "next/link"
 import DeleteButton from "./DeleteButton"
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 const getVideos = async () => {
   try {
@@ -35,6 +36,10 @@ export default async function VideoList() {
     console.log(getId(video.videoURL))
   ))
 
+  const {data:session} = getServerSession(authOptions);
+  const userType = session?.user?.type;
+
+
   return (
     <div className="flex flex-col w-1/3">
         <>
@@ -48,8 +53,8 @@ export default async function VideoList() {
                 <h2 className="font-bold">Description</h2>
                 <p>{video.description}</p>
 
-                <Link href={`./edit-video/${video._id}`}><button className="btn">Edit</button></Link>
-                <DeleteButton id={video._id} route={"videos"} className="btn"/>
+                <Link href={`./edit-recipe/${video._id}`}><button className="btn">Edit</button></Link>
+                <DeleteButton id={video._id} route={"recipes"} className="btn"/>
             </div>
             </div>
         ))}
