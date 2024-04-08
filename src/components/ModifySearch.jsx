@@ -9,7 +9,7 @@ export default function ModifySearch() {
 
   useEffect(() => {
     const getUsers = async () => {
-      const response = await fetch('http://localhost:3000/api/searchUser');
+      const response = await fetch('/api/searchUser');
       const users = await response.json();
       setUsers(users);
     }

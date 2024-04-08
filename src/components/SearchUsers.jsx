@@ -32,7 +32,6 @@ export default function SearchUsers({ getSearchResults }) {
               onChange={(e) => setQuery(e.target.value)}
             />
           </label>
-
           {error && (
             <div className="text-sm font-medium text-error">{error}</div>
           )}
