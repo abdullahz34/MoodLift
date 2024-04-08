@@ -6,6 +6,13 @@ export default function AnswerSurveyForm({ id }) {
   const [survey, setSurvey] = useState(null);
   const [answers, setAnswers] = useState([]);
 
+
+  const maxCharacters = 400;
+
+  const isCharacterLimitReached = (text) => {
+    return text.length > maxCharacters; 
+  }; 
+
   useEffect(() => {
     const fetchSurvey = async () => {
       try {
@@ -82,16 +89,32 @@ export default function AnswerSurveyForm({ id }) {
           <div key={index} className="px-4 py-2 bg-neutral-content rounded-lg">
             <h3>{question.text}</h3>
             {question.type === 'text' ? (
-              <input
+              <div>
+              <textarea
+                rows={6}
                 type="text"
                 value={answers[index] || ''}
-                onChange={(e) => handleAnswerChange(index, e.target.value)}
+                onChange={(e) => {
+                  const newValue = e.target.value;
+                  const isDeleting = newValue.length < (answers[index] || '').length;
+                  if (isDeleting || newValue.length <= maxCharacters) {
+                    handleAnswerChange(index, newValue);
+                  }
+                }}
+                className='w-full min-h-20 max-h-40 px-1' 
+            
+                disabled = {isCharacterLimitReached(answers[index] || '')}
               />
+              <p>Characters remaining: {maxCharacters - (answers[index] || '').length}</p>
+              </div>
             ) : (
               <select
                 value={answers[index] || ''}
                 onChange={(e) => handleAnswerChange(index, e.target.value)}
+                className='w-full px-2'
+                
               >
+                
                 <option value="">Select an option</option>
                 {question.choices.map((choice, choiceIndex) => (
                   <option key={choiceIndex} value={choice}>
