@@ -49,7 +49,7 @@ const Moodbot = () => {
   const [messages, setMessages] = useState([
     {
       sender: 'moodbot',
-      text: `Hi ${firstname || 'there'}, I'm moodbot, your personal wellbeing assistant. Here at FDM we value wellbeing, I'll be trying my best to answer all your wellbeing enquiries!`,
+      text: `Hi ${firstname || 'there'}, I'm Moodbot, your personal wellbeing assistant. Here at FDM we value wellbeing, I'll be trying my best to answer all your wellbeing enquiries!`,
       timestamp: new Date().toLocaleString(),
     },
   ])
@@ -80,14 +80,21 @@ const Moodbot = () => {
     }
   }
 
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      handleSubmit()
+      event.preventDefault() // Prevent the default Enter key behavior
+    }
+  }
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="grid grid-rows-[1fr_auto] h-[calc(100vh-68px)]">
       {/* Chat Container */}
-      <div className="flex-1 overflow-y-auto p-4">
+      <div className="h-full overflow-y-auto p-4">
         {messages.map((message, index) => (
           <div
             key={index}
@@ -129,6 +136,7 @@ const Moodbot = () => {
           placeholder="Type your message..."
           value={userInput}
           onChange={(e) => setUserInput(e.target.value)}
+          onKeyDown={handleKeyDown}
         />
         <button className="btn btn-primary" onClick={handleSubmit}>
           Send
