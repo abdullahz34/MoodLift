@@ -15,11 +15,8 @@ const AmbassadorDash = () => {
   return (
     <div className="flex justify-center items-center h-screen">
       <div className="card w-96 bg-base-100 shadow-xl">
-        <h1 className="card-title text-xl font-bold text-gray-900 justify-center">Ambassador details</h1>
+        <h1 className="card-title text-xl font-bold text-gray-900 justify-center">Your details</h1>
         <div className="card-body space-y-4">
-          <div>
-            in the ambassador dash
-          </div>
           <div>
             Username: <span className="font-bold">{session?.user?.username}</span>
           </div>

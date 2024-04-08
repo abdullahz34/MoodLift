@@ -6,7 +6,7 @@ import { authOptions } from '../../api/auth/[...nextauth]/route';
 export default async function Signup() {
   const session = await getServerSession(authOptions);
 
-  if (session?.user?.type!=="Admin") redirect("/dashboard");
+  if (session?.user?.type!=="Admin" && session?.user?.type!=="Superadmin") redirect("/dashboard");
 
   return (
     <main>

@@ -57,7 +57,8 @@ const Navbar = () => {
               </div>
             </div>
             <ul tabIndex={0} className={`mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52 ${isDropdownOpen ? 'block' : 'hidden'}`}>
-              <li><Link href="/" onClick={() => setIsDropdownOpen(false)}>Dashboard</Link></li>
+              <li><Link href="/" onClick={() => setIsDropdownOpen(false)}>Dashboard
+                <span className="badge">{session?.user?.type}</span></Link></li>
               <li><Link href="/GiveFeedback" onClick={() => setIsDropdownOpen(false)}>Submit Feedback</Link></li>
               <li><a onClick={handleSignout}>Logout</a></li>
             </ul>

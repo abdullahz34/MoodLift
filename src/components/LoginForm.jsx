@@ -27,10 +27,6 @@ export default function LoginForm() {
     }
   };
 
-  // if (status==="loading") return null
-
-  // if(status!=="loading" && session) return router.replace("dashboard")
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 

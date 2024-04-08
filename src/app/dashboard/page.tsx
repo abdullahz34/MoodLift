@@ -24,7 +24,7 @@ export default async function Dashboard() {
         <SideBar />
         <div className="divider divider-horizontal mt-20 mb-20"></div>
         <div className="flex flex-col items-center">
-          {session?.user?.type==="Admin" &&
+          {(session?.user?.type==="Admin" || session?.user?.type==="Superadmin")&&
             <AdminDash />
           }
           {session?.user?.type==="Ambassador" &&
