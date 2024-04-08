@@ -48,6 +48,7 @@ async function main(userMessage, username, firstname) {
   const logbookData = await getLogbookData(username);
   const videoData = await getData('videos');
   const recipeData = await getData('recipes');
+  const articleData = await getData('articles');
 
   const messages = [
     { role: "system", content: "You are Moodbot for the application Moodlift, a personal wellbeing assistant, helping users with their well being enquiries." },
@@ -58,8 +59,9 @@ async function main(userMessage, username, firstname) {
     { role: "system", content: "Moodlift has a messages channel where users can communicate with their appointed ambassadors. Once an appointment is booked, the ambassador will show up in the inbox 30 minutes prior." },
     { role: "system", content: "Moodlift includes a survey feature where users are prompted to fill out a survey either daily, weekly or monthly. Mental health ambassadors can see this information and directly reach out to users." },
     { role: 'system', content: `Here is your logbook data, obtained from logbook trackers: ${JSON.stringify(logbookData, null, 2)}` },
-    { role: 'system', content: `Here is your video data, obtained from resources: ${JSON.stringify(videoData, null, 2)}` },
-    { role: 'system', content: `Here is your recipe data, obtained from resources : ${JSON.stringify(recipeData, null, 2)}` },
+    { role: 'system', content: `Here is your videos data, obtained from resources: ${JSON.stringify(videoData, null, 2)}` },
+    { role: 'system', content: `Here is your recipes data, obtained from resources : ${JSON.stringify(recipeData, null, 2)}` },
+    { role: 'system', content: `Here is your articles data, obtained from resources : ${JSON.stringify(articleData, null, 2)}` },
     { role: "user", content: userMessage },
     { role: "system", content: `The current user is ${username}.` },
   ]
