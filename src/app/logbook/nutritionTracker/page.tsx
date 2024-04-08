@@ -30,28 +30,71 @@ const NutritionTracker = () => {
 
   const [food, setFood] = useState('');
   const [nutrition, setNutrition] = useState(null);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const { data: session } = useSession();
   const username = session?.user?.name;
 
   useEffect(() => {
     if (food) {
-      axios.get(`https://api.edamam.com/api/food-database/v2/parser?app_id=${process.env.NEXT_PUBLIC_EDAMAM_APP_ID}&app_key=${process.env.NEXT_PUBLIC_EDAMAM_APP_KEY}&ingr=${food}&nutrition-type=logging`)
-        .then(response => {
-          const foodId = response.data.hints[0].food.foodId;
-          const measureURI = response.data.hints[0].measures[0].uri;
-
-          return axios.post(`https://api.edamam.com/api/food-database/v2/nutrients?app_id=${process.env.NEXT_PUBLIC_EDAMAM_APP_ID}&app_key=${process.env.NEXT_PUBLIC_EDAMAM_APP_KEY}`, {
-            ingredients: [
-              {
-                quantity: 1,
-                measureURI: measureURI,
-                foodId: foodId
-              }
-            ]
-          });
+      axios
+        .get(
+          `https://api.edamam.com/auto-complete?app_id=${process.env.NEXT_PUBLIC_EDAMAM_APP_ID}&app_key=${process.env.NEXT_PUBLIC_EDAMAM_APP_KEY}&q=${food}`
+        )
+        .then((response) => {
+          const suggestions = response.data;
+          if (suggestions.includes(food.toLowerCase())) {
+            // Food item exists in the autocomplete API response
+            return axios.get(
+              `https://api.edamam.com/api/food-database/v2/parser?app_id=${process.env.NEXT_PUBLIC_EDAMAM_APP_ID}&app_key=${process.env.NEXT_PUBLIC_EDAMAM_APP_KEY}&ingr=${food}&nutrition-type=logging`
+            );
+          } else {
+            // Food item does not exist in the autocomplete API response
+            setNutrition(null);
+            setCalories(0);
+            setProtein(0);
+            setFats(0);
+            setCarbs(0);
+            if (food.trim() !== '') {
+              setErrorMessage('No matching food item found. Please try a different entry.');
+              // Clear the error message after 3 seconds
+              setTimeout(() => setErrorMessage(''), 1500);
+            }
+            return Promise.reject();
+          }
         })
-        .then(response => {
+        .then((response) => {
+          if (response.data.hints.length > 0) {
+            const foodId = response.data.hints[0].food.foodId;
+            const measureURI = response.data.hints[0].measures[0].uri;
+
+            return axios.post(
+              `https://api.edamam.com/api/food-database/v2/nutrients?app_id=${process.env.NEXT_PUBLIC_EDAMAM_APP_ID}&app_key=${process.env.NEXT_PUBLIC_EDAMAM_APP_KEY}`,
+              {
+                ingredients: [
+                  {
+                    quantity: 1,
+                    measureURI: measureURI,
+                    foodId: foodId,
+                  },
+                ],
+              }
+            );
+          } else {
+            setNutrition(null);
+            setCalories(0);
+            setProtein(0);
+            setFats(0);
+            setCarbs(0);
+            if (food.trim() !== '') {
+              setErrorMessage('An error occurred while fetching the data.');
+              // Clear the error message after 3 seconds
+              setTimeout(() => setErrorMessage(''), 1500);
+            }
+            return Promise.reject();
+          }
+        })
+        .then((response) => {
           const nutrients = response.data.totalNutrients;
           console.log('Nutrients:', nutrients);
           setNutrition(nutrients);
@@ -60,7 +103,7 @@ const NutritionTracker = () => {
           setFats(nutrients.FAT?.quantity?.toFixed(2));
           setCarbs(nutrients.CHOCDF?.quantity?.toFixed(2));
         })
-        .catch(error => console.error(error));
+        .catch((error) => console.error(error));
     }
   }, [food]);
 
@@ -142,6 +185,9 @@ const NutritionTracker = () => {
                       <span className="label-text">Food</span>
                     </label>
                     <input type="text" value={food} onChange={(e) => setFood(e.target.value)} placeholder="Type here" className="input input-bordered" required />
+                  </div>
+                  <div>
+                    {errorMessage && <p className="text-red-500">{errorMessage}</p>}
                   </div>
                   {nutrition && (
                     <div className="overflow-auto max-h-48">
