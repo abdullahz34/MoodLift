@@ -20,7 +20,7 @@ const AdminDash = () => {
           <h1 className="card-title text-xl font-bold text-gray-900 justify-center">Admin details</h1>
           <div className="card-body space-y-4">
             <div>
-            in the admin dash...
+              in the admin dash...
             </div>
             <div>
               Username: <span className="font-bold">{session?.user?.username}</span>
@@ -29,7 +29,7 @@ const AdminDash = () => {
               Type: <span className="font-bold">{session?.user?.type}</span>
             </div>
             <div className="card-actions">
-              <button 
+              <button
                 onClick={handleSignout}
                 className="btn btn-secondary w-full">Logout</button>
             </div>
@@ -42,6 +42,16 @@ const AdminDash = () => {
           <div className="card-body space-y-4">
             <div className="card-actions">
               <Link href="/manage-users" className="btn btn-secondary w-full">Go</Link>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="flex justify-center items-center">
+        <div className="card w-96 bg-base-100 shadow-xl">
+          <h1 className="card-title text-xl font-bold text-gray-900 justify-center">View Feedback</h1>
+          <div className="card-body space-y-4">
+            <div className="card-actions">
+              <Link href="/ViewFeedback" className="btn btn-secondary w-full">Go</Link>
             </div>
           </div>
         </div>
