@@ -33,7 +33,7 @@ const Navbar = () => {
                 <summary>
                   Logbook
                 </summary>
-                <ul className="p-2 bg-base-100 rounded-t-none">
+                <ul className="p-2 bg-base-100 rounded-t-none" style={{ zIndex: 9999 }}>
                   <li><Link href="/logbook/nutritionTracker" onClick={closeDropdown}>Nutrition</Link></li>
                   <li><Link href="/logbook/fitnessTracker" onClick={closeDropdown}>Fitness</Link></li>
                   <li><Link href="/logbook/sleepTracker" onClick={closeDropdown}>Sleep</Link></li>
@@ -48,7 +48,7 @@ const Navbar = () => {
             <li><Link href="/chat">Messages</Link></li>
             <li><Link href="/moodbot">MoodBot</Link></li>
           </ul>
-          <div className="dropdown dropdown-end" id="login">
+          <div className="dropdown dropdown-end" id="login" style={{ zIndex: 9999 }}>
             <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
               <div className="w-10 rounded-full">
                 <img alt="Tailwind CSS Navbar component" src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
