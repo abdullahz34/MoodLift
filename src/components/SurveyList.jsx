@@ -8,6 +8,7 @@ import { IoMenu } from "react-icons/io5";
 
 
 
+
 const capitalFirst = (string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
 };
