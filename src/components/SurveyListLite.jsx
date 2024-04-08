@@ -59,7 +59,7 @@ export default async function SurveyList() {
 <Link className="btn btn-ghost text-lg text-bg-secondary font-bold" 
         href={`/completeSurvey/${s._id}`}
   >
-            View Survey
+            Complete Survey
           </Link>
 
         </div>
@@ -93,33 +93,7 @@ const DropdownMenu = ({ id }) => {
 
   const dropdownRef = React.useRef(null);
 
-  return (
     
-    <div className="relative" ref={dropdownRef}>
-      
-      <button
-        onClick={toggleDropdown}
-        className="text-gray-500 hover:text-gray-700 focus:outline-none w-38"
-      >
-        <IoMenu size={30} />
-        
-      </button>
-      
-
-      {isOpen && (
-        <div className="absolute right-0 mt-1 py-2 w-42 bg-white rounded-md shadow-lg z-10">
-          <Link
-            href={`/editSurvey/${id}`}
-            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-          >
-            <HiPencilAlt size={18} className="inline-block mr-2" />
-            Edit
-          </Link>   
-          <div className="block pl-3 py-2 text-sm text-gray-700 hover:bg-gray-100">
-            <RemoveBtn id={id} className="inline-block pl-2" />Delete
-          </div>
-        </div>
-      )}
-    </div>
-  );
+   
+  
 };
