@@ -31,6 +31,7 @@ const getSurveys = async () => {
 
 export default async function SurveyList() {
   
+
   const { surveys } = await getSurveys();
   
 
