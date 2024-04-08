@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@azure/openai": "^1.0.0-beta.12",
+    "axios": "^1.6.8",
     "bcryptjs": "^2.4.3",
     "daisyui": "^4.9.0",
     "jsonwebtoken": "^9.0.2",

@@ -1,6 +1,7 @@
 'use client'
 import React, { useState, useEffect } from 'react'
 import { useSession } from "next-auth/react";
+import axios from 'axios';
 
 
 async function getData(date, username) {
@@ -27,8 +28,28 @@ const NutritionTracker = () => {
   const [nutritionData, setNutritionData] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const [food, setFood] = useState('');
+  const [nutrition, setNutrition] = useState(null);
+
   const { data: session } = useSession();
   const username = session?.user?.name;
+
+  useEffect(() => {
+    if (food) {
+      axios.get(`https://api.edamam.com/api/food-database/v2/parser?app_id=7f5534d1&app_key=efc97b8f57bd6654484de2cbb3b140cb&ingr=${food}&nutrition-type=logging`)
+        .then(response => {
+          const nutrients = response.data.hints[0].food.nutrients;
+          console.log('Response', response.data);
+          console.log('Nutrients:', nutrients);
+          setNutrition(nutrients);
+          setCalories(nutrients.ENERC_KCAL.toFixed(2));
+          setProtein(nutrients.PROCNT.toFixed(2));
+          setFats(nutrients.FAT.toFixed(2));
+          setCarbs(nutrients.CHOCDF.toFixed(2));
+        })
+        .catch(error => console.error(error));
+    }
+  }, [food]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -69,7 +90,7 @@ const NutritionTracker = () => {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const dataPromise = getData(date,username);
+      const dataPromise = getData(date, username);
       const timeoutPromise = new Promise(resolve => setTimeout(resolve, 500)); // 500ms minimum loading time
       await Promise.all([dataPromise, timeoutPromise]);
       const data = await dataPromise;
@@ -79,7 +100,7 @@ const NutritionTracker = () => {
       console.error("Error fetching data:", error);
     }
   };
-  
+
   useEffect(() => {
     console.log('Current date:', date);
     if (date) {
@@ -99,21 +120,33 @@ const NutritionTracker = () => {
         <div className="w-1/2 mr-20">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-gray-700">Calories</label>
-              <input type="number" value={calories || ''} onChange={(e) => setCalories(e.target.value)} placeholder="Type here" className="input input-bordered w-full max-w-xs" required />
+              <label className="block text-gray-700">Food</label>
+              <input type="text" value={food} onChange={(e) => setFood(e.target.value)} placeholder="Type here" className="input input-bordered w-full max-w-xs" required />
             </div>
-            <div>
-              <label className="block text-gray-700">Protein</label>
-              <input type="number" value={protein || ''} onChange={(e) => setProtein(e.target.value)} placeholder="Type here" className="input input-bordered w-full max-w-xs" required />
-            </div>
-            <div>
-              <label className="block text-gray-700">Fats</label>
-              <input type="number" value={fats || ''} onChange={(e) => setFats(e.target.value)} placeholder="Type here" className="input input-bordered w-full max-w-xs" required />
-            </div>
-            <div>
-              <label className="block text-gray-700">Carbs</label>
-              <input type="number" value={carbs || ''} onChange={(e) => setCarbs(e.target.value)} placeholder="Type here" className="input input-bordered w-full max-w-xs" required />
-            </div>
+            {nutrition && (
+              <div className="stats stats-vertical lg:stats-horizontal shadow">
+                <div className="stat">
+                  <div className="stat-title">Calories</div>
+                  <div className="stat-value">{nutrition.ENERC_KCAL.toFixed(2)}</div>
+                </div>
+                <div className="stat">
+                  <div className="stat-title">Protein</div>
+                  <div className="stat-value">{nutrition.PROCNT.toFixed(2)}</div>
+                </div>
+                <div className="stat">
+                  <div className="stat-title">Fats</div>
+                  <div className="stat-value">{nutrition.FAT.toFixed(2)}</div>
+                </div>
+                <div className="stat">
+                  <div className="stat-title">Carbs</div>
+                  <div className="stat-value">{nutrition.CHOCDF.toFixed(2)}</div>
+                </div>
+                <div className="stat">
+                  <div className="stat-title">Fiber</div>
+                  <div className="stat-value">{nutrition.FIBTG?.toFixed(2)}</div>
+                </div>
+              </div>
+            )}
             <div>
               <label className="block text-gray-700">Date</label>
               <input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="input input-bordered w-full max-w-xs" />
