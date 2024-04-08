@@ -86,18 +86,18 @@ export default function EditRecipeForm({id, newTitle, newPrep, newCalories, newI
             <form onSubmit={handleSubmit} className="flex flex-col gap-3 w-1/3">
                 <h2>Edit recipe</h2>
                 <label htmlFor="title">Title</label>
-                <input type="text" id="title" name="title" value={formData.title} onChange={handleChange} className="input input-bordered"/>
+                <input type="text" id="title" name="title" value={formData.title} onChange={handleChange} className="input input-bordered" required/>
 
                 <label htmlFor="prep">Prep Time</label>
-                <input type="text" id="prep" name="prep" value={formData.prep} onChange={handleChange} className="input input-bordered"/>
+                <input type="text" id="prep" name="prep" value={formData.prep} onChange={handleChange} className="input input-bordered" required/>
 
                 <label htmlFor="calories">Calories</label>
-                <input type="text" id="calories" name="calories" value={formData.calories} onChange={handleChange} className="input input-bordered"/>
+                <input type="text" id="calories" name="calories" value={formData.calories} onChange={handleChange} className="input input-bordered" required/>
 
                 <label htmlFor="ingredients">Ingredients</label>
                 {formData.ingredients.map((ingredient, i) => (
                     <div>
-                        <input key={i} type="text" name="ingredients" id={`ingredient-${i}`} value={ingredient} onChange={(event) => handleArrayItem(event, i, "ingredients")} className="input input-bordered"/>
+                        <input key={i} type="text" name="ingredients" id={`ingredient-${i}`} value={ingredient} onChange={(event) => handleArrayItem(event, i, "ingredients")} className="input input-bordered" required/>
                         <button onClick={() => handleDelete(i, "ingredients")} type="button">x</button>
                     </div>
                 ))}
@@ -107,14 +107,14 @@ export default function EditRecipeForm({id, newTitle, newPrep, newCalories, newI
                 <label htmlFor="instructions">Instructions</label>
                 {formData.instructions.map((instruction, i) =>(
                     <div>
-                        <input key={i} type="text" name="instructions" id={`instruction-${i}`} value={instruction} onChange={(event) => handleArrayItem(event,i, "instructions")} className="input input-bordered"/>
+                        <input key={i} type="text" name="instructions" id={`instruction-${i}`} value={instruction} onChange={(event) => handleArrayItem(event,i, "instructions")} className="input input-bordered" required/>
                         <button onClick={() => handleDelete(i, "instructions")} type="button">x</button>
                     </div>
                 ))}
                 <button onClick={() => addArrayItem("instructions")} type="button" className="btn">Add instruction</button>
 
                 <label htmlFor="imgURL">Image URL</label>
-                <input type="text" id="imgURL" name="imgURL" value={formData.imgURL} onChange={handleChange} className="input input-bordered"/>
+                <input type="text" id="imgURL" name="imgURL" value={formData.imgURL} onChange={handleChange} className="input input-bordered" required/>
 
                 <button type="submit" className="btn">Edit Recipe</button>
             </form>

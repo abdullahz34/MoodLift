@@ -5,6 +5,9 @@ import { HiPencilAlt, HiDotsHorizontal } from "react-icons/hi";
 import React from 'react';
 import { IoMenu } from "react-icons/io5";
 
+
+
+
 const capitalFirst = (string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
 };
@@ -26,7 +29,9 @@ const getSurveys = async () => {
 };
 
 export default async function SurveyList() {
+  
   const { surveys } = await getSurveys();
+  
 
   return (
     <>
@@ -44,10 +49,18 @@ export default async function SurveyList() {
 </h3>
             <div className="card-actions justify-end">{s.description}</div>
           </div>
-
+          
           <div className="  pt-3 absolute right-0 pr-3 ">
             <DropdownMenu id={s._id} />
           </div>
+          
+
+<Link className="btn btn-ghost text-lg text-bg-secondary font-bold" 
+        href={`/completeSurvey/${s._id}`}
+  >
+            Complete Survey
+          </Link>
+
         </div>
       
       ))}
@@ -80,13 +93,17 @@ const DropdownMenu = ({ id }) => {
   const dropdownRef = React.useRef(null);
 
   return (
+    
     <div className="relative" ref={dropdownRef}>
+      
       <button
         onClick={toggleDropdown}
         className="text-gray-500 hover:text-gray-700 focus:outline-none w-38"
       >
         <IoMenu size={30} />
+        
       </button>
+      
 
       {isOpen && (
         <div className="absolute right-0 mt-1 py-2 w-42 bg-white rounded-md shadow-lg z-10">
