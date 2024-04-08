@@ -1,11 +1,10 @@
-import RecipeList from "@/components/RecipeList"
+import RecipeList from "@/components/RecipeList";
 
-const recipes = () => {
-    return (
+const Recipes = () => {
+  return (
     <div className="flex justify-center">
-        <RecipeList/>
+      <RecipeList/>
     </div>
-    )
+  );
 }
-
-export default recipes;
+export default Recipes;

@@ -60,14 +60,14 @@ const CreateVideo = () => {
                 <h2>Create a video</h2>
 
                 <label htmlFor="title">Title</label>
-                <input type="text" id="title" name="title" onChange={handleChange} className="input input-bordered"/>
+                <input type="text" id="title" name="title" onChange={handleChange} className="input input-bordered" required/>
 
 
                 <label htmlFor="videoURL">Youtube URL</label>
-                <input type="text" id="videoURL" name="videoURL" onChange={handleChange} className="input input-bordered"/>
+                <input type="text" id="videoURL" name="videoURL" onChange={handleChange} className="input input-bordered" required/>
 
                 <label htmlFor="description">Description</label>
-                <textarea id="description" name="description" onChange={handleChange} className="textarea textarea-bordered"/>
+                <textarea id="description" name="description" onChange={handleChange} className="textarea textarea-bordered" required/>
 
                 <button type="submit" className="btn">Add Video</button>
             </form>
