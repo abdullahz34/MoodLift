@@ -10,7 +10,8 @@ import SurveyListLite from '../../components/SurveyListLite';
 
 export default async function Home() {
   const session = await getServerSession(authOptions);
-
+//add a way to refresh auto here on server comp if possible
+//not a requirement, optional for security
   
   if (session && (session.user.type === 'Admin' || session.user.type === 'Ambassador')) {
     
