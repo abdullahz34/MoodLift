@@ -39,7 +39,7 @@ async function main(userMessage, username, firstname) {
   const endpoint = "https://testingpoc.openai.azure.com/"
   const client = new OpenAIClient(
     endpoint,
-    new AzureKeyCredential("7d88a30a0aaa46beacc48b8dc23a95ef")
+    new AzureKeyCredential(process.env.NEXT_PUBLIC_AZURE_OPENAI_KEY)
   )
 
 

@@ -1,6 +1,7 @@
 'use client'
 import React, { useState, useEffect } from 'react'
 import { useSession } from "next-auth/react";
+import axios from 'axios';
 
 
 async function getData(date, username) {
@@ -27,8 +28,84 @@ const NutritionTracker = () => {
   const [nutritionData, setNutritionData] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const [food, setFood] = useState('');
+  const [nutrition, setNutrition] = useState(null);
+  const [errorMessage, setErrorMessage] = useState('');
+
   const { data: session } = useSession();
   const username = session?.user?.name;
+
+  useEffect(() => {
+    if (food) {
+      axios
+        .get(
+          `https://api.edamam.com/auto-complete?app_id=${process.env.NEXT_PUBLIC_EDAMAM_APP_ID}&app_key=${process.env.NEXT_PUBLIC_EDAMAM_APP_KEY}&q=${food}`
+        )
+        .then((response) => {
+          const suggestions = response.data;
+          if (suggestions.includes(food.toLowerCase())) {
+            // Food item exists in the autocomplete API response
+            return axios.get(
+              `https://api.edamam.com/api/food-database/v2/parser?app_id=${process.env.NEXT_PUBLIC_EDAMAM_APP_ID}&app_key=${process.env.NEXT_PUBLIC_EDAMAM_APP_KEY}&ingr=${food}&nutrition-type=logging`
+            );
+          } else {
+            // Food item does not exist in the autocomplete API response
+            setNutrition(null);
+            setCalories(0);
+            setProtein(0);
+            setFats(0);
+            setCarbs(0);
+            if (food.trim() !== '') {
+              setErrorMessage('No matching food item found. Please try a different entry.');
+              // Clear the error message after 3 seconds
+              setTimeout(() => setErrorMessage(''), 1500);
+            }
+            return Promise.reject();
+          }
+        })
+        .then((response) => {
+          if (response.data.hints.length > 0) {
+            const foodId = response.data.hints[0].food.foodId;
+            const measureURI = response.data.hints[0].measures[0].uri;
+
+            return axios.post(
+              `https://api.edamam.com/api/food-database/v2/nutrients?app_id=${process.env.NEXT_PUBLIC_EDAMAM_APP_ID}&app_key=${process.env.NEXT_PUBLIC_EDAMAM_APP_KEY}`,
+              {
+                ingredients: [
+                  {
+                    quantity: 1,
+                    measureURI: measureURI,
+                    foodId: foodId,
+                  },
+                ],
+              }
+            );
+          } else {
+            setNutrition(null);
+            setCalories(0);
+            setProtein(0);
+            setFats(0);
+            setCarbs(0);
+            if (food.trim() !== '') {
+              setErrorMessage('An error occurred while fetching the data.');
+              // Clear the error message after 3 seconds
+              setTimeout(() => setErrorMessage(''), 1500);
+            }
+            return Promise.reject();
+          }
+        })
+        .then((response) => {
+          const nutrients = response.data.totalNutrients;
+          console.log('Nutrients:', nutrients);
+          setNutrition(nutrients);
+          setCalories(nutrients.ENERC_KCAL?.quantity?.toFixed(2));
+          setProtein(nutrients.PROCNT?.quantity?.toFixed(2));
+          setFats(nutrients.FAT?.quantity?.toFixed(2));
+          setCarbs(nutrients.CHOCDF?.quantity?.toFixed(2));
+        })
+        .catch((error) => console.error(error));
+    }
+  }, [food]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -69,7 +146,7 @@ const NutritionTracker = () => {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const dataPromise = getData(date,username);
+      const dataPromise = getData(date, username);
       const timeoutPromise = new Promise(resolve => setTimeout(resolve, 500)); // 500ms minimum loading time
       await Promise.all([dataPromise, timeoutPromise]);
       const data = await dataPromise;
@@ -79,7 +156,7 @@ const NutritionTracker = () => {
       console.error("Error fetching data:", error);
     }
   };
-  
+
   useEffect(() => {
     console.log('Current date:', date);
     if (date) {
@@ -88,55 +165,72 @@ const NutritionTracker = () => {
   }, [date]);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-primary">
+    <div className="min-h-screen bg-base-200 py-12">
       {submitted && (
-        <div role="alert" className="alert alert-success fixed top-0 left-0 right-0 flex items-center justify-center mt-4 p-2 text-sm max-w-xs mx-auto">
-          <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-          <span>Your nutrition has been successfully tracked for this day!</span>
+        <div role="alert" className="alert alert-success shadow-lg mx-auto mb-4 max-w-md">
+          <div>
+            <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            <span>Your nutrition has been successfully tracked for this day!</span>
+          </div>
         </div>
       )}
-      <div className="flex">
-        <div className="w-1/2 mr-20">
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-gray-700">Calories</label>
-              <input type="number" value={calories || ''} onChange={(e) => setCalories(e.target.value)} placeholder="Type here" className="input input-bordered w-full max-w-xs" required />
+      <div className="container mx-auto flex justify-center">
+        <div className="card bg-base-100 shadow-xl w-full max-w-3xl">
+          <div className="card-body">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="form-control">
+                    <label className="label">
+                      <span className="label-text">Food</span>
+                    </label>
+                    <input type="text" value={food} onChange={(e) => setFood(e.target.value)} placeholder="Type here" className="input input-bordered" required />
+                  </div>
+                  <div>
+                    {errorMessage && <p className="text-red-500">{errorMessage}</p>}
+                  </div>
+                  {nutrition && (
+                    <div className="overflow-auto max-h-48">
+                      {Object.entries(nutrition).map(([key, value]) => (
+                        <div key={key} className="flex justify-between py-2 border-b">
+                          <span className="font-semibold">{value?.label || key}</span>
+                          <span>{value?.quantity?.toFixed(2)}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  <div className="form-control">
+                    <label className="label">
+                      <span className="label-text">Date</span>
+                    </label>
+                    <input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="input input-bordered" />
+                  </div>
+                  <div className="form-control mt-6">
+                    <button type="submit" className="btn btn-primary">Submit</button>
+                  </div>
+                </form>
+              </div>
+              <div>
+                {loading ? (
+                  <div className="flex justify-center items-center h-full">
+                    <span className="loading loading-dots loading-md"></span>
+                  </div>
+                ) : nutritionData ? (
+                  <div>
+                    <h2 className="text-xl font-semibold mb-4">Notable data logged on this date for nutrition:</h2>
+                    <ul className="list-disc pl-6 space-y-2">
+                      <li>Calories: {nutritionData.calories}</li>
+                      <li>Protein: {nutritionData.protein}</li>
+                      <li>Fats: {nutritionData.fats}</li>
+                      <li>Carbs: {nutritionData.carbs}</li>
+                    </ul>
+                  </div>
+                ) : (
+                  <p className="text-center text-gray-500">No logs on this date!</p>
+                )}
+              </div>
             </div>
-            <div>
-              <label className="block text-gray-700">Protein</label>
-              <input type="number" value={protein || ''} onChange={(e) => setProtein(e.target.value)} placeholder="Type here" className="input input-bordered w-full max-w-xs" required />
-            </div>
-            <div>
-              <label className="block text-gray-700">Fats</label>
-              <input type="number" value={fats || ''} onChange={(e) => setFats(e.target.value)} placeholder="Type here" className="input input-bordered w-full max-w-xs" required />
-            </div>
-            <div>
-              <label className="block text-gray-700">Carbs</label>
-              <input type="number" value={carbs || ''} onChange={(e) => setCarbs(e.target.value)} placeholder="Type here" className="input input-bordered w-full max-w-xs" required />
-            </div>
-            <div>
-              <label className="block text-gray-700">Date</label>
-              <input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="input input-bordered w-full max-w-xs" />
-            </div>
-            <button type="submit" className="btn btn-secondary">Submit</button>
-          </form>
-        </div>
-        <div className="w-1/2">
-          {loading ? (
-            <span className="loading loading-dots loading-md"></span>
-          ) : nutritionData ? (
-            <div>
-              <h2>Data logged on this date for nutrition:</h2>
-              <ul>
-                <li>Calories: {nutritionData.calories}</li>
-                <li>Protein: {nutritionData.protein}</li>
-                <li>Fats: {nutritionData.fats}</li>
-                <li>Carbs: {nutritionData.carbs}</li>
-              </ul>
-            </div>
-          ) : (
-            <p>No logs on this date!</p>
-          )}
+          </div>
         </div>
       </div>
     </div>
