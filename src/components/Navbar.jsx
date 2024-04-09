@@ -43,6 +43,7 @@ const Navbar = () => {
                 </ul>
               </details>
             </li>
+            <li><Link href="/todolist">To-do list</Link></li>
             <li><Link href="/journal">Journal</Link></li>
             <li><Link href="/insights">Insights</Link></li>
             <li><Link href="/resources">Resources</Link></li>
