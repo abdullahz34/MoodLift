@@ -40,13 +40,13 @@ const TodoList = () => {
 
   const fetchQuote = async () => {
     setLoading(true);
-    const categories = ['amazing', 'attitude', 'communication', 'courage', 'dreams', 'fitness', 'happiness', 'hope', 'inspirational', 'learning', 'life', 'success'];
+    const categories = ['courage', 'dreams', 'fitness', 'happiness', 'hope', 'inspirational', 'life', 'success'];
     const category = categories[Math.floor(Math.random() * categories.length)];
 
     try {
       const response = await fetch(`https://api.api-ninjas.com/v1/quotes?category=${category}`, {
         headers: {
-          'X-Api-Key': '7RhYGiAhYzpetRE/O/tASA==1WixzSl7SFp6JCyB'
+          'X-Api-Key': process.env.NEXT_PUBLIC_QUOTE_API_KEY
         },
       });
 
