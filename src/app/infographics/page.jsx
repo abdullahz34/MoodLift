@@ -33,8 +33,8 @@ export default async function SurveyList() {
           <h3 className="text-lg font-bold mb-2">{(survey.title)}</h3>
           {survey.responses && survey.responses.length > 0 ? (
             survey.responses.map((response, index) => (
-              <div key={index} className="mb-2">
-                <p className="font-bold">{(response.username)}: </p>
+              <div key={index} className="mb-2 ">
+                <p className="font-bold">{(response.username)} </p>
                 <p className="px-2 py-1 rounded-md">
   <span className="bg-success text-white">Completed</span>
 </p>
