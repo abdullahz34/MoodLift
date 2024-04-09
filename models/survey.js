@@ -13,6 +13,7 @@ const questionSchema = new Schema({
 
   const responseSchema = new Schema({
     answers: [String], 
+    username: String,
   });
 
 const surveySchema = new Schema(

@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 
 export default function AnswerSurveyForm({ id }) {
+  const { data: session } = useSession();
   const router = useRouter();
   const [survey, setSurvey] = useState(null);
   const [answers, setAnswers] = useState([]);
-
+  
 
   const maxCharacters = 400;
 
@@ -44,6 +46,7 @@ export default function AnswerSurveyForm({ id }) {
   };
 
   const handleSubmit = async (e) => {
+    
     e.preventDefault();
 
     try {
@@ -52,7 +55,7 @@ export default function AnswerSurveyForm({ id }) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ answers }),
+        body: JSON.stringify({ answers, username: session.user.username }),
       });
 
       if (res.ok) {
