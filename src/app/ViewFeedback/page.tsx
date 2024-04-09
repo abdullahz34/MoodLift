@@ -1,12 +1,23 @@
-import AllFeedback from "./GetFeedback";
+import ImDyingSquirtle from "./GetFeedback";
+import Navbar from "@/components/Navbar";
 import React from 'react';
 export default async function getFeedback() {
     return (
         <body>
-            <h1>Viewing feedback:</h1>        
-            <br></br>
-            <AllFeedback/>
+            <div>
+            <Navbar/>
+            </div>
+            <div className="card w-200 bg-base-100 shadow-xl">
+  <div className="card-body">
+    <h2 className="card-title bg-neutral-content">Viewing feedback</h2>
+      <text className="bg-primary">
+        <ImDyingSquirtle/>
+        </text>
+    </div>
+  </div>
         </body>
 
     )
 }   
+
+
