@@ -1,8 +1,0 @@
-For calendar:
-    npm install react-calendar
-
-For time picker: Not using currently want to change to this in the future for more flexibility
-    npm install react-time-picker
-
-for date on react calendar:
-    npm install date-fns
