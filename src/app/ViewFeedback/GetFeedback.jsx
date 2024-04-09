@@ -29,8 +29,8 @@ count = count + 1;
 });
 }
 
-
- function GetFirstEntry() {
+//Returns the first entry of the feedback array and then removes it from the array
+ function PopFirstEntry() {
     if (feedbackList.length ===  0) {
         return null
     }
@@ -40,7 +40,8 @@ count = count + 1;
 
 };
 
-function BubbleUp() {
+//Places the current entry of the feedback array into a speech bubble
+function FormatEntry() {
     if (feedbackList.length === 0) {
         return
         (            
@@ -51,7 +52,7 @@ function BubbleUp() {
         return (
             <div>
             <div className="chat chat-start">
-            <div className="chat-bubble chat-bubble-secondary"><GetFirstEntry/></div>
+            <div className="chat-bubble chat-bubble-secondary"><PopFirstEntry/></div>
             </div>
             <br></br>
             <div className="chat chat-start">
@@ -63,22 +64,22 @@ function BubbleUp() {
 }
 
 
-
-export default async function ImDyingSquirtle() {
+//Displays all of the speech bubbles containing the entries of feedback
+export default async function DisplayEntries() {
     await GetList();
     return (
         <div>
             <div className="badge badge-primary badge-lg"></div> 
-            <BubbleUp/>              
-            <BubbleUp/>  
-            <BubbleUp/>  
-            <BubbleUp/>
-            <BubbleUp/>
-            <BubbleUp/>
-            <BubbleUp/>
-            <BubbleUp/>
-            <BubbleUp/>
-            <BubbleUp/>  
+            <FormatEntry/>              
+            <FormatEntry/>              
+            <FormatEntry/>              
+            <FormatEntry/>              
+            <FormatEntry/>              
+            <FormatEntry/>              
+            <FormatEntry/>              
+            <FormatEntry/>              
+            <FormatEntry/>              
+            <FormatEntry/>              
         </div>
     )
 }
