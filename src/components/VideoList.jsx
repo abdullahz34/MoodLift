@@ -36,29 +36,66 @@ export default async function VideoList() {
     console.log(getId(video.videoURL))
   ))
 
-  const {data:session} = getServerSession(authOptions);
-  const userType = session?.user?.type;
+  const session = await getServerSession(authOptions);
 
-
+  if (session && (session.user.type === 'Admin' || session.user.type === 'Ambassador')) {
   return (
     <div className="flex flex-col w-1/3">
-        <>
-        {videos.map((video) => (
-            <div key={video._id} className="p-4 border border-slate-300 my-3 flex justify-between gap-5 items-start">
-            <div>
-                <h2 className="font-bold text-2xl">{video.title}</h2>
-                
-                <iframe src={"//www.youtube.com/embed/"+getId(video.videoURL)}></iframe>
-
-                <h2 className="font-bold">Description</h2>
-                <p>{video.description}</p>
-
-                <Link href={`./edit-recipe/${video._id}`}><button className="btn">Edit</button></Link>
-                <DeleteButton id={video._id} route={"recipes"} className="btn"/>
+      {videos.map((video) => (
+        <div key={video._id} className="p-4 border border-slate-300 my-3 relative">
+          <h2 className="font-bold text-2xl">{video.title}</h2>
+          
+          <div className="w-full">
+            <div className="relative" style={{ paddingBottom: "56.25%" }}>
+              <iframe
+                src={"//www.youtube.com/embed/" + getId(video.videoURL)}
+                allowFullScreen
+                className="absolute top-0 left-0 w-full h-full"
+              ></iframe>
             </div>
-            </div>
-        ))}
-        </>
+          </div>
+
+          <div className="overflow-hidden">
+            <h2 className="font-bold">Description</h2>
+            <p className="whitespace-pre-line">{video.description}</p>
+          </div>
+
+          <div className="flex gap-3">
+            <Link href={`./edit-video/${video._id}`}>
+              <button className="btn">Edit</button>
+            </Link>
+            <DeleteButton id={video._id} route={"videos"} className="btn" />
+          </div>
+        </div>
+      ))}
     </div>
   );
+}
+
+else{
+  return (
+    <div className="flex flex-col w-1/3">
+      {videos.map((video) => (
+        <div key={video._id} className="p-4 border border-slate-300 my-3 relative">
+          <h2 className="font-bold text-2xl">{video.title}</h2>
+          
+          <div className="w-full">
+            <div className="relative" style={{ paddingBottom: "56.25%" }}>
+              <iframe
+                src={"//www.youtube.com/embed/" + getId(video.videoURL)}
+                allowFullScreen
+                className="absolute top-0 left-0 w-full h-full"
+              ></iframe>
+            </div>
+          </div>
+
+          <div className="overflow-hidden">
+            <h2 className="font-bold">Description</h2>
+            <p className="whitespace-pre-line">{video.description}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
 }
