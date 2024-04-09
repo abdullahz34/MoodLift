@@ -25,11 +25,11 @@ export default async function Edit({params}) {
 
   const { id } = params;
   const { user } = await getUser(id);
-  const { username, name, password, type } = user;
+  const { username, name, type } = user;
 
   return (
     <main>
-      <EditUser id={id} username={username} name={name} password={password} type={type}/>
+      <EditUser id={id} username={username} name={name} type={type}/>
     </main>
   )
 }

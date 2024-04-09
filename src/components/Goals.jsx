@@ -118,8 +118,10 @@ export default function Goals() {
           const form = e.target;
           form.reset()
           setSubmitted(true);
-          setTimeout(() => setSubmitted(false), 3000);
-          setTimeout(window.location.reload(), 3000)
+          setTimeout(() => {
+            setSubmitted(false)
+            window.location.reload()
+          } , 2000);
         }
       }
       else {
