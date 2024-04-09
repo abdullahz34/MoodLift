@@ -35,7 +35,7 @@ const Navbar = () => {
           <li><Link href="/insights">Insights</Link></li>
           <li><Link href="/resources">Resources</Link></li>
           <li><Link href="/surveys">Survey</Link></li>
-          <li><Link href="/Appointments">Appointments</Link></li>
+          <li><Link href="/appointments">Appointments</Link></li>
           <li><Link href="/moodbot">MoodBot</Link></li>
         </ul>
         <div className="dropdown dropdown-end" id="login">
