@@ -2,7 +2,6 @@
 import { signOut } from "next-auth/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import Link from 'next/link'
 
 const AdminDash = () => {
   const { data: session, status } = useSession();
@@ -14,8 +13,8 @@ const AdminDash = () => {
   }
 
   return (
-    <div className="container mx-auto px-5 py-10">
-      <div className="grid grid-cols-2 gap-8 justify-center justify-between">
+    <div className="container mx-auto py-10">
+      <div className="grid grid-cols-2 gap-8">
         <div>
           <div className="card w-96 bg-base-100 shadow-xl">
             <h1 className="card-title text-xl font-bold text-gray-900 justify-center">Your details</h1>
@@ -30,24 +29,6 @@ const AdminDash = () => {
                 <button
                   onClick={handleSignout}
                   className="btn btn-secondary w-full">Logout</button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div>
-          <div className="card w-96 bg-base-100 shadow-xl">
-            <h1 className="card-title text-xl font-bold text-gray-900 justify-center">Manage Users</h1>
-            <div className="card-body space-y-4">
-              <div className="card-actions">
-                <Link href="/manage-users" className="btn btn-secondary w-full">Go</Link>
-              </div>
-            </div>
-          </div>
-          <div className="card w-96 bg-base-100 shadow-xl mt-8">
-            <h1 className="card-title text-xl font-bold text-gray-900 justify-center">View Feedback</h1>
-            <div className="card-body space-y-4">
-              <div className="card-actions">
-                <Link href="/ViewFeedback" className="btn btn-secondary w-full">Go</Link>
               </div>
             </div>
           </div>

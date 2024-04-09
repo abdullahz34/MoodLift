@@ -2,7 +2,6 @@
 import { signOut } from "next-auth/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import Goals from "./Goals";
 
 const EmployeeDash = () => {
   const { data: session, status } = useSession();
@@ -33,9 +32,6 @@ const EmployeeDash = () => {
               </div>
             </div>
           </div>
-        </div>
-        <div className="grid grid-cols-1">
-          <Goals />
         </div>
       </div>
     </div>
