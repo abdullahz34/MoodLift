@@ -1,4 +1,4 @@
-import ImDyingSquirtle from "./GetFeedback";
+import DisplayEntries from "./GetFeedback";
 import Navbar from "@/components/Navbar";
 import React from 'react';
 export default async function getFeedback() {
@@ -11,7 +11,7 @@ export default async function getFeedback() {
   <div className="card-body">
     <h2 className="card-title bg-neutral-content">Viewing feedback</h2>
       <text className="bg-primary">
-        <ImDyingSquirtle/>
+        <DisplayEntries/>
         </text>
     </div>
   </div>
