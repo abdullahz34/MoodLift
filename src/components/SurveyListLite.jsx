@@ -38,9 +38,19 @@ export default async function SurveyList() {
         >
           <div className="card-body">
             <h2 className="card-title">{s.title}</h2>
-            <h3 className="whitespace-nowrap overflow-hidden max-w-max text-m font-primary bg-secondary text-white px-2 py-1 rounded-md inline-block">
-            {capitalFirst(s.frequency)}
-</h3>
+            <h3
+              className={`whitespace-nowrap overflow-hidden max-w-max text-m font-primary px-2 py-1 rounded-md inline-block ${
+                s.frequency === 'daily'
+                  ? 'bg-secondary text-black'
+                  : s.frequency === 'weekly'
+                  ? 'bg-green-500 text-black'
+                  : s.frequency === 'monthly'
+                  ? 'bg-yellow-500 text-black'
+                  : ''
+              }`}
+>
+              {capitalFirst(s.frequency)}
+              </h3>
             <div className="card-actions justify-end">{s.description}</div>
           </div>
           
