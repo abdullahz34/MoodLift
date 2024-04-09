@@ -22,7 +22,7 @@ const Journal = () => {
     if (savedBestStreak) {
       setBestStreak(Number(savedBestStreak));
     }
-  
+
     fetchJournalEntries();
   }, [username, selectedDate]);
 
@@ -31,7 +31,7 @@ const Journal = () => {
       const journalResponse = await fetch(`/api/journals?username=${username}&date=${selectedDate || formattedTodayDate}`);
       const journalData = await journalResponse.json();
       setJournalEntries(journalData);
-  
+
       if (journalData.length > 0) {
         const latestEntry = journalData[0];
         setStreak(latestEntry.streak);
@@ -133,10 +133,10 @@ const Journal = () => {
         <div className="mt-8">
           <h3 className="text-xl font-bold mb-2">Your Streaks</h3>
           <p>
-            Current Streak: <span className="font-bold">{streak} days</span>
+            🔥 Current Streak: <span className="font-bold">{streak} days</span>
           </p>
           <p>
-            Best Streak: <span className="font-bold">{bestStreak} days</span>
+            🏆 Best Streak: <span className="font-bold">{bestStreak} days</span>
           </p>
         </div>
         {journalEntries.length > 0 ? (
