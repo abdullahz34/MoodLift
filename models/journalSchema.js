@@ -6,7 +6,7 @@ const journalSchema = new Schema({
   username: { type: String, required: true },
   date: { type: Date, required: true },
   entry: { type: String, required: true },
-  mood: { type: String, default: '' }, 
+  mood: { type: String, required: true }, 
   streak: { type: Number, default: 0 },
 });
 

@@ -109,6 +109,7 @@ const Journal = () => {
               value={mood}
               onChange={handleMoodChange}
               className="w-full p-2 border border-gray-300 rounded-md"
+              required
             >
               <option value="">Select your mood</option>
               <option value="happy">😊 Happy</option>
