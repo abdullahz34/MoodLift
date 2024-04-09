@@ -9,6 +9,7 @@ export default function DeleteButton({id, route}){
         });
       
         if (res.ok) {
+          router.replace(`/resources/view-${route}`)
           router.refresh();
         }
     }
