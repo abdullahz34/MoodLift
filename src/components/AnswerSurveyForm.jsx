@@ -108,20 +108,24 @@ export default function AnswerSurveyForm({ id }) {
               <p>Characters remaining: {maxCharacters - (answers[index] || '').length}</p>
               </div>
             ) : (
-              <select
-                value={answers[index] || ''}
-                onChange={(e) => handleAnswerChange(index, e.target.value)}
-                className='w-full px-2'
-                
-              >
-                
-                <option value="">Select an option</option>
-                {question.choices.map((choice, choiceIndex) => (
-                  <option key={choiceIndex} value={choice}>
-                    {choice}
-                  </option>
-                ))}
-              </select>
+              <div>
+                <input
+                  type="range"
+                  min="1"
+                  max="5"
+                  value={answers[index] || ''}
+                  onChange={(e) => handleAnswerChange(index, e.target.value)}
+                  className="w-full h-6 bg-gray-200 rounded-full appearance-none cursor-pointer
+                  "
+                />
+                <div className="flex justify-between text-sm">
+                  <span>1</span>
+                  <span>2</span>
+                  <span>3</span>
+                  <span>4</span>
+                  <span>5</span>
+                </div>
+              </div>
             )}
           </div>
         ))}
