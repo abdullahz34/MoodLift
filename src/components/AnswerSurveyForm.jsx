@@ -70,7 +70,7 @@ export default function AnswerSurveyForm({ id }) {
   };
 
   if (!survey) {
-    return <div>Loading...</div>;
+    return <div>Loading</div>;
   }
 
   return (
