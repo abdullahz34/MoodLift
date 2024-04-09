@@ -1,16 +1,99 @@
 'use client' // client side rendering
 import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
-import axios from 'axios';
+
+async function getData(date, username) {
+  const response = await fetch(`http://localhost:3000/api/logging?date=${date}&username=${username}`, { cache: "no-store" });
+  if (!response.ok) {
+    throw new Error('Response for the logging API call failed! (fitness)');
+  }
+  const data = await response.json();
+
+  // Find the object for the selected date and username
+  const item = data.find(item => new Date(item.date).toDateString() === new Date(date).toDateString() && item.username === username);
+
+  // Return the fitness object of the found item, or null if no item was found
+  return item ? item : null;
+}
 
 export default function Goals() {
-  const [steps, setSteps] = useState('');
-  const [water, setWater] = useState('');
-  const [sleep, setSleep] = useState('');
+  const [date, setDate] = useState(getFormattedCurrentDate());
+  const [fitnessData, setFitnessData] = useState('');
+  const [hydrationData, setHydrationData] = useState('');
+  const [sleepData, setSleepData] = useState('');
+  const [stepsGoal, setStepsGoal] = useState('');
+  const [waterGoal, setWaterGoal] = useState('');
+  const [sleepGoal, setSleepGoal] = useState('');
+
   const [value, setValue] = useState('');
   const [goal_type, setGoal_type] = useState("");
+  const [submitted, setSubmitted] = useState(false);
 
   const { data: session } = useSession();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const resGoals = await fetch(`/api/goals/allgoals?username=${session?.user?.username}`, {
+          method: "GET"
+        })
+
+        const goals = await resGoals.json();
+        const stepsEntry = goals.filter(item => item.goal_type === "Steps");
+        const waterEntry = goals.filter(item => item.goal_type === "Water");
+        const sleepEntry = goals.filter(item => item.goal_type === "Sleep");
+        
+        // Accessing value field from stepsEntry
+        const stepsValue = stepsEntry.length > 0 ? stepsEntry[0].value : null;
+
+        // Accessing value field from waterEntry
+        const waterValue = waterEntry.length > 0 ? waterEntry[0].value : null;
+
+        // Accessing value field from sleepEntry
+        const sleepValue = sleepEntry.length > 0 ? sleepEntry[0].value : null;
+
+        setStepsGoal(stepsValue)
+        setWaterGoal(waterValue)
+        setSleepGoal(sleepValue)
+
+        const data = await getData(date, session?.user?.name)
+  
+        if (data) {
+          setFitnessData(data.fitness);
+          setHydrationData(data.hydration);
+          setSleepData(data.sleep);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    }
+    fetchData();
+  }, [date, session?.user?.username]);
+
+  function getFormattedCurrentDate() {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0'); // Adding 1 to month because it's zero-based
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  const calcProgress = (data, goal) => {
+    let progressPercentage = 0;
+    if (data && goal) {
+      const calculatedPercentage = (data / goal) * 100;
+      progressPercentage = Math.floor(Math.min(calculatedPercentage, 100));
+    }
+    return progressPercentage
+  }
+
+  const isGoalMet = (data, goal) => {
+    let goalMet = false;
+    if (calcProgress(data,goal)>=100) {
+      goalMet = true
+    }
+    return goalMet
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -34,7 +117,9 @@ export default function Goals() {
         if (resUpdate.ok) {
           const form = e.target;
           form.reset()
-          router.push("/")
+          setSubmitted(true);
+          setTimeout(() => setSubmitted(false), 3000);
+          setTimeout(window.location.reload(), 3000)
         }
       }
       else {
@@ -54,7 +139,9 @@ export default function Goals() {
         if (resCreate.ok) {
           const form = e.target;
           form.reset()
-          router.push("/")
+          setSubmitted(true);
+          setTimeout(() => setSubmitted(false), 3000);
+          setTimeout(window.location.reload(), 3000)
         }
       }
     } catch (error) {
@@ -64,13 +151,27 @@ export default function Goals() {
 
   return (
     <div className="flex flex-col space-y-8">
+      {submitted && (
+        <div role="alert" className="alert alert-success fixed top-0 left-0 right-0 flex items-center justify-center mt-4 p-2 text-sm max-w-xs mx-auto z-50">
+          <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+          <span>Goal successfully updated!</span>
+        </div>
+      )}
       <div className="card w-96 bg-base-100 shadow-xl">
         <div className="card-body text-sm space-y-4">
           <h1 className="card-title text-sm font-bold text-gray-900 justify-center">Today's steps</h1>
           <div className="grid grid-cols-4 items-center">
-            <div className="radial-progress" style={{"--value":70, "--size":"3rem"}} role="progressbar">70%</div>
+            <div className="radial-progress" style={{"--value":calcProgress(fitnessData.steps, stepsGoal), "--size":"3rem"}} role="progressbar">{calcProgress(fitnessData.steps, stepsGoal)}%</div>
             <div className="col-span-3">
-              Stay determined! So far you've walked .... This is ...% of your daily steps goal - keep moving.
+              {!isGoalMet(fitnessData.steps, stepsGoal) ? 
+                <p>
+                  Stay determined! So far you've walked {fitnessData.steps} steps. This is {Math.round((fitnessData.steps/stepsGoal)*100)}% of your daily steps goal - keep moving.
+                </p>
+                : 
+                <p>
+                  You walked {fitnessData.steps} steps today and met your goal. Well done!
+                </p>
+              }
             </div>
           </div>
           <div className="card-actions">
@@ -110,9 +211,17 @@ export default function Goals() {
         <div className="card-body text-sm space-y-4">
           <h1 className="card-title text-sm font-bold text-gray-900 justify-center">Today's water</h1>
           <div className="grid grid-cols-4 items-center">
-            <div className="radial-progress" style={{"--value":20, "--size":"3rem"}} role="progressbar">20%</div>
+            <div className="radial-progress" style={{"--value":calcProgress(hydrationData.waterML, waterGoal), "--size":"3rem"}} role="progressbar">{calcProgress(hydrationData.waterML, waterGoal)}%</div>
             <div className="col-span-3">
-              Good hydration is vital. So far you've had ... cups of water, only ... left to reach your goal!
+              {!isGoalMet(hydrationData.waterML, waterGoal) ? 
+                <p>
+                  Good hydration is vital. So far you've had {hydrationData.waterML}mL of water, only {waterGoal-hydrationData.waterML}mL left to reach your goal!
+                </p>
+                : 
+                <p>
+                  You drank {hydrationData.waterML}mL of water today and met your goal. Well done!
+                </p>
+              }
             </div>
           </div>
           <div className="card-actions">
@@ -152,9 +261,17 @@ export default function Goals() {
         <div className="card-body text-sm space-y-4">
           <h1 className="card-title text-sm font-bold text-gray-900 justify-center">Last night's sleep</h1>
           <div className="grid grid-cols-4 items-center">
-            <div className="radial-progress" style={{"--value":50, "--size":"3rem"}} role="progressbar">50%</div>
+            <div className="radial-progress" style={{"--value":calcProgress(sleepData.hoursSlept, sleepGoal), "--size":"3rem"}} role="progressbar">{calcProgress(sleepData.hoursSlept, sleepGoal)}%</div>
             <div className="col-span-3">
-              Good sleep is essential. Take a break and recover some sleep to get closer to your goal of ... hours.
+              {!isGoalMet(sleepData.hoursSlept, sleepGoal) ? 
+                <p>
+                  Good sleep is essential. Take a break and recover some sleep to get closer to your goal of {sleepGoal} hours.
+                </p>
+                : 
+                <p>
+                  You slept for {sleepData.hoursSlept} hours last night and met your goal. Well done!
+                </p>
+              }
             </div>
           </div>
           <div className="card-actions">

@@ -12,7 +12,7 @@ const SideBar = () => {
     <>
       
         {session?.user?.type==="Employee" &&
-          <div className="flex justify-center items-center p-5">
+          <div className="flex justify-center items-center p-5 ml-5">
             <Goals />
           </div>
         }
