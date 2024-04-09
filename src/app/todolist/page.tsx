@@ -1,39 +1,34 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
+import { TrashIcon, PencilIcon } from '@heroicons/react/outline';
 
 const TodoList = () => {
   const [todoList, setTodoList] = useState([]);
   const [newTask, setNewTask] = useState('');
-
+  const [selectedDate, setSelectedDate] = useState(null);
   const { data: session } = useSession();
   const username = session?.user?.username;
 
   const today = new Date();
-  const formattedDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+  const formattedTodayDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
   useEffect(() => {
     fetchTodoList();
-  }, [username, formattedDate]);
+  }, [username, selectedDate]);
 
   const fetchTodoList = async () => {
     try {
-      const todoResponse = await fetch(`/api/todolists?username=${username}&date=${formattedDate}`);
+      const todoResponse = await fetch(`/api/todolists?username=${username}&date=${selectedDate || formattedTodayDate}`);
       const todoData = await todoResponse.json();
-
-      // Check if the API returns an array of to-do lists
       if (Array.isArray(todoData)) {
-        // Find the to-do list for the current date and username
         const currentTodoList = todoData.find(
           (list) =>
-            new Date(list.date).toDateString() === new Date(formattedDate).toDateString() &&
+            new Date(list.date).toDateString() === new Date(selectedDate || formattedTodayDate).toDateString() &&
             list.username === username
         );
-
-        // Set the todoList state with the tasks from the found list, or an empty array if no list was found
         setTodoList(currentTodoList ? currentTodoList.tasks : []);
       } else {
-        // Handle the case where the API doesn't return an array
         setTodoList(todoData.tasks || []);
       }
     } catch (error) {
@@ -45,16 +40,15 @@ const TodoList = () => {
     e.preventDefault();
     try {
       const response = await fetch('/api/todolists', {
-        method: 'POST',
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, date: formattedDate, tasks: [...todoList, newTask] }),
+        body: JSON.stringify({ username, date: selectedDate || formattedTodayDate, tasks: [...todoList, { text: newTask, completed: false }] }),
       });
-
       if (response.ok) {
         setNewTask('');
-        await fetchTodoList(); // Fetch updated to-do list
+        await fetchTodoList();
       } else {
         console.error('Error creating to-do list');
       }
@@ -63,32 +57,134 @@ const TodoList = () => {
     }
   };
 
+  const handleTaskDelete = async (index) => {
+    try {
+      const updatedTasks = [...todoList];
+      updatedTasks.splice(index, 1);
+      const response = await fetch('/api/todolists', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, date: selectedDate || formattedTodayDate, tasks: updatedTasks }),
+      });
+      if (response.ok) {
+        await fetchTodoList();
+      } else {
+        console.error('Error deleting task');
+      }
+    } catch (error) {
+      console.error('Error deleting task:', error);
+    }
+  };
+
+  const handleTaskUpdate = async (index, updatedText) => {
+    try {
+      const updatedTasks = [...todoList];
+      updatedTasks[index].text = updatedText;
+      const response = await fetch('/api/todolists', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, date: selectedDate || formattedTodayDate, tasks: updatedTasks }),
+      });
+      if (response.ok) {
+        await fetchTodoList();
+      } else {
+        console.error('Error updating task');
+      }
+    } catch (error) {
+      console.error('Error updating task:', error);
+    }
+  };
+
+  const handleDateChange = (e) => {
+    setSelectedDate(e.target.value);
+  };
+
+  const handleTaskToggle = async (index) => {
+    try {
+      const updatedTasks = [...todoList];
+      updatedTasks[index].completed = !updatedTasks[index].completed;
+      const response = await fetch('/api/todolists', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, date: selectedDate || formattedTodayDate, tasks: updatedTasks }),
+      });
+      if (response.ok) {
+        await fetchTodoList();
+      } else {
+        console.error('Error toggling task');
+      }
+    } catch (error) {
+      console.error('Error toggling task:', error);
+    }
+  };
+
+
   return (
     <div className="container mx-auto py-8">
       <div>
         <h2 className="text-2xl font-bold mb-4">To-Do List</h2>
-        <form onSubmit={handleTaskSubmit}>
-          <input
-            type="text"
-            className="w-full p-2 border border-gray-300 rounded-md mb-4"
-            placeholder="Enter a new task..."
-            value={newTask}
-            onChange={(e) => setNewTask(e.target.value)}
+        {/* Add date dropdown */}
+        <div className="mb-4">
+          <label htmlFor="date" className="mr-2">Select Date:</label>
+          <input 
+            type="date" 
+            id="date" 
+            value={selectedDate || formattedTodayDate} 
+            onChange={handleDateChange} 
+            className="p-2 border border-gray-300 rounded-md"
           />
-          <button
-            type="submit"
+        </div>
+        {/* Existing form for adding tasks */}
+        <form onSubmit={handleTaskSubmit}>
+          <input 
+            type="text" 
+            className="w-full p-2 border border-gray-300 rounded-md mb-4" 
+            placeholder="Enter a new task..." 
+            value={newTask} 
+            onChange={(e) => setNewTask(e.target.value)} 
+          />
+          <button 
+            type="submit" 
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           >
             Add Task
           </button>
         </form>
+        {/* Display tasks with delete and edit icons */}
         {todoList.length > 0 && (
           <div className="mt-8">
             <h3 className="text-xl font-bold mb-2">Tasks</h3>
             <ul>
               {todoList.map((task, index) => (
-                <li key={index} className="mb-2">
-                  {task}
+                <li key={index} className="flex items-center justify-between mb-2">
+                  <span 
+                    className={`flex-grow ${task.completed ? 'line-through text-gray-500' : ''}`}
+                    onClick={() => handleTaskToggle(index)}
+                  >
+                    {task.text}
+                  </span>
+                  <div className="flex items-center space-x-2">
+                    {/* Edit icon */}
+                    <button 
+                      onClick={() => handleTaskUpdate(index, prompt('Edit task:', task.text))} 
+                      className="text-blue-500 hover:text-blue-700"
+                    >
+                      <PencilIcon className="w-5 h-5" />
+                    </button>
+                    {/* Delete icon */}
+                    <button 
+                      onClick={() => handleTaskDelete(index)} 
+                      className="text-red-500 hover:text-red-700"
+                    >
+                      <TrashIcon className="w-5 h-5" />
+                    </button>
+                  </div>
                 </li>
               ))}
             </ul>
