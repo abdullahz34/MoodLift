@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 
 export default function AnswerSurveyForm({ id }) {
+  const { data: session } = useSession();
   const router = useRouter();
   const [survey, setSurvey] = useState(null);
   const [answers, setAnswers] = useState([]);
-
+  
 
   const maxCharacters = 400;
 
@@ -44,20 +46,21 @@ export default function AnswerSurveyForm({ id }) {
   };
 
   const handleSubmit = async (e) => {
+    
     e.preventDefault();
 
     try {
-      const res = await fetch(`http://localhost:3000/api/surveys/${id}/complete`, {
+      const res = await fetch(`http://localhost:3000/api/surveys/${id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ answers }),
+        body: JSON.stringify({ answers, username: session.user.username }),
       });
 
       if (res.ok) {
         
-        router.push('/dashboard');
+        router.push('/surveys');
       } else {
         console.error('Failed to save survey response');
       }
@@ -78,15 +81,15 @@ export default function AnswerSurveyForm({ id }) {
       <form onSubmit={handleSubmit} className="flex flex-col gap-4 max-w-auto mr-auto pl-4 pr-4 pt-2">
 
       <div className="px-4 py-2 bg-neutral-content rounded-lg">
-      <h1>{survey.title}</h1>
+      <h1 className=" text-black bg-info text-lg p-4 rounded">{survey.title}</h1>
        </div>
 <div className="px-4 py-2 bg-neutral-content rounded-lg">
-<h2>{survey.description}</h2>
+<h2 className="text-black bg-info text-lg p-4 rounded">{survey.description}</h2>
     
 </div>
 {/*BULK OF SURVEY QUESTIONS*/}
         {survey.questions.map((question, index) => (
-          <div key={index} className="px-4 py-2 bg-neutral-content rounded-lg">
+          <div key={index} className="px-4 py-2 bg-neutral-content rounded-lg text-lg">
             <h3>{question.text}</h3>
             {question.type === 'text' ? (
               <div>
@@ -108,24 +111,35 @@ export default function AnswerSurveyForm({ id }) {
               <p>Characters remaining: {maxCharacters - (answers[index] || '').length}</p>
               </div>
             ) : (
-              <select
-                value={answers[index] || ''}
-                onChange={(e) => handleAnswerChange(index, e.target.value)}
-                className='w-full px-2'
-                
-              >
-                
-                <option value="">Select an option</option>
-                {question.choices.map((choice, choiceIndex) => (
-                  <option key={choiceIndex} value={choice}>
-                    {choice}
-                  </option>
-                ))}
-              </select>
+              <div>
+                <input
+                  type="range"
+                  min="1"
+                  max="5"
+                  value={answers[index] || ''}
+                  onChange={(e) => handleAnswerChange(index, e.target.value)}
+                  className="w-full h-6 bg-gray-200 rounded-full appearance-none cursor-pointer
+                  "
+                />
+                <div className="flex justify-between text-sm">
+                  <span>1</span>
+                  <span>2</span>
+                  <span>3</span>
+                  <span>4</span>
+                  <span>5</span>
+                </div>
+              </div>
             )}
           </div>
         ))}
-        <button type="submit">Submit</button>
+        <div className="flex justify-end">
+  <button
+    type="submit"
+    className="btn btn-ghost font-bold text-border-slate-500 pb-1 py-3 px-6 rounded-lg w-fit text-lg hover:bg-success hover:text-white transition-colors duration-300"
+  >
+    Submit
+  </button>
+</div>
       </form>
     </div>
   );
