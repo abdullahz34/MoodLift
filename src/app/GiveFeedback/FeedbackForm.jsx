@@ -38,7 +38,7 @@ export default function CreateForm() {
             <textarea 
               required
               rows={10}
-              cols={100}
+              cols={200}
               maxLength={300}
               className="text-[darkblue]"
               onChange={(e) => setMessage(e.target.value)}
@@ -46,6 +46,7 @@ export default function CreateForm() {
               />
               
           </label>
+          <div><br></br></div>
           <button className="btn btn-secondary">Submit</button>  
        
         </form>
