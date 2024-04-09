@@ -4,10 +4,10 @@ import Feedback from "../../../../models/feedbackSchema";
 import mongoose from "mongoose";
 
 export async function POST(req) {
-    const { message } = await req.json()
+    const { message,username } = await req.json()
     try{
         await connect();
-        await Feedback.create({ message })
+        await Feedback.create({ message,username })
         return NextResponse.json({
             msg: ["feedback message sent successfully"],
             success: true,
