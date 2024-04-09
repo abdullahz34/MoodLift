@@ -23,7 +23,7 @@ export default async function Home() {
   else if(!session) {
     return( <div className="flex items-center justify-center h-screen">
     <h1 className="text-2xl font-bold text-gray-800">
-      You are not authorized to view surveys, please log in
+      You are not authorised to view surveys. Please log in first. 
     </h1>
   </div>);
   }

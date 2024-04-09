@@ -78,15 +78,15 @@ export default function AnswerSurveyForm({ id }) {
       <form onSubmit={handleSubmit} className="flex flex-col gap-4 max-w-auto mr-auto pl-4 pr-4 pt-2">
 
       <div className="px-4 py-2 bg-neutral-content rounded-lg">
-      <h1>{survey.title}</h1>
+      <h1 className=" text-black bg-info text-lg p-4 rounded">{survey.title}</h1>
        </div>
 <div className="px-4 py-2 bg-neutral-content rounded-lg">
-<h2>{survey.description}</h2>
+<h2 className="text-black bg-info text-lg p-4 rounded">{survey.description}</h2>
     
 </div>
 {/*BULK OF SURVEY QUESTIONS*/}
         {survey.questions.map((question, index) => (
-          <div key={index} className="px-4 py-2 bg-neutral-content rounded-lg">
+          <div key={index} className="px-4 py-2 bg-neutral-content rounded-lg text-lg">
             <h3>{question.text}</h3>
             {question.type === 'text' ? (
               <div>
@@ -125,9 +125,14 @@ export default function AnswerSurveyForm({ id }) {
             )}
           </div>
         ))}
-        <button type="submit"
-        className="btn btn-ghost font-bold text-border-slate-500 py-3 px-6 rounded-lg w-fit text-lg hover:bg-success hover:text-white transition-colors duration-300"
-        >Submit</button>
+        <div className="flex justify-end">
+  <button
+    type="submit"
+    className="btn btn-ghost font-bold text-border-slate-500 pb-1 py-3 px-6 rounded-lg w-fit text-lg hover:bg-success hover:text-white transition-colors duration-300"
+  >
+    Submit
+  </button>
+</div>
       </form>
     </div>
   );
