@@ -5,6 +5,7 @@ import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 
 //Employee Imports
 import RequestAmbassador from "@/components/RequestAmbassador/index"
+import BookedAppointmentsEmployee from "@/components/BookedAppointmentsEmployee"
 
 //Admin Imports
 import ViewAmbassadors from "@/components/ViewAmbassador/index"
@@ -59,7 +60,7 @@ export default async function Appointment() {
         <main>
 
           <div className='flex flex-row px-20 pb-10 justify-center '>
-            <div className='pr-20'>   <BookedAppointments/>   </div>
+            <div className='pr-20'>   <BookedAppointmentsEmployee/>   </div>
 
             <div><RequestAmbassador/></div>
 
