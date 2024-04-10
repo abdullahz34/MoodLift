@@ -1,3 +1,4 @@
+import BackButton from "@/components/backButton";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { authOptions } from "../api/auth/[...nextauth]/route";
@@ -10,6 +11,7 @@ export default async function ManageUsers() {
 
   return (
     <>
+      <BackButton route="/" label="dashboard" />
       <div className="flex justify-center space-x-8 items-center h-screen">
         <div className="flex justify-center items-center">
           <div className="card w-96 bg-base-100 shadow-xl">
