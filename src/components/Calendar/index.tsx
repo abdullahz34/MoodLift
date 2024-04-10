@@ -4,8 +4,6 @@ import ReactCalendar from 'react-calendar'
 import '../Calendar/CalendarStyle.css';
 import {add,format} from 'date-fns';
 
-import { getServerSession } from "next-auth";
-import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 import { useSession } from "next-auth/react";
 
 interface indexProps{}
@@ -19,7 +17,8 @@ interface DateType{
 
 export default function Calendar() {
 
-    const {data:session, status}= useSession()
+    const { data: session, status } = useSession();
+    
 
     // Time Selection
     const[date,setDate] = useState<DateType>({
@@ -30,9 +29,15 @@ export default function Calendar() {
 
     const[FormButton,setForm]= useState(false)
     const[Employee_username,setEmployee_username]= useState('')
-    const[Ambassadorusername,setAmbassador_username]= useState(session?.user.username)
+    const [Ambassadorusername, setAmbassador_username] = useState('');
     const [bookedTimes, setBookedTimes] = useState<Date[]>([]);
     const [ToggleAppointmentForm, setToggleAppointmentForm] = useState('Video Call')
+
+    useEffect(() => {
+        if (session?.user) {
+            setAmbassador_username(session.user.username as string);
+        }
+    }, [session]);
 
     console.log('Selected Date:', date.justDate);
     // console.log(date.dateTime)
@@ -86,10 +91,12 @@ export default function Calendar() {
 
     const handleFormChange= () =>{
         setForm(!FormButton)
-        if (ToggleAppointmentForm === 'Video Call') {setToggleAppointmentForm('1-on-1 Messaging')} else if (ToggleAppointmentForm === '1-on-1 Messaging') {setToggleAppointmentForm('Video Call')}
-        console.log(ToggleAppointmentForm)
+        if (ToggleAppointmentForm === 'Video Call') {
+            setToggleAppointmentForm('1-on-1 Messaging');
+        } else if (ToggleAppointmentForm === '1-on-1 Messaging') {
+            setToggleAppointmentForm('Video Call');
+        }
     }
-
 
     const JustdateString = date.justDate ? format(date.justDate,'dd/MM/yyyy') : '';
 
