@@ -22,9 +22,9 @@ const index: FC<indexProps> = ({}) => {
 
     const[FormButton,setForm]= useState(false)
     const[Employee_username,setEmployee_username]= useState('')
-    const[Ambassador_username,setAmbassador_username]= useState('Ambassador2')
+    const[Ambassador_username,setAmbassador_username]= useState('AmbassdorYaser')
     const [bookedTimes, setBookedTimes] = useState<Date[]>([]);
-
+    const [ToggleAppointmentForm, setToggleAppointmentForm] = useState('Video Call')
 
     console.log('Selected Date:', date.justDate);
     // console.log(date.dateTime)
@@ -78,7 +78,9 @@ const index: FC<indexProps> = ({}) => {
     };
 
     const handleFormChange= () =>{
-        setForm(!FormButton) 
+        setForm(!FormButton)
+        if (ToggleAppointmentForm === 'Video Call') {setToggleAppointmentForm('1-on-1 Messaging')} else if (ToggleAppointmentForm === '1-on-1 Messaging') {setToggleAppointmentForm('Video Call')}
+        console.log(ToggleAppointmentForm)
     }
 
 
@@ -91,7 +93,7 @@ const index: FC<indexProps> = ({}) => {
                 Employee_username,
                 Date_Time: date.dateTime ,//? format(date.dateTime, 'yyyy-MM-dd kk:mm') : '',
                 JustDate: JustdateString,
-                Appointment_form: 'Online'
+                Appointment_form: ToggleAppointmentForm
             };
             const response = await fetch('/api/Appointment', {
                 method: 'POST',
@@ -116,7 +118,7 @@ const index: FC<indexProps> = ({}) => {
     const booked= []
 
     return (
-        <div className="flex flex-row p-2 backdrop-blur-sm bg-slate-500/5 w-min rounded-3xl ">
+        <div className="flex flex-row p-2 backdrop-blur-sm bg-slate-500/5 w-fit rounded-3xl ">
             {/* AppointmentSelection= Calendar and RightSide */}
 
             <ReactCalendar  
@@ -148,6 +150,7 @@ const index: FC<indexProps> = ({}) => {
                             <button 
                             type='button' 
                             className={`btn ${bookedTimes.includes(time) ? 'btn-error' : 'btn-success'}`}
+                            // className={`btn ${bookedTimes.includes(time) ? 'btn-success' : 'btn'}`}
                             onClick={() => setDate(prevDate => ({ ...prevDate, dateTime: time }))}>
                                 {format(time,'kk:mm')}  {/* kk for military time */}
                             </button> 
@@ -156,7 +159,7 @@ const index: FC<indexProps> = ({}) => {
                 </div>
                 
                 <div className="flex flex-row self-center pt-4">
-                    <div className="pr-5">In person </div>
+                    <div className="pl-5 pr-5">Video Call </div>
 
                     {/* Toggle button */}
                     <div>
@@ -166,7 +169,7 @@ const index: FC<indexProps> = ({}) => {
                         checked={FormButton}/>
                     </div>
                 
-                    <div className="pl-5">Online</div>
+                    <div className="pl-5 pr-5">1-on-1 Messaging</div>
                 </div>
 
                 {/* Schedule Button */}
