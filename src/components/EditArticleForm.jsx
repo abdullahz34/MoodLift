@@ -3,6 +3,7 @@ import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import "react-quill/dist/quill.snow.css";
 import dynamic from "next/dynamic";
+import ReturnButton from "./ReturnButton";
 
 
 export default function EditArticleForm({id, newTitle, newSummary, newImgURL, newContent}){
@@ -51,6 +52,7 @@ export default function EditArticleForm({id, newTitle, newSummary, newImgURL, ne
                   <ReactQuill value={content} onChange={setContent} placeholder="Write your article"/>
                 </div>
                 <button type="submit" className="btn mt-1.5">Edit article</button>
+                <ReturnButton/>
             </form>
         </div>
     )
