@@ -9,19 +9,16 @@ export default async function getFeedback() {
     const session = await getServerSession(authOptions);
     if (!session) redirect("/");
     return (
-        <body>
-            <div>
-            <Navbar/>
-            </div>
+        <div>
             <div className="card w-200 bg-base-100 shadow-xl">
   <div className="card-body">
     <h2 className="card-title bg-neutral-content">Viewing feedback</h2>
-      <text className="bg-primary">
+      <text>
         <DisplayEntries/>
         </text>
     </div>
   </div>
-        </body>
+        </div>
 
     )
 }   
