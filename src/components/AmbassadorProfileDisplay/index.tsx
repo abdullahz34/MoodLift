@@ -14,7 +14,6 @@ interface Profile {
 const index: FC<indexProps> = ({}) => {
 
     const [profile, setProfile] = useState<Profile | null>(null);
-    const [loading, setLoading] = useState<boolean>(true);
 
     // const fetchProfile = async (username:string) => {
     //     try {
@@ -66,14 +65,11 @@ const index: FC<indexProps> = ({}) => {
                 const selectedProfile = profilesData.find(profile => profile.username === targetUsername);
                 if (selectedProfile){
                     setProfile(selectedProfile);
-                    setLoading(false);
                 } else{
                     console.error(`Profile with username ${targetUsername} not found`);
-                    setLoading(false);
                 }
             } catch (error) {
                 console.error("Error fetching profile:", error);
-                setLoading(false);
             }
         };
 

@@ -20,7 +20,7 @@ const AppointmentList: FC = () => {
         throw new Error("Failed to fetch appointments");
       }
       const appointments = await response.json();
-      console.log("Fetched appointments:", appointments); // Add this line
+      // console.log("Fetched appointments:", appointments); // Add this line
       return appointments;
       
     } catch (error) {

@@ -62,7 +62,7 @@ export default async function Appointment() {
           <div className='flex flex-row px-20 pb-10 justify-center '>
             <div className='pr-20'>   <BookedAppointmentsEmployee/>   </div>
 
-            <div><RequestAmbassador/></div>
+            <div className='backdrop-blur-sm bg-slate-500/5 px-20 pb-15 rounded-3xl pt-10' ><RequestAmbassador/></div>
 
           </div>
         </main>

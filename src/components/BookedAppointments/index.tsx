@@ -11,6 +11,7 @@ interface Appointment {
   JustDate: string;
   Appointment_form: string;
 }
+
 const AppointmentList: FC = () => {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
 
@@ -60,8 +61,6 @@ const AppointmentList: FC = () => {
         const appointmentsData = await fetchAppointments();
         setAppointments(appointmentsData);
         
-        
-          
       } catch (error) {
         console.error("Error fetching appointments:", error);
       }

@@ -13,10 +13,10 @@ export const GET = async () => {
 
         const username = session.user.username;
 
-        console.log("Employee username:", username); // Log the username
+        // console.log("Employee username:", username); // Log the username
         
         const appointments = await Appointment_Schema.find({ Employee_username: username });
-        console.log("Fetched appointments:", appointments); // Log the fetched appointments
+        // console.log("Fetched appointments:", appointments); // Log the fetched appointments
 
         appointments.sort((a, b) => a.Date_Time - b.Date_Time); //sorting array based on closest Date_time
 
