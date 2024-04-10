@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
+import { withAuth } from "@/components/WithAuth";
 
 async function getData(date, username) {
   const response = await fetch(
@@ -249,4 +250,4 @@ const FitnessPage = () => {
   );
 };
 
-export default FitnessPage;
+export default withAuth(FitnessPage);
