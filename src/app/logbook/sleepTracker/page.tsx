@@ -32,7 +32,7 @@ const SleepTracker = () => {
   const [loading, setLoading] = useState(true);
 
   const { data: session } = useSession();
-  const username = session?.user?.name;
+  const username = session?.user?.username;
 
   const fetchData = async () => {
     try {
