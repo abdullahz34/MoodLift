@@ -7,7 +7,7 @@ const resources = () => {
     const userType = session?.user?.type;
 
     return (
-    <div className="flex justify-center">
+    <div className="flex justify-center gap-4">
         <Link href="resources/view-recipes">
           <div className="card card-compact w-96 bg-base-100 shadow-xl">
             <div className="card-body">
