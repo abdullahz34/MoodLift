@@ -113,6 +113,10 @@ const TodoList = () => {
   };
 
   const handleTaskUpdate = async (index, updatedText) => {
+    if (updatedText.trim() === '') {
+      alert('Edited task cannot be empty');
+      return;
+    }
     try {
       const updatedTasks = [...todoList];
       updatedTasks[index].text = updatedText;
