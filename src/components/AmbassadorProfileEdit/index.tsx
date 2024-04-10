@@ -56,7 +56,7 @@ const index: FC<indexProps> = ({}) => {
 
         <div className=" w-100 bg-slate-500/5 backdrop-blur-sm p-10 rounded-3xl h-full w-fit">
 
-            <div className=" backdrop-blur-sm bg-slate-500/5 rounded-3xl p-5 h-full">
+            <div className="rounded-3xl p-5 h-full">
                 {showAlert && (
                     <Alert message="Profile Updated. Refresh to see changes" onClose={handleCloseAlert} />
                 )}
@@ -74,7 +74,7 @@ const index: FC<indexProps> = ({}) => {
 
                     <label className="pt-3">Description</label>
                     <textarea value={description} onChange={(e) => setDescription(e.target.value)} className="textarea text-pretty textarea-bordered textarea-md w-full max-w-md h-full" placeholder="Bio"></textarea>
-                    <div className="p-5"><button type="submit" onClick={handleSubmit} className="btn btn-wide">Submit</button></div>
+                    <div className="p-5"><button type="submit" onClick={handleSubmit} className="btn btn-wide btn-success">Submit</button></div>
                 </div>
             </div>
         </div>

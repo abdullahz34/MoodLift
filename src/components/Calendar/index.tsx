@@ -156,12 +156,11 @@ export default function Calendar() {
 
     return (
         <div className="flex flex-row p-2 backdrop-blur-sm bg-slate-500/5 w-fit rounded-3xl ">
-            {/* {showAlert && <Alert message={Message} onClose={handleCloseAlert} />}
-            {showErrorAlert && <Alert message={errorMessage} onClose={() => setShowErrorAlert(false)} />} */}
             {showAlert && <Alert message={Message} onClose={handleCloseAlert} />}
             {showErrorAlert && <Error message={errorMessage} onClose={() => setShowErrorAlert(false)} />}
-            {/* AppointmentSelection= Calendar and RightSide */}
 
+
+            {/* AppointmentSelection= Calendar and RightSide */}
             <ReactCalendar  
                 minDate={new Date()} 
                 className='REACT-CALENDAR p-2' 
@@ -187,12 +186,9 @@ export default function Calendar() {
                     {times?.map((time,i) => (
 
                         <div key={`time-${i}`} className="p-2">
-                            {/* <button type='button' className="btn" onClick={() => setDate ((prev) => ({... prev, dateTime: time}))}> */}
                             <button 
                             type='button' 
-                            // className={`btn ${bookedTimes.includes(time) ? 'btn-error' : 'btn-success'}`}
-                            className='btn btn-success'
-                            // className={`btn ${bookedTimes.includes(time) ? 'btn-success' : 'btn'}`}
+                            className='btn'
                             onClick={() => setDate(prevDate => ({ ...prevDate, dateTime: time }))}>
                                 {format(time,'kk:mm')}  {/* kk for military time */}
                             </button> 
@@ -216,7 +212,7 @@ export default function Calendar() {
 
                 {/* Schedule Button */}
                 <div className="self-center py-3">
-                    <button className="btn btn-wide" onClick={scheduleButton}>Schedule</button>
+                    <button className="btn btn-wide btn-success" onClick={scheduleButton}>Schedule</button>
                 </div>
 
 
