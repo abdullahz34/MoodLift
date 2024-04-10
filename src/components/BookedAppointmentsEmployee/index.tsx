@@ -1,6 +1,7 @@
 'use client';
 import React, { FC, useEffect, useState } from "react";
 import {format} from 'date-fns';
+import Alert from '@/components/Alert/index'
 
 interface Appointment {
   Ambassador_username: string;
@@ -11,8 +12,8 @@ interface Appointment {
 }
 const AppointmentList: FC = () => {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [showAlert, setShowAlert] = useState(false);// alert
 
-  
   const fetchAppointments = async () => {
     try {
       const response = await fetch("http://localhost:3000/api/BookedAppointmentEmployee");
@@ -42,7 +43,8 @@ const AppointmentList: FC = () => {
       if (!response.ok) {
         throw new Error('Failed to delete appointment');
       }
-  
+      setShowAlert(true);
+      setTimeout(() => setShowAlert(false), 5000); // Hide the alert after 5 seconds
       const data = await response.json();
       console.log(data.message);
       // Optionally, you can update the state by filtering out the deleted appointment
@@ -51,6 +53,10 @@ const AppointmentList: FC = () => {
       console.error('Error deleting appointment:', error);
     }
   };
+
+  const handleCloseAlert = () => {
+    setShowAlert(false);
+  };
   
   useEffect(() => {
     const fetchData = async () => {
@@ -58,8 +64,6 @@ const AppointmentList: FC = () => {
         const appointmentsData = await fetchAppointments();
         setAppointments(appointmentsData);
         
-        
-          
       } catch (error) {
         console.error("Error fetching appointments:", error);
       }
@@ -69,9 +73,12 @@ const AppointmentList: FC = () => {
   }, []);
   
   return (
-    <div className=" backdrop-blur-sm bg-slate-500/5 rounded-3xl ">
+    <div className=" backdrop-blur-sm bg-slate-500/5 rounded-3xl p-5 h-full">
+      {showAlert && (
+        <Alert message="Appointment has been cancelled successfully" onClose={handleCloseAlert} />
+      )}
         {appointments.length > 0 ? (
-            <table className="table">
+            <table className="table pt-10">
                 <thead>
                 <tr className="bg-base-200">
                     <th></th>

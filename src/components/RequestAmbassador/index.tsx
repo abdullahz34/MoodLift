@@ -1,6 +1,7 @@
 'use client';
 import { FC, useState , useEffect } from "react"
 import { useSession } from "next-auth/react";
+import Alert from '@/components/Alert/index'
 
 
 interface Profile {
@@ -14,6 +15,7 @@ interface Profile {
 const Request_Ambassador: FC = () => {
 
     const [Profiles, setProfiles] = useState<Profile[]>([]);
+    const [showAlert, setShowAlert] = useState(false);// alert
 
     const [Employee_username, setEmployeeUsername]= useState('')
     const [Severity,SetSeverity]=useState('')
@@ -93,6 +95,8 @@ const Request_Ambassador: FC = () => {
           if (response.ok) {
             const responseData = await response.json();
             console.log(responseData);
+            setShowAlert(true);
+            setTimeout(() => setShowAlert(false), 5000); // Hide the alert after 3 seconds
             // Reset form fields
             SetSeverity(''); setReason('');setAppointmentPref(''); //clear for next request
           } else {
@@ -103,9 +107,16 @@ const Request_Ambassador: FC = () => {
         }
     };
 
+    const handleCloseAlert = () => {
+      setShowAlert(false);
+    };
+
 
     return(
         <div>
+                {showAlert && (
+        <Alert message="Request has been sent successfully" onClose={handleCloseAlert} />
+      )}
             {Profiles.map((Profile, index) => (
                 <div key={index} className="py-2">
                     <div className="collapse collapse-plus bg-base-200">

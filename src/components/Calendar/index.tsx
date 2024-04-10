@@ -3,6 +3,7 @@ import React, { FC, useState, useEffect } from "react"
 import ReactCalendar from 'react-calendar'
 import '../Calendar/CalendarStyle.css';
 import {add,format} from 'date-fns';
+import Alert from '@/components/Alert/index'
 
 import { useSession } from "next-auth/react";
 
@@ -18,7 +19,8 @@ interface DateType{
 export default function Calendar() {
 
     const { data: session, status } = useSession();
-    
+    const [showAlert, setShowAlert] = useState(false);// alert
+    const [Message,SetMessage]=useState('')
 
     // Time Selection
     const[date,setDate] = useState<DateType>({
@@ -32,6 +34,7 @@ export default function Calendar() {
     const [Ambassadorusername, setAmbassador_username] = useState('');
     const [bookedTimes, setBookedTimes] = useState<Date[]>([]);
     const [ToggleAppointmentForm, setToggleAppointmentForm] = useState('Video Call')
+    
 
     useEffect(() => {
         if (session?.user) {
@@ -119,6 +122,17 @@ export default function Calendar() {
             if (response.ok) {
                 const responseData = await response.json();
                 console.log(responseData); // Handle success response
+
+                // Format the appointment time
+                const appointmentTime = format(date.dateTime!, 'kk:mm');
+
+
+                // Create the alert message with the appointment details
+                const alertMessage = `Appointment scheduled with ${Employee_username} on ${JustdateString} at ${appointmentTime}. Please refresh the page`;
+                SetMessage(alertMessage)
+
+                setShowAlert(true);
+                setTimeout(() => setShowAlert(false), 8000);
             } else {
                 console.error('Failed to send data:', response.statusText); // Handle error response
             }
@@ -126,13 +140,18 @@ export default function Calendar() {
             console.error('Error:', error); // Handle network or other errors
         }
     };
+
+    const handleCloseAlert = () => {
+        setShowAlert(false);
+      };
     
     const times=getTimes()
 
-    const booked= []
-
     return (
         <div className="flex flex-row p-2 backdrop-blur-sm bg-slate-500/5 w-fit rounded-3xl ">
+            {showAlert && (
+                <Alert message={Message} onClose={handleCloseAlert} />
+            )}
             {/* AppointmentSelection= Calendar and RightSide */}
 
             <ReactCalendar  
