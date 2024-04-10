@@ -12,7 +12,7 @@ export default async function Home() {
 //add a way to refresh auto here on server comp if possible
 //not a requirement, optional for security
   
-  if (session && (session.user.type === 'Admin' || session.user.type === 'Ambassador')) {
+  if (session && (session.user.type === 'Admin' || session.user.type === 'Ambassador' || session.user.type === 'Superadmin')) {
     
     return <SurveyList />;
   } else if (session && session.user.type === 'Employee') {

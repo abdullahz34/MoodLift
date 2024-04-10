@@ -70,23 +70,22 @@ export default function AnswerSurveyForm({ id }) {
   };
 
   if (!survey) {
-    return <div>Loading...</div>;
+    return <div>Loading</div>;
   }
 
   return (
     <div>
-      
-      
-      
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4 max-w-auto mr-auto pl-4 pr-4 pt-2">
-
-      <div className="px-4 py-2 bg-neutral-content rounded-lg">
-      <h1 className=" text-black bg-info text-lg p-4 rounded">{survey.title}</h1>
-       </div>
-<div className="px-4 py-2 bg-neutral-content rounded-lg">
-<h2 className="text-black bg-info text-lg p-4 rounded">{survey.description}</h2>
-    
-</div>
+  <form onSubmit={handleSubmit} className="flex flex-col gap-4 max-w-auto mr-auto pl-4 pr-4 pt-2">
+    <div className="px-4 py-2 bg-neutral-content rounded-lg">
+      <h1 className="text-black text-2xl bg-neutral-content rounded inline-block px-4">
+        {survey.title}
+      </h1>
+    </div>
+    <div className="px-4 py-2 bg-neutral-content rounded-lg">
+      <h2 className="text-black bg-neutral-content rounded inline-block px-4">
+        {survey.description}
+      </h2>
+    </div>
 {/*BULK OF SURVEY QUESTIONS*/}
         {survey.questions.map((question, index) => (
           <div key={index} className="px-4 py-2 bg-neutral-content rounded-lg text-lg">
