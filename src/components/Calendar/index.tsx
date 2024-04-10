@@ -4,6 +4,7 @@ import ReactCalendar from 'react-calendar'
 import '../Calendar/CalendarStyle.css';
 import {add,format} from 'date-fns';
 import Alert from '@/components/Alert/index'
+import Error from '@/components/Alert/error'
 
 import { useSession } from "next-auth/react";
 
@@ -22,6 +23,9 @@ export default function Calendar() {
     const [showAlert, setShowAlert] = useState(false);// alert
     const [Message,SetMessage]=useState('')
 
+    const [showErrorAlert, setShowErrorAlert] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
+
     // Time Selection
     const[date,setDate] = useState<DateType>({
         justDate: null,
@@ -32,7 +36,6 @@ export default function Calendar() {
     const[FormButton,setForm]= useState(false)
     const[Employee_username,setEmployee_username]= useState('')
     const [Ambassadorusername, setAmbassador_username] = useState('');
-    const [bookedTimes, setBookedTimes] = useState<Date[]>([]);
     const [ToggleAppointmentForm, setToggleAppointmentForm] = useState('Video Call')
     
 
@@ -70,28 +73,6 @@ export default function Calendar() {
         return times
     }
 
-    // useEffect(() => {
-    //     if (date.justDate) {
-    //         fetchBookedTimes(format(date.justDate, 'yyyy-MM-dd'));
-    //     }
-    // }, [date.justDate]);
-
-    // const fetchBookedTimes = async (selectedDate: String) => {
-    //     try {
-    //         const response = await fetch(`/api/Appointment?date=${selectedDate}`);
-    //         console.log('selected date in fetchbookeditems',selectedDate)
-    //         if (response.ok) {
-    //             const data: string[] = await response.json();
-    //             const parsedTimes = data.map(timeStr => new Date(timeStr));
-    //             setBookedTimes(parsedTimes);
-    //         } else {
-    //             console.error('Failed to fetch booked times:', response.statusText);
-    //         }
-    //     } catch (error) {
-    //         console.error('Error fetching booked times:', error);
-    //     }
-    // };
-
     const handleFormChange= () =>{
         setForm(!FormButton)
         if (ToggleAppointmentForm === 'Video Call') {
@@ -105,6 +86,24 @@ export default function Calendar() {
 
     const scheduleButton = async () => {
         try {
+            //this
+            if (!Employee_username) {
+                setErrorMessage('Please enter an employee username.');
+                setShowErrorAlert(true);
+                setTimeout(() => setShowErrorAlert(false), 5000);
+                return;
+              }
+
+            //this
+            // Check if no day or time is selected
+            if (!date.justDate || !date.dateTime) {
+                setErrorMessage('Please select a day and time.');
+                setShowErrorAlert(true);
+                setTimeout(() => setShowErrorAlert(false), 5000);
+                return;
+            }
+
+
             const data = {
                 Ambassador_username:Ambassadorusername,
                 Employee_username,
@@ -119,6 +118,7 @@ export default function Calendar() {
                 },
                 body: JSON.stringify(data),
             });
+
             if (response.ok) {
                 const responseData = await response.json();
                 console.log(responseData); // Handle success response
@@ -133,7 +133,14 @@ export default function Calendar() {
 
                 setShowAlert(true);
                 setTimeout(() => setShowAlert(false), 8000);
-            } else {
+
+            } else if (response.status === 409) {
+
+                setErrorMessage('The selected date and time are already booked. Please choose a different slot.');
+                setShowErrorAlert(true);
+                setTimeout(() => setShowErrorAlert(false), 5000);
+            
+            }else {
                 console.error('Failed to send data:', response.statusText); // Handle error response
             }
         } catch (error) {
@@ -149,9 +156,10 @@ export default function Calendar() {
 
     return (
         <div className="flex flex-row p-2 backdrop-blur-sm bg-slate-500/5 w-fit rounded-3xl ">
-            {showAlert && (
-                <Alert message={Message} onClose={handleCloseAlert} />
-            )}
+            {/* {showAlert && <Alert message={Message} onClose={handleCloseAlert} />}
+            {showErrorAlert && <Alert message={errorMessage} onClose={() => setShowErrorAlert(false)} />} */}
+            {showAlert && <Alert message={Message} onClose={handleCloseAlert} />}
+            {showErrorAlert && <Error message={errorMessage} onClose={() => setShowErrorAlert(false)} />}
             {/* AppointmentSelection= Calendar and RightSide */}
 
             <ReactCalendar  
