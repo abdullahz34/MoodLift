@@ -1,77 +1,48 @@
-import { Underdog } from 'next/font/google';
-import React from 'react';
-const getFeedback = async() => {
-    try {
+'use client';
+import React, { useEffect, useState } from 'react';
+
+const GetFeedback = () => {
+  const [feedbackList, setFeedbackList] = useState([]);
+
+  useEffect(() => {
+    const fetchFeedback = async () => {
+      try {
         const res = await fetch("http://localhost:3000/api/feedback", {
-            cache: "no-store", 
+          cache: "no-store",
         });
         if (!res.ok) {
-            throw new Error("Failed to fetch feedback");
+          throw new Error("Failed to fetch feedback");
         }
-        return res.json();
-    } catch (error) {
+        const feedbackData = await res.json();
+        const formattedFeedback = feedbackData.map((feedback) => {
+          const date = new Date(feedback.createdAt);
+          return [
+            `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`,
+            feedback.username,
+            feedback.message,
+          ];
+        });
+        setFeedbackList(formattedFeedback);
+      } catch (error) {
         console.log("Error loading feedback: ", error);
-    }
-}
+      }
+    };
+    fetchFeedback();
+  }, []);
 
-
-const feedbackList = []
-//Returns the list of feedback as an array with 10 entries
-async function GetList() {
-const allFeedback = await getFeedback();
-let count = 0;
-allFeedback.forEach(f => {
-
-    let d = new Date(f.createdAt);
-feedbackList.push([d.toLocaleDateString() + " " + d.toLocaleTimeString(), f.username, f.message])
-
-count = count + 1;
-});
-}
-
-
-export default async function DisplayEntries() {
-    await GetList();
-    return (
-        <div>
-        <IterateArray/>
-        </div>
-    )
-}
-
-function IterateArray() {
-    if(feedbackList.length === 1) {
-    return (
-            <div>
-            <div className="chat chat-start">
-            <div className="chat-bubble chat-bubble-secondary"><GetOutput/></div>
-            </div>
-            <br></br>
-            <div>
-            </div>
-            </div>
-    ) 
-    }
-    return (
+  return (
     <div>
-        <div className="chat chat-start">
-        <div className="chat-bubble chat-bubble-secondary"><GetOutput/></div>
+      {feedbackList.map((feedback, index) => (
+        <div key={index} className="chat chat-start">
+          <div className="chat-bubble chat-bubble-secondary">
+            {feedback[1] === "" || feedback[1] === undefined
+              ? `[${feedback[0]}] ${feedback[2]}`
+              : `[${feedback[0]}] ${feedback[2]} (by ${feedback[1]})`}
+          </div>
         </div>
-        <br></br>
-        <div><IterateArray/></div>
-
+      ))}
     </div>
-    )
-}
+  );
+};
 
-function GetOutput() {
-    let entry = feedbackList.splice(0,1)[0]
-    let output = ""
-    if (entry[1] === "" || entry[1] === undefined) {
-        output = "["+entry[0] + "] " + entry[2]
-    }
-    else {output = "["+entry[0] + "] " + entry[2] + " (by " + entry[1] + ")"}
-    return (output)
-
-}
-
+export default GetFeedback;
