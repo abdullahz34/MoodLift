@@ -1,4 +1,4 @@
-.MoodLift {
+.MoodLift-chat {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -8,7 +8,7 @@
     padding-bottom: 7%;
   }
   
-  .MoodLift header {
+  .MoodLift-chat header {
     width: 100%;
     max-width: 100%;
     padding: 18px;
@@ -20,7 +20,7 @@
     border-radius: 8px 8px 0 0;
   }
   
-  .container {
+  .container-chat {
     display: flex;
     height: 85%;
     width: 100%;
@@ -33,7 +33,7 @@
     margin-top: 20px;
   }
   
-  .sidebar {
+  .sidebar-chat {
     width: 250px;
     border-right: 1px solid #ddd;
     overflow-y: auto;

@@ -1,17 +1,24 @@
-'use client'
-import { withAuth } from "@/components/WithAuth";
-import React, { useState, useEffect } from 'react';
+"use client";
+import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
+import { withAuth } from "@/components/WithAuth";
 
 async function getData(date, username) {
-  const response = await fetch(`http://localhost:3000/api/logging?date=${date}&username=${username}`, { cache: "no-store" });
+  const response = await fetch(
+    `http://localhost:3000/api/logging?date=${date}&username=${username}`,
+    { cache: "no-store" }
+  );
   if (!response.ok) {
-    throw new Error('Response for the logging API call failed! (hydration)');
+    throw new Error("Response for the logging API call failed! (hydration)");
   }
   const data = await response.json();
-  console.log('Data from getData:', data);
+  console.log("Data from getData:", data);
   // Find the object for the selected date and username
-  const item = data.find(item => new Date(item.date).toDateString() === new Date(date).toDateString() && item.username === username);
+  const item = data.find(
+    (item) =>
+      new Date(item.date).toDateString() === new Date(date).toDateString() &&
+      item.username === username
+  );
 
   // Return the hydration object of the found item, or null if no item was found
   return item ? item.hydration : null;
@@ -30,13 +37,13 @@ const HydrationTracker = () => {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const dataPromise = getData(date,username);
-      const timeoutPromise = new Promise(resolve => setTimeout(resolve, 500)); // 500ms minimum loading time
+      const dataPromise = getData(date, username);
+      const timeoutPromise = new Promise((resolve) => setTimeout(resolve, 500)); // 500ms minimum loading time
       await Promise.all([dataPromise, timeoutPromise]);
       const data = await dataPromise;
       setHydrationData(data);
       setLoading(false);
-      console.log("Data for hydrationData", hydrationData)
+      console.log("Data for hydrationData", hydrationData);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -53,10 +60,10 @@ const HydrationTracker = () => {
 
     const hydration = { waterML };
 
-    const response = await fetch('http://localhost:3000/api/logging', {
-      method: 'POST',
+    const response = await fetch("http://localhost:3000/api/logging", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         username,
@@ -65,69 +72,128 @@ const HydrationTracker = () => {
       }),
     });
     if (!response.ok) {
-      throw new Error('Response for the logging API call failed! (hydration)');
+      throw new Error("Response for the logging API call failed! (hydration)");
     }
 
     const responseData = await response.json();
     console.log(responseData);
     await fetchData();
-  }
+  };
 
   function getFormattedCurrentDate() {
     const today = new Date();
     const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0'); // Adding 1 to month because it's zero-based
-    const day = String(today.getDate()).padStart(2, '0');
+    const month = String(today.getMonth() + 1).padStart(2, "0"); // Adding 1 to month because it's zero-based
+    const day = String(today.getDate()).padStart(2, "0");
     return `${year}-${month}-${day}`;
   }
 
-
   useEffect(() => {
-    console.log('Current date:', date);
+    console.log("Current date:", date);
     if (date) {
       fetchData();
     }
   }, [date]);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-primary">
-      {submitted && (
-        <div role="alert" className="alert alert-success fixed top-0 left-0 right-0 flex items-center justify-center mt-4 p-2 text-sm max-w-xs mx-auto">
-          <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-          <span>Your hydration has been successfully tracked for this day!</span>
+    <div className="min-h-screen py-12 px-3 bg-white">
+      <div className="max-w-[1400px] mx-auto flex h-auto md:h-[620px] rounded-lg overflow-hidden shadow">
+        <div className="hidden md:block w-[40%]">
+          <img
+            src="/hydration.jpg"
+            alt="hydration"
+            className="w-full h-full bg-center bg-cover"
+          />
         </div>
-      )}
-      <div className="flex">
-        <div className="w-1/2 mr-20">
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-gray-700">Water (ML)</label>
-              <input type="number" value={waterML || ''} onChange={(e) => setWaterML(e.target.value)} placeholder="Type here" className="input input-bordered w-full max-w-xs" required />
+
+        <div className="w-full md:w-[60%] bg-white flex flex-col py-[70px] px-5 sm:px-32">
+          {submitted && (
+            <div
+              role="alert"
+              className="alert alert-success shadow-lg mx-auto mb-6 w-full flex items-center"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="stroke-current shrink-0 h-4 w-4 mr-2"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <span className="text-white text-sm">
+                Your hydration has been successfully tracked for this day!
+              </span>
             </div>
-            <div>
-              <label className="block text-gray-700">Date</label>
-              <input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="input input-bordered w-full max-w-xs" />
-            </div>
-            <button type="submit" className="btn btn-secondary">Submit</button>
-          </form>
-        </div>
-        <div className="w-1/2">
-          {loading ? (
-            <span className="loading loading-dots loading-md"></span>
-          ) : hydrationData ? (
-            <div>
-              <h2>Data logged on this date for hydration:</h2>
-              <ul>
-                <li>Water(ML): {hydrationData.waterML}</li>
-              </ul>
-            </div>
-          ) : (
-            <p>No logs on this date!</p>
           )}
+
+          <div className="w-full">
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label className="text-[#222222] text-base font-semibold">
+                  Water (ML)
+                </label>
+                <input
+                  type="number"
+                  value={waterML || ""}
+                  onChange={(e) => setWaterML(e.target.value)}
+                  placeholder="Type here"
+                  className="border border-gray-300 mt-1 rounded-[50px] p-3 w-full outline-none font-medium text-base bg-transparent"
+                  required
+                />
+              </div>
+              <div>
+                <label className="text-[#222222] text-base font-semibold">
+                  Date
+                </label>
+                <input
+                  type="date"
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
+                  className="border border-gray-300 mt-1 rounded-[50px] p-3 w-full outline-none font-medium text-base bg-transparent"
+                />
+              </div>
+              <div className="flex justify-end">
+                <button
+                  type="submit"
+                  className="bg-[#ff6801] text-white px-9 h-[45px] text-sm hover:bg-[#cd5300] transition-colors duration-300"
+                >
+                  Submit
+                </button>
+              </div>
+            </form>
+          </div>
+          <div>
+            {loading ? (
+              <div className="flex justify-center items-center h-full">
+                <span className="loading loading-dots loading-md bg-[#ff6801] mt-10"></span>
+              </div>
+            ) : hydrationData ? (
+              <div>
+                <h2 className="text-xl font-semibold mb-4 mt-10">
+                  Data logged on this date for hydration:
+                </h2>
+                <ul>
+                  <li className="text-base font-medium">
+                    Water(ML):{" "}
+                    <span className="font-semibold ml-1">
+                      {hydrationData.waterML}
+                    </span>
+                  </li>
+                </ul>
+              </div>
+            ) : (
+              <p>No logs on this date!</p>
+            )}
+          </div>
         </div>
       </div>
     </div>
-  )
+  );
 };
 
 export default withAuth(HydrationTracker);

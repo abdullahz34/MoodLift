@@ -1,5 +1,4 @@
 "use client"
-import { withAuth } from "@/components/WithAuth";
 import React, { useEffect, useState } from 'react';
 import { Chart, registerables } from 'chart.js';
 import { Doughnut, Bar } from 'react-chartjs-2';
@@ -124,4 +123,4 @@ const InsightsPage = () => {
   );
 };
 
-export default withAuth(InsightsPage);
+export default InsightsPage;

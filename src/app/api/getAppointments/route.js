@@ -1,16 +1,16 @@
 import { NextResponse } from "next/server";
 import connect from "../../../../db";
-import Appointments from "../../../../models/appointmentsSchema";
+import Appointment from "../../../../models/Appointment_Schema";
 
 export const GET = async (req) => {
   try {
     let scheduleTime = null;
     await connect();
     const userAppointment = await fetch('http://localhost:3000/api/auth/session', {headers: {cookie: req.cookies.toString()}}).then(res => res.json()).then(data => data.user.username);
-    const users = await Appointments.find({ EmployeeID: userAppointment });
+    const users = await Appointment.find({ Employee_username: userAppointment });
     let upcomingAppointments = [];
     users.forEach((appointment) => {
-        scheduleTime = new Date(appointment.scheduleTime) - 3*60*60*1000;
+        scheduleTime = new Date(appointment.Date_Time) - 3*60*60*1000;
         if (scheduleTime > new Date()) {
             upcomingAppointments.push(appointment);
         }

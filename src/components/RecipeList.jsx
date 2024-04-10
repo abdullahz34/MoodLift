@@ -28,7 +28,7 @@ export default async function RecipeList() {
   const { recipes } = await getRecipes();
   const session = await getServerSession(authOptions);
 
-  if (session && (session.user.type === 'Admin' || session.user.type === 'Ambassador')) {
+  if (session && (session.user.type === 'Superadmin' || session.user.type === 'Admin' || session.user.type === 'Ambassador')) {
 
   return (
     <div className="flex flex-col w-1/3">

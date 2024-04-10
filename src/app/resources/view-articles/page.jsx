@@ -27,7 +27,7 @@ const articles = async () => {
     const {articles} = await getArticles();
 
     return (
-    <div className="flex flex-wrap justify-center">
+    <div className="flex flex-wrap justify-center gap-4">
         {articles.map((post) =>(
             <Link href={"view-articles/" + post._id}>
                 <div className="card card-compact w-96 h-80 bg-base-100 shadow-xl">
