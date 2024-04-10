@@ -4,6 +4,10 @@ import ReactCalendar from 'react-calendar'
 import '../Calendar/CalendarStyle.css';
 import {add,format} from 'date-fns';
 
+import { getServerSession } from "next-auth";
+import {authOptions} from "@/app/api/auth/[...nextauth]/route";
+import { useSession } from "next-auth/react";
+
 interface indexProps{}
 
 interface DateType{
@@ -11,7 +15,11 @@ interface DateType{
     dateTime:Date | null
 }
 
-const index: FC<indexProps> = ({}) => { 
+// const index: FC<indexProps> = ({}) => { 
+
+export default function Calendar() {
+
+    const {data:session, status}= useSession()
 
     // Time Selection
     const[date,setDate] = useState<DateType>({
@@ -22,7 +30,7 @@ const index: FC<indexProps> = ({}) => {
 
     const[FormButton,setForm]= useState(false)
     const[Employee_username,setEmployee_username]= useState('')
-    const[Ambassador_username,setAmbassador_username]= useState('AmbassdorYaser')
+    const[Ambassadorusername,setAmbassador_username]= useState(session?.user.username)
     const [bookedTimes, setBookedTimes] = useState<Date[]>([]);
     const [ToggleAppointmentForm, setToggleAppointmentForm] = useState('Video Call')
 
@@ -31,7 +39,6 @@ const index: FC<indexProps> = ({}) => {
     // console.log(bookedTimes)
     // console.log(date.justDate)
     
-
 
     const getTimes = () => {
         
@@ -55,27 +62,27 @@ const index: FC<indexProps> = ({}) => {
         return times
     }
 
-    useEffect(() => {
-        if (date.justDate) {
-            fetchBookedTimes(format(date.justDate, 'yyyy-MM-dd'));
-        }
-    }, [date.justDate]);
+    // useEffect(() => {
+    //     if (date.justDate) {
+    //         fetchBookedTimes(format(date.justDate, 'yyyy-MM-dd'));
+    //     }
+    // }, [date.justDate]);
 
-    const fetchBookedTimes = async (selectedDate: String) => {
-        try {
-            const response = await fetch(`/api/Appointment?date=${selectedDate}`);
-            console.log('selected date in fetchbookeditems',selectedDate)
-            if (response.ok) {
-                const data: string[] = await response.json();
-                const parsedTimes = data.map(timeStr => new Date(timeStr));
-                setBookedTimes(parsedTimes);
-            } else {
-                console.error('Failed to fetch booked times:', response.statusText);
-            }
-        } catch (error) {
-            console.error('Error fetching booked times:', error);
-        }
-    };
+    // const fetchBookedTimes = async (selectedDate: String) => {
+    //     try {
+    //         const response = await fetch(`/api/Appointment?date=${selectedDate}`);
+    //         console.log('selected date in fetchbookeditems',selectedDate)
+    //         if (response.ok) {
+    //             const data: string[] = await response.json();
+    //             const parsedTimes = data.map(timeStr => new Date(timeStr));
+    //             setBookedTimes(parsedTimes);
+    //         } else {
+    //             console.error('Failed to fetch booked times:', response.statusText);
+    //         }
+    //     } catch (error) {
+    //         console.error('Error fetching booked times:', error);
+    //     }
+    // };
 
     const handleFormChange= () =>{
         setForm(!FormButton)
@@ -89,7 +96,7 @@ const index: FC<indexProps> = ({}) => {
     const scheduleButton = async () => {
         try {
             const data = {
-                Ambassador_username,
+                Ambassador_username:Ambassadorusername,
                 Employee_username,
                 Date_Time: date.dateTime ,//? format(date.dateTime, 'yyyy-MM-dd kk:mm') : '',
                 JustDate: JustdateString,
@@ -149,7 +156,8 @@ const index: FC<indexProps> = ({}) => {
                             {/* <button type='button' className="btn" onClick={() => setDate ((prev) => ({... prev, dateTime: time}))}> */}
                             <button 
                             type='button' 
-                            className={`btn ${bookedTimes.includes(time) ? 'btn-error' : 'btn-success'}`}
+                            // className={`btn ${bookedTimes.includes(time) ? 'btn-error' : 'btn-success'}`}
+                            className='btn btn-success'
                             // className={`btn ${bookedTimes.includes(time) ? 'btn-success' : 'btn'}`}
                             onClick={() => setDate(prevDate => ({ ...prevDate, dateTime: time }))}>
                                 {format(time,'kk:mm')}  {/* kk for military time */}
@@ -182,6 +190,6 @@ const index: FC<indexProps> = ({}) => {
         </div>
     )
 }
-export default index;
+// export default index;
 
 

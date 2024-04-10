@@ -1,6 +1,8 @@
 'use client';
 import React, { FC, useEffect, useState } from "react";
-
+import {format} from 'date-fns';
+import { getServerSession } from "next-auth";
+import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 
 interface Appointment {
   Ambassador_username: string;
@@ -20,18 +22,46 @@ const AppointmentList: FC = () => {
         throw new Error("Failed to fetch appointments");
       }
       const appointments = await response.json();
+      
       return appointments;
+      
     } catch (error) {
       console.error("Error fetching appointments:", error);
       throw error;
     }
   }
+
+  const deleteAppointment = async (appointment: any) => {
+    try {
+      const response = await fetch('/api/Appointment', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(appointment),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to delete appointment');
+      }
+  
+      const data = await response.json();
+      console.log(data.message);
+      // Optionally, you can update the state by filtering out the deleted appointment
+      setAppointments(appointments.filter((a) => a !== appointment));
+    } catch (error) {
+      console.error('Error deleting appointment:', error);
+    }
+  };
   
   useEffect(() => {
     const fetchData = async () => {
       try {
         const appointmentsData = await fetchAppointments();
         setAppointments(appointmentsData);
+        
+        
+          
       } catch (error) {
         console.error("Error fetching appointments:", error);
       }
@@ -39,7 +69,7 @@ const AppointmentList: FC = () => {
 
     fetchData();
   }, []);
-
+  
   return (
     <div className=" backdrop-blur-sm bg-slate-500/5 rounded-3xl ">
       <table className="table">
@@ -47,8 +77,8 @@ const AppointmentList: FC = () => {
           <tr className="bg-base-200">
             <th></th>
             <th>Employee</th>
-            <th >Date</th>
-            {/* <th>Time</th> */}
+            <th>Date</th>
+            <th>Time</th>
             <th>Form</th>
             <th>Cancel</th>
           </tr>
@@ -56,12 +86,12 @@ const AppointmentList: FC = () => {
         <tbody>
           {appointments.map((appointment, index) => (
             <tr key={index}>
-                <td>{index}</td>
+                <td>{index+1}</td>
                 <td className="pr-2">{appointment.Employee_username}</td>
                 <td>{appointment.JustDate}</td>
-                {/* <td>{appointment.Date_Time}</td> */}
+                <td>{format(appointment.Date_Time,'kk:mm')}</td>
                 <td>{appointment.Appointment_form}</td>
-                <td><button className="btn btn-sm btn-error">Cancel</button></td>
+                <td><button className="btn btn-sm btn-error" onClick={() => deleteAppointment(appointment)}>Cancel</button></td>
             </tr>
           ))}
         </tbody>
