@@ -1,6 +1,6 @@
 "use client";
 
-export default function DeleteUser({ id }) {
+export default function DeleteUser({ id, setSubmitted }) {
 
   const handleDeleteUser = async () => {
     const confirmed = confirm("Are you sure you want to delete this user?");
@@ -11,7 +11,11 @@ export default function DeleteUser({ id }) {
       });
 
       if (res.ok) {
-        window.location.reload()
+        setSubmitted(true);
+        setTimeout(() => {
+          setSubmitted(false)
+          window.location.reload()
+        }, 2000);
       }
     }
   };
