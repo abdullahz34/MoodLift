@@ -8,13 +8,9 @@ export default async function FeedbackPage() {
   if (!session) redirect("/");
 
   return (
-    <div>
-      <div className="card w-200 bg-base-100 shadow-xl">
-        <div className="card-body">
-          <h2 className="card-title bg-neutral-content">Viewing feedback</h2>
-          <GetFeedback />
-        </div>
-      </div>
+    <div className="container mx-auto py-8">
+      <h2 className="text-3xl font-bold mb-4">Viewing Feedback</h2>
+      <GetFeedback />
     </div>
   );
 }

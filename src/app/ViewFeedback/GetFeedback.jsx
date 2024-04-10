@@ -16,11 +16,11 @@ const GetFeedback = () => {
         const feedbackData = await res.json();
         const formattedFeedback = feedbackData.map((feedback) => {
           const date = new Date(feedback.createdAt);
-          return [
-            `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`,
-            feedback.username,
-            feedback.message,
-          ];
+          return {
+            date: `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`,
+            username: feedback.username,
+            message: feedback.message,
+          };
         });
         setFeedbackList(formattedFeedback);
       } catch (error) {
@@ -31,14 +31,17 @@ const GetFeedback = () => {
   }, []);
 
   return (
-    <div>
+    <div className="grid gap-4">
       {feedbackList.map((feedback, index) => (
-        <div key={index} className="chat chat-start">
-          <div className="chat-bubble chat-bubble-secondary">
-            {feedback[1] === "" || feedback[1] === undefined
-              ? `[${feedback[0]}] ${feedback[2]}`
-              : `[${feedback[0]}] ${feedback[2]} (by ${feedback[1]})`}
+        <div
+          key={index}
+          className="bg-white rounded-lg shadow-md p-4 flex flex-col"
+        >
+          <div className="flex items-center mb-2">
+            <span className="font-semibold mr-2">{feedback.username || 'Anonymous'}</span>
+            <span className="text-gray-500">{feedback.date}</span>
           </div>
+          <p className="text-gray-800">{feedback.message}</p>
         </div>
       ))}
     </div>
