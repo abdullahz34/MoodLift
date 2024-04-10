@@ -162,20 +162,31 @@ export default function Goals() {
       <div className="card w-96 bg-base-100 shadow-xl">
         <div className="card-body text-sm space-y-4">
           <h1 className="card-title text-sm font-bold text-gray-900 justify-center">Today's steps</h1>
-          <div className="grid grid-cols-4 items-center">
-            <div className="radial-progress" style={{"--value":calcProgress(fitnessData.steps, stepsGoal), "--size":"3rem"}} role="progressbar">{calcProgress(fitnessData.steps, stepsGoal)}%</div>
-            <div className="col-span-3">
-              {!isGoalMet(fitnessData.steps, stepsGoal) ? 
-                <p>
-                  Stay determined! So far you've walked {fitnessData.steps} steps. This is {Math.round((fitnessData.steps/stepsGoal)*100)}% of your daily steps goal - keep moving.
-                </p>
-                : 
-                <p>
-                  You walked {fitnessData.steps} steps today and met your goal. Well done!
-                </p>
-              }
+          {(fitnessData && stepsGoal) ?
+            <div className="grid grid-cols-4 items-center">
+              <div className="radial-progress" style={{"--value":calcProgress(fitnessData.steps, stepsGoal), "--size":"3rem"}} role="progressbar">{calcProgress(fitnessData.steps, stepsGoal)}%</div>
+              <div className="col-span-3">
+                {!isGoalMet(fitnessData.steps, stepsGoal) ? 
+                  <p>
+                    Stay determined! So far you've walked {fitnessData.steps} steps. This is {Math.round((fitnessData.steps/stepsGoal)*100)}% of your daily steps goal - keep moving.
+                  </p>
+                  : 
+                  <p>
+                    You walked {fitnessData.steps} steps today and met your goal. Well done!
+                  </p>
+                }
+              </div>
             </div>
-          </div>
+            :
+            (!fitnessData&&!stepsGoal || fitnessData) ?
+            <p>
+              You haven't set a goal yet! Set one now to start tracking your progress.
+            </p>
+            :
+            <p>
+            You haven't got any entries yet for today! Good luck reaching your goal of {stepsGoal} steps!
+            </p>
+          }
           <div className="card-actions">
             <div className="collapse bg-secondary">
               <input type="checkbox" /> 
@@ -212,20 +223,32 @@ export default function Goals() {
       <div className="card w-96 bg-base-100 shadow-xl">
         <div className="card-body text-sm space-y-4">
           <h1 className="card-title text-sm font-bold text-gray-900 justify-center">Today's water</h1>
-          <div className="grid grid-cols-4 items-center">
-            <div className="radial-progress" style={{"--value":calcProgress(hydrationData.waterML, waterGoal), "--size":"3rem"}} role="progressbar">{calcProgress(hydrationData.waterML, waterGoal)}%</div>
-            <div className="col-span-3">
-              {!isGoalMet(hydrationData.waterML, waterGoal) ? 
-                <p>
-                  Good hydration is vital. So far you've had {hydrationData.waterML}mL of water, only {waterGoal-hydrationData.waterML}mL left to reach your goal!
-                </p>
-                : 
-                <p>
-                  You drank {hydrationData.waterML}mL of water today and met your goal. Well done!
-                </p>
-              }
+          {(hydrationData && waterGoal) ? 
+            <div className="grid grid-cols-4 items-center">
+              <div className="radial-progress" style={{"--value":calcProgress(hydrationData.waterML, waterGoal), "--size":"3rem"}} role="progressbar">{calcProgress(hydrationData.waterML, waterGoal)}%</div>
+              <div className="col-span-3">
+                {!isGoalMet(hydrationData.waterML, waterGoal) ? 
+                  <p>
+                    Good hydration is vital. So far you've had {hydrationData.waterML}mL of water, only {waterGoal-hydrationData.waterML}mL left to reach your goal!
+                  </p>
+                  : 
+                  <p>
+                    You drank {hydrationData.waterML}mL of water today and met your goal. Well done!
+                  </p>
+                }
+              </div>
             </div>
-          </div>
+            :
+            (!hydrationData&&!waterGoal || hydrationData) ?
+            <p>
+              You haven't set a goal yet! Set one now to start tracking your progress.
+            </p>
+            :
+            <p>
+            You haven't got any entries yet for today! Good luck reaching your goal of {waterGoal}mL!
+            </p>
+          }
+
           <div className="card-actions">
             <div className="collapse bg-secondary">
               <input type="checkbox" /> 
@@ -262,20 +285,32 @@ export default function Goals() {
       <div className="card w-96 bg-base-100 shadow-xl">
         <div className="card-body text-sm space-y-4">
           <h1 className="card-title text-sm font-bold text-gray-900 justify-center">Last night's sleep</h1>
-          <div className="grid grid-cols-4 items-center">
-            <div className="radial-progress" style={{"--value":calcProgress(sleepData.hoursSlept, sleepGoal), "--size":"3rem"}} role="progressbar">{calcProgress(sleepData.hoursSlept, sleepGoal)}%</div>
-            <div className="col-span-3">
-              {!isGoalMet(sleepData.hoursSlept, sleepGoal) ? 
-                <p>
-                  Good sleep is essential. Take a break and recover some sleep to get closer to your goal of {sleepGoal} hours.
-                </p>
-                : 
-                <p>
-                  You slept for {sleepData.hoursSlept} hours last night and met your goal. Well done!
-                </p>
-              }
+          {(sleepData && sleepGoal) ? 
+            <div className="grid grid-cols-4 items-center">
+              <div className="radial-progress" style={{"--value":calcProgress(sleepData.hoursSlept, sleepGoal), "--size":"3rem"}} role="progressbar">{calcProgress(sleepData.hoursSlept, sleepGoal)}%</div>
+              <div className="col-span-3">
+                {!isGoalMet(sleepData.hoursSlept, sleepGoal) ? 
+                  <p>
+                    Good sleep is essential. Take a break and recover some sleep to get closer to your goal of {sleepGoal} hours.
+                  </p>
+                  :
+                  <p>
+                    You slept for {sleepData.hoursSlept} hours last night and met your goal. Well done!
+                  </p>
+                }
+              </div>
             </div>
-          </div>
+            :
+            (!sleepData&&!sleepGoal || sleepData) ?
+            <p>
+              You haven't set a goal yet! Set one now to start tracking your progress.
+            </p>
+            :
+            <p>
+            You haven't got any entries yet for today! Good luck reaching your goal of {sleepGoal} hours!
+            </p>
+          }
+
           <div className="card-actions">
             <div className="collapse bg-secondary">
               <input type="checkbox" /> 
