@@ -21,22 +21,51 @@ async function GetList() {
 const allFeedback = await getFeedback();
 let count = 0;
 allFeedback.forEach(f => {
-if (count > 10) {  }
-else {
+
     let d = new Date(f.createdAt);
 feedbackList.push([d.toLocaleDateString() + " " + d.toLocaleTimeString(), f.username, f.message])
-}
+
 count = count + 1;
 });
 }
 
-//Returns the first entry of the feedback array and then removes it from the array
- function PopFirstEntry() {
-    if (feedbackList.length ===  0) {
-        return null
+
+export default async function DisplayEntries() {
+    await GetList();
+    return (
+        <div>
+        <IterateArray/>
+        </div>
+    )
+}
+
+function IterateArray() {
+    if(feedbackList.length === 1) {
+    return (
+            <div>
+            <div className="chat chat-start">
+            <div className="chat-bubble chat-bubble-secondary"><GetOutput/></div>
+            </div>
+            <br></br>
+            <div>
+            </div>
+            </div>
+    ) 
     }
-    let entry = feedbackList[0];
-    feedbackList.splice(0,1)
+    return (
+    <div>
+        <div className="chat chat-start">
+        <div className="chat-bubble chat-bubble-secondary"><GetOutput/></div>
+        </div>
+        <br></br>
+        <div><IterateArray/></div>
+
+    </div>
+    )
+}
+
+function GetOutput() {
+    let entry = feedbackList.splice(0,1)[0]
     let output = ""
     if (entry[1] === "" || entry[1] === undefined) {
         output = "["+entry[0] + "] " + entry[2]
@@ -44,48 +73,5 @@ count = count + 1;
     else {output = "["+entry[0] + "] " + entry[2] + " (by " + entry[1] + ")"}
     return (output)
 
-};
-
-//Places the current entry of the feedback array into a speech bubble
-function FormatEntry() {
-    if (feedbackList.length === 0) {
-        return
-        (            
-         <div className="badge badge-primary badge-lg"></div>
-        )
-    }
-    else {
-        return (
-            <div>
-            <div className="chat chat-start">
-            <div className="chat-bubble chat-bubble-secondary"><PopFirstEntry/></div>
-            </div>
-            <br></br>
-            <div>
-            </div>
-            </div>
-        )
-    }
-}
-
-
-//Displays all of the speech bubbles containing the entries of feedback
-export default async function DisplayEntries() {
-    await GetList();
-    return (
-        <div>
-            <div></div> 
-            <FormatEntry/>              
-            <FormatEntry/>              
-            <FormatEntry/>              
-            <FormatEntry/>              
-            <FormatEntry/>              
-            <FormatEntry/>              
-            <FormatEntry/>              
-            <FormatEntry/>              
-            <FormatEntry/>              
-            <FormatEntry/>              
-        </div>
-    )
 }
 
