@@ -68,6 +68,10 @@ const TodoList = () => {
 
   const handleTaskSubmit = async (e) => {
     e.preventDefault();
+    if (newTask.trim() === '') {
+      alert('Task cannot be empty');
+      return;
+    }
     try {
       const response = await fetch('/api/todolists', {
         method: 'PUT',
