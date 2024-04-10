@@ -43,7 +43,7 @@ const resources = () => {
                 <h2 className="card-title">Articles</h2>
                 <p>Explore articles to help improve your wellbeing</p>
                 <figure><img src=""></img></figure>
-                {userType==="Superadmin" || (userType==="Admin" || userType==="Ambassador") && <div className="card-actions justify-end">
+                {(userType==="Superadmin" || userType==="Admin" || userType==="Ambassador") && <div className="card-actions justify-end">
                     <Link href="resources/create-article"><button className="btn btn-primary">Create</button></Link>
                 </div>}
                 
