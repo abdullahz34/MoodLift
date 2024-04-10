@@ -1,4 +1,7 @@
 import EditRecipeForm from "@/components/EditRecipeForm";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 const getRecipeById = async (id) => {
     try {
@@ -17,6 +20,9 @@ const getRecipeById = async (id) => {
   };
 
 export default async function EditRecipe({ params }){
+    const session = await getServerSession(authOptions);
+    if (!session) redirect("/");
+
     const {id} = params;
     const {recipe} = await getRecipeById(id);
     const {title, prep, calories, ingredients, instructions, imgURL} = recipe;

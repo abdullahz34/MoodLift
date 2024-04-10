@@ -1,6 +1,8 @@
 import EditSurveyForm from "../../../components/EditSurveyForm";
 import { useRouter } from "next/navigation";
-
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+import { authOptions } from "../../../app/api/auth/[...nextauth]/route";
 
 
 //locating specific survey by id
@@ -24,6 +26,9 @@ const getSurveyById = async (id) => {
 };
 //to edit asurvey using identity of id
 export default async function EditSurvey({ params }) {
+  const session = await getServerSession(authOptions);
+  if (!session) redirect("/");
+
   const { id } = params;
   const { survey } = await getSurveyById(id);
   const { title, description, frequency } = survey;
