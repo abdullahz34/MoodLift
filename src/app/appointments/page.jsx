@@ -72,7 +72,7 @@ export default async function Appointment() {
         </main>
   )}
 //admin
-  else if (session && session.user.type === 'Admin') {
+  else if (session && (session.user.type === 'Admin' || session.user.type === 'Superadmin')) {
       return (
         <main>
           <div className='flex flex-row px-20 pb-10 justify-center '>
