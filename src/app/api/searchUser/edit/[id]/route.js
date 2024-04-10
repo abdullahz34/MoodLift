@@ -1,6 +1,7 @@
 import connect from "../../../../../../db";
 import User from "../../../../../../models/userSchema";
 import { NextResponse } from "next/server";
+import bcrypt from "bcryptjs"
 
 export async function GET(req, { params }) {
   try {
@@ -17,7 +18,8 @@ export async function GET(req, { params }) {
 export async function PUT(request, { params }) {
   const { id } = params;
   const { newUsername: username, newName: name, newPassword: password, newType: type } = await request.json();
+  const hashedPassword = await bcrypt.hash(password, 10);
   await connect();
-  await User.findByIdAndUpdate(id, { username, name, password, type });
+  await User.findByIdAndUpdate(id, { username, name, password: hashedPassword, type });
   return NextResponse.json({ message: "User updated" }, { status: 200 });
 }

@@ -16,12 +16,12 @@ export default function SurveyNavbar() {
         <Link className="btn btn-ghost text-lg text-bg-secondary font-bold mr-3" href={"/surveys"}>
           Active Surveys
         </Link>
-        {(session && (session.user.type === 'Admin' || session.user.type === 'Ambassador')) && (
+        {(session && (session.user.type === 'Admin' || session.user.type === 'Ambassador' || session.user.type === 'Superadmin')) && (
           <Link className="btn btn-ghost text-lg text-bg-secondary font-bold mr-3" href="/addSurvey">
             Create Survey
           </Link>
         )}
-        {(session && (session.user.type === 'Admin' || session.user.type === 'Ambassador')) && (
+        {(session && (session.user.type === 'Admin' || session.user.type === 'Ambassador' || session.user.type === 'Superadmin')) && (
         <Link className="btn btn-ghost text-lg text-bg-secondary font-bold mr-3" href={"/infographics"}>
           View Results
         </Link>

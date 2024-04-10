@@ -23,7 +23,7 @@ export default async function Dashboard() {
       <div className="flex w-full">
         <SideBar />
         <div className="divider divider-horizontal mt-20 mb-20"></div>
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col flex-1 items-center">
           {(session?.user?.type==="Admin" || session?.user?.type==="Superadmin")&&
             <AdminDash />
           }

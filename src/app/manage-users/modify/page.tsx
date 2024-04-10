@@ -1,6 +1,7 @@
 import ModifySearch from "@/components/ModifySearch";
+import BackButton from "@/components/backButton";
 import { getServerSession } from 'next-auth';
-import { notFound, redirect } from 'next/navigation';
+import { redirect } from 'next/navigation';
 import { authOptions } from '../../api/auth/[...nextauth]/route';
 
 export default async function Modify() {
@@ -9,6 +10,7 @@ export default async function Modify() {
 
   return (
     <main>
+      <BackButton route="/manage-users" label="Manage users" />
       <ModifySearch />
     </main>
   )

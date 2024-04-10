@@ -3,9 +3,15 @@ import Calendar from '../../components/Calendar/index'
 import BookedAppointments from '@/components/BookedAppointments/index'
 import AmbassadorProfileDisplay from '@/components/AmbassadorProfileDisplay/index'
 import AmbassadorProfileEdit from '@/components/AmbassadorProfileEdit/index'
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 // import TimePicker from '../../components/TimePicker/index'
 
-const Appointment = () => {
+const Appointment = async () => {
+  const session = await getServerSession(authOptions);
+  if (!session) redirect("/");
+
   return (
     <main>
       <div className='flex flex-row px-20 pb-10 justify-center '>

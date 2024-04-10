@@ -13,26 +13,28 @@ const EmployeeDash = () => {
   }
 
   return (
-    <>
-      <div className="flex justify-center items-center h-screen">
-        <div className="card w-96 bg-base-100 shadow-xl">
-          <h1 className="card-title text-xl font-bold text-gray-900 justify-center">Your details</h1>
-          <div className="card-body space-y-4">
-            <div>
-              Username: <span className="font-bold">{session?.user?.username}</span>
-            </div>
-            <div>
-              Type: <span className="font-bold">{session?.user?.type}</span>
-            </div>
-            <div className="card-actions">
-              <button 
-                onClick={handleClick}
-                className="btn btn-secondary w-full">Logout</button>
+    <div className="container mx-auto px-5 py-10">
+      <div className="grid grid-rows-1">
+        <div className="grid grid-cols gap-8 items-start mb-8">
+          <div className="card w-96 bg-base-100 shadow-xl">
+            <h1 className="card-title text-xl font-bold text-gray-900 justify-center">Your details</h1>
+            <div className="card-body space-y-4">
+              <div>
+                Username: <span className="font-bold">{session?.user?.username}</span>
+              </div>
+              <div>
+                Type: <span className="font-bold">{session?.user?.type}</span>
+              </div>
+              <div className="card-actions">
+                <button 
+                  onClick={handleClick}
+                  className="btn btn-secondary w-full">Logout</button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </>
+    </div>
   )
 }
 

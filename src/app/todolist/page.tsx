@@ -1,4 +1,5 @@
 'use client';
+import { withAuth } from "@/components/WithAuth";
 import React, { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { TrashIcon, PencilIcon } from '@heroicons/react/outline';
@@ -68,6 +69,10 @@ const TodoList = () => {
 
   const handleTaskSubmit = async (e) => {
     e.preventDefault();
+    if (newTask.trim() === '') {
+      alert('Task cannot be empty');
+      return;
+    }
     try {
       const response = await fetch('/api/todolists', {
         method: 'PUT',
@@ -109,6 +114,10 @@ const TodoList = () => {
   };
 
   const handleTaskUpdate = async (index, updatedText) => {
+    if (updatedText.trim() === '') {
+      alert('Edited task cannot be empty');
+      return;
+    }
     try {
       const updatedTasks = [...todoList];
       updatedTasks[index].text = updatedText;
@@ -236,4 +245,4 @@ const TodoList = () => {
   );
 };
 
-export default TodoList;
+export default withAuth(TodoList);

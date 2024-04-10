@@ -1,4 +1,5 @@
 import SignupForm from '@/components/SignupForm';
+import BackButton from '@/components/backButton';
 import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
 import { authOptions } from '../../api/auth/[...nextauth]/route';
@@ -10,6 +11,7 @@ export default async function Signup() {
 
   return (
     <main>
+      <BackButton route="/manage-users" label="Manage users"/>
       <SignupForm />
     </main>
   )

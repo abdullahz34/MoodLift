@@ -1,4 +1,5 @@
 'use client'
+import { withAuth } from "@/components/WithAuth";
 import React from 'react'
 import { useState, useEffect, useRef } from 'react'
 import { useSession } from "next-auth/react"
@@ -191,4 +192,4 @@ const Moodbot = () => {
   )
 }
 
-export default Moodbot
+export default withAuth(Moodbot);
