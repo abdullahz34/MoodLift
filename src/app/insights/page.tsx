@@ -1,47 +1,38 @@
 "use client"
 import React, { useEffect, useState } from 'react';
 import { Chart, registerables } from 'chart.js';
-import { Doughnut, Bar } from 'react-chartjs-2';
+import { Line } from 'react-chartjs-2';
 import axios from 'axios';
 import './InsightsPage.css';
 
 Chart.register(...registerables);
 
 const InsightsPage = () => {
-  // State hooks for your data
-  const [appointments, setAppointments] = useState([]);
   const [logbookEntries, setLogbookEntries] = useState([]);
   const [surveys, setSurveys] = useState([]);
 
-  // Fetch data on component mount
   useEffect(() => {
     const fetchData = async () => {
-      const appointmentsData = await axios.get('/api/getAppointments');
-      setAppointments(appointmentsData.data);
-
       const logbookData = await axios.get('/api/getLogbooks');
-      // recalculate calories
       const newData = [];
-        logbookData.data.forEach(entry => {
-            try {
-                const calories = calculateEnergy(entry.nutrition.protein, entry.nutrition.carbs, entry.nutrition.fats);
-                newData.push({
-                ...entry,
-                nutrition: {
-                    ...entry.nutrition,
-                    calories,
-                },
-                });
-            } catch (error) {
-                console.error('Error calculating calories', error);
-            }
-
-        });
+      logbookData.data.forEach(entry => {
+        try {
+          const calories = calculateEnergy(entry.nutrition.protein, entry.nutrition.carbs, entry.nutrition.fats);
+          newData.push({
+            ...entry,
+            nutrition: {
+              ...entry.nutrition,
+              calories,
+            },
+          });
+        } catch (error) {
+          console.error('Error calculating calories', error);
+        }
+      });
       setLogbookEntries(newData);
 
       const surveysData = await axios.get('/api/surveys');
       setSurveys(surveysData.data.surveys);
-      console.log(surveysData.data.surveys);
     };
 
     fetchData();
@@ -51,18 +42,35 @@ const InsightsPage = () => {
 
   function calculateEnergy(proteins, carbs, fats) {
     return (proteins * 4) + (carbs * 4) + (fats * 9);
-}
+  }
 
-  const createGraphData = (label, key1, key2, colors) => {
+  const createGraphData = () => {
     const data = {
       labels: last7Days.map(entry => new Date(entry.date).toLocaleDateString()),
       datasets: [
         {
-          label: label,
-          data: last7Days.map(entry => entry[key1][key2]),
-          backgroundColor: colors,
-          borderColor: colors,
-          borderWidth: 1,
+          label: 'Sleep Hours',
+          data: last7Days.map(entry => entry.sleep ? entry.sleep.hoursSlept : null),
+          borderColor: 'rgba(255, 99, 132, 0.5)',
+          backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        },
+        {
+          label: 'Calories',
+          data: last7Days.map(entry => entry.nutrition ? entry.nutrition.calories : null),
+          borderColor: 'rgba(54, 162, 235, 0.5)',
+          backgroundColor: 'rgba(54, 162, 235, 0.2)',
+        },
+        {
+          label: 'Water Intake (ml)',
+          data: last7Days.map(entry => entry.hydration ? entry.hydration.waterML : null),
+          borderColor: 'rgba(255, 206, 86, 0.5)',
+          backgroundColor: 'rgba(255, 206, 86, 0.2)',
+        },
+        {
+          label: 'Fitness Activity',
+          data: last7Days.map(entry => entry.fitness ? entry.fitness.steps : null),
+          borderColor: 'rgba(75, 192, 192, 0.5)',
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
         },
       ],
     };
@@ -70,53 +78,38 @@ const InsightsPage = () => {
     return data;
   };
 
-  const sleepData = createGraphData('Sleep Hours', 'sleep', 'hoursSlept', 'rgba(255, 99, 132, 0.5)');
-  const caloriesData = createGraphData('Calories', 'nutrition', 'calories', 'rgba(54, 162, 235, 0.5)');
-  const waterIntakeData = createGraphData('Water Intake (ml)', 'hydration', 'waterML', 'rgba(255, 206, 86, 0.5)');
-  const fitnessData = createGraphData('Fitness Activity', 'fitness', 'steps', 'rgba(75, 192, 192, 0.5)');
+  const graphData = createGraphData();
 
   const options = {
     scales: {
       y: {
         beginAtZero: true,
       },
+      x: {
+        reverse: true, // Add this line to reverse the x-axis labels
+      },
     },
   };
 
-
   return (
-    <div>
-      <div className="grid-container">
-        <div className="logbook-section">
-            <h2>Upcoming Appointments</h2>
-            <ul>
-                {appointments.map((appointment, index) => (
-                <li key={index}>
-                    {appointment.AmbassadorID} with {appointment.EmployeeID} on {new Date(appointment.schedule).toLocaleString()}
-                </li>
-                ))}
-            </ul>
-        </div>
-      </div>
+    <div className='max-w-[1400px] mx-auto w-full px-3 py-10'>
+      <h2 className='text-black text-center mt-12 mb-5 text-2xl font-semibold'>Your Insights</h2>
       <div className="appointments-section">
         <div>
-            <h2>Logbook Overview (Last 7 Days)</h2>
-            <div className="graph-container"> {/* You might want to style this container */}
-            <Bar data={sleepData} options={options} />
-            <Bar data={caloriesData} options={options} />
-            <Bar data={waterIntakeData} options={options} />
-            <Bar data={fitnessData} options={options} />
-            </div>
+          <h2 className='mb-3 text-black'>Logbook Overview (Last 7 Days)</h2>
+          <div className="graph-container">
+            <Line data={graphData} options={options} />
+          </div>
         </div>
       </div>
       <div className="surveys-section">
         <div>
-            <h2>Available Surveys</h2>
-            <ul>
-                {surveys.map((survey, index) => (
-                <li key={index}>{survey.title}</li>
-                ))}
-            </ul>
+          <h2 className='text-black my-5 text-lg font-bold'>Available Surveys</h2>
+          <ul className='list-disc ml-6'>
+            {surveys.map((survey, index) => (
+              <li key={index} className='text-black mb-2'>{survey.title}</li>
+            ))}
+          </ul>
         </div>
       </div>
     </div>
