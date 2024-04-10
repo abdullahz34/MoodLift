@@ -1,3 +1,4 @@
+import { Underdog } from 'next/font/google';
 import React from 'react';
 const getFeedback = async() => {
     try {
@@ -23,7 +24,7 @@ allFeedback.forEach(f => {
 if (count > 10) {  }
 else {
     let d = new Date(f.createdAt);
-feedbackList.push([d.toLocaleDateString() + " " + d.toLocaleTimeString(), f.message])
+feedbackList.push([d.toLocaleDateString() + " " + d.toLocaleTimeString(), f.username, f.message])
 }
 count = count + 1;
 });
@@ -36,7 +37,12 @@ count = count + 1;
     }
     let entry = feedbackList[0];
     feedbackList.splice(0,1)
-    return ("["+entry[0] + "] " + entry[1])
+    let output = ""
+    if (entry[1] === "" || entry[1] === undefined) {
+        output = "["+entry[0] + "] " + entry[2]
+    }
+    else {output = "["+entry[0] + "] " + entry[2] + " (by " + entry[1] + ")"}
+    return (output)
 
 };
 
@@ -55,8 +61,7 @@ function FormatEntry() {
             <div className="chat-bubble chat-bubble-secondary"><PopFirstEntry/></div>
             </div>
             <br></br>
-            <div className="chat chat-start">
-            <div className="chat-bubble chat-bubble-primary"></div>
+            <div>
             </div>
             </div>
         )
@@ -69,7 +74,7 @@ export default async function DisplayEntries() {
     await GetList();
     return (
         <div>
-            <div className="badge badge-primary badge-lg"></div> 
+            <div></div> 
             <FormatEntry/>              
             <FormatEntry/>              
             <FormatEntry/>              
