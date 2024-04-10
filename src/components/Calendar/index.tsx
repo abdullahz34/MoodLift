@@ -3,6 +3,8 @@ import React, { FC, useState, useEffect } from "react"
 import ReactCalendar from 'react-calendar'
 import '../Calendar/CalendarStyle.css';
 import {add,format} from 'date-fns';
+import Alert from '@/components/Alert/index'
+import Error from '@/components/Alert/error'
 
 import { useSession } from "next-auth/react";
 
@@ -18,7 +20,11 @@ interface DateType{
 export default function Calendar() {
 
     const { data: session, status } = useSession();
-    
+    const [showAlert, setShowAlert] = useState(false);// alert
+    const [Message,SetMessage]=useState('')
+
+    const [showErrorAlert, setShowErrorAlert] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
 
     // Time Selection
     const[date,setDate] = useState<DateType>({
@@ -30,8 +36,8 @@ export default function Calendar() {
     const[FormButton,setForm]= useState(false)
     const[Employee_username,setEmployee_username]= useState('')
     const [Ambassadorusername, setAmbassador_username] = useState('');
-    const [bookedTimes, setBookedTimes] = useState<Date[]>([]);
     const [ToggleAppointmentForm, setToggleAppointmentForm] = useState('Video Call')
+    
 
     useEffect(() => {
         if (session?.user) {
@@ -67,28 +73,6 @@ export default function Calendar() {
         return times
     }
 
-    // useEffect(() => {
-    //     if (date.justDate) {
-    //         fetchBookedTimes(format(date.justDate, 'yyyy-MM-dd'));
-    //     }
-    // }, [date.justDate]);
-
-    // const fetchBookedTimes = async (selectedDate: String) => {
-    //     try {
-    //         const response = await fetch(`/api/Appointment?date=${selectedDate}`);
-    //         console.log('selected date in fetchbookeditems',selectedDate)
-    //         if (response.ok) {
-    //             const data: string[] = await response.json();
-    //             const parsedTimes = data.map(timeStr => new Date(timeStr));
-    //             setBookedTimes(parsedTimes);
-    //         } else {
-    //             console.error('Failed to fetch booked times:', response.statusText);
-    //         }
-    //     } catch (error) {
-    //         console.error('Error fetching booked times:', error);
-    //     }
-    // };
-
     const handleFormChange= () =>{
         setForm(!FormButton)
         if (ToggleAppointmentForm === 'Video Call') {
@@ -102,6 +86,24 @@ export default function Calendar() {
 
     const scheduleButton = async () => {
         try {
+            //this
+            if (!Employee_username) {
+                setErrorMessage('Please enter an employee username.');
+                setShowErrorAlert(true);
+                setTimeout(() => setShowErrorAlert(false), 5000);
+                return;
+              }
+
+            //this
+            // Check if no day or time is selected
+            if (!date.justDate || !date.dateTime) {
+                setErrorMessage('Please select a day and time.');
+                setShowErrorAlert(true);
+                setTimeout(() => setShowErrorAlert(false), 5000);
+                return;
+            }
+
+
             const data = {
                 Ambassador_username:Ambassadorusername,
                 Employee_username,
@@ -116,25 +118,49 @@ export default function Calendar() {
                 },
                 body: JSON.stringify(data),
             });
+
             if (response.ok) {
                 const responseData = await response.json();
                 console.log(responseData); // Handle success response
-            } else {
+
+                // Format the appointment time
+                const appointmentTime = format(date.dateTime!, 'kk:mm');
+
+
+                // Create the alert message with the appointment details
+                const alertMessage = `Appointment scheduled with ${Employee_username} on ${JustdateString} at ${appointmentTime}. Please refresh the page`;
+                SetMessage(alertMessage)
+
+                setShowAlert(true);
+                setTimeout(() => setShowAlert(false), 8000);
+
+            } else if (response.status === 409) {
+
+                setErrorMessage('The selected date and time are already booked. Please choose a different slot.');
+                setShowErrorAlert(true);
+                setTimeout(() => setShowErrorAlert(false), 5000);
+            
+            }else {
                 console.error('Failed to send data:', response.statusText); // Handle error response
             }
         } catch (error) {
             console.error('Error:', error); // Handle network or other errors
         }
     };
+
+    const handleCloseAlert = () => {
+        setShowAlert(false);
+      };
     
     const times=getTimes()
 
-    const booked= []
-
     return (
         <div className="flex flex-row p-2 backdrop-blur-sm bg-slate-500/5 w-fit rounded-3xl ">
-            {/* AppointmentSelection= Calendar and RightSide */}
+            {showAlert && <Alert message={Message} onClose={handleCloseAlert} />}
+            {showErrorAlert && <Error message={errorMessage} onClose={() => setShowErrorAlert(false)} />}
 
+
+            {/* AppointmentSelection= Calendar and RightSide */}
             <ReactCalendar  
                 minDate={new Date()} 
                 className='REACT-CALENDAR p-2' 
@@ -160,12 +186,9 @@ export default function Calendar() {
                     {times?.map((time,i) => (
 
                         <div key={`time-${i}`} className="p-2">
-                            {/* <button type='button' className="btn" onClick={() => setDate ((prev) => ({... prev, dateTime: time}))}> */}
                             <button 
                             type='button' 
-                            // className={`btn ${bookedTimes.includes(time) ? 'btn-error' : 'btn-success'}`}
-                            className='btn btn-success'
-                            // className={`btn ${bookedTimes.includes(time) ? 'btn-success' : 'btn'}`}
+                            className='btn'
                             onClick={() => setDate(prevDate => ({ ...prevDate, dateTime: time }))}>
                                 {format(time,'kk:mm')}  {/* kk for military time */}
                             </button> 
@@ -189,7 +212,7 @@ export default function Calendar() {
 
                 {/* Schedule Button */}
                 <div className="self-center py-3">
-                    <button className="btn btn-wide" onClick={scheduleButton}>Schedule</button>
+                    <button className="btn btn-wide btn-success" onClick={scheduleButton}>Schedule</button>
                 </div>
 
 

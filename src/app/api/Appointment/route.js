@@ -12,6 +12,16 @@ export async function POST(request) {
 
         await connect();
 
+
+        // Check if an appointment with the same Date_Time already exists
+        const existingAppointment = await Appointment_Schema.findOne({ Date_Time });
+
+
+        if (existingAppointment) {
+            // If an existing appointment is found, return an error response
+            return NextResponse.json({ error: "The selected date and time are already booked. Please choose a different slot." }, { status: 409 });
+          }
+
         await Appointment_Schema.create({Ambassador_username, Employee_username, Date_Time, JustDate, Appointment_form})
 
         return NextResponse.json({message:"Added succesfully"},{status:201})

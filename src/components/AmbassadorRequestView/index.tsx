@@ -1,6 +1,7 @@
 'use client';
 import React, { FC, useEffect, useState } from "react";
 import {format} from 'date-fns';
+import Alert from '@/components/Alert/index'
 
 interface Request { 
     Ambassador_username:string,
@@ -14,6 +15,8 @@ interface Request {
 const RequestList: FC = () => {
 
     const [requests, setRequests] = useState<Request[]>([]);
+    const [showAlert, setShowAlert] = useState(false);// alert
+    const [Message,SetMessage]=useState('')
 
 
     const fetchRequests = async () => {
@@ -32,7 +35,7 @@ const RequestList: FC = () => {
         }
     }
 
-    const deleteRequest = async (Request: any) => {
+    const deleteRequest = async (Request: any,button:String) => {
         try {
           const response = await fetch('/api/AmbassadorRequest', {
             method: 'DELETE',
@@ -49,11 +52,22 @@ const RequestList: FC = () => {
           const data = await response.json();
           console.log(data.message);
           // update the state by filtering out the deleted request
+
+          const alertMessage = `Request has been ${button} successfully.`;
+          SetMessage(alertMessage)
+
+          setShowAlert(true);
+          setTimeout(() => setShowAlert(false), 5000);
+
           setRequests(requests.filter((a) => a !== Request));
         } catch (error) {
           console.error('Error deleting Request:', error);
         }
       };
+
+  const handleCloseAlert = () => {
+    setShowAlert(false);
+  };
 
 
     useEffect(() => {
@@ -74,6 +88,9 @@ const RequestList: FC = () => {
 
     return (
         <div className=" backdrop-blur-sm bg-slate-500/5 rounded-3xl p-5 h-full ">
+        {showAlert && (
+          <Alert message={Message} onClose={handleCloseAlert} />
+        )}
         {requests.length > 0 ? (
             <table className="table">
                 <thead>
@@ -97,7 +114,8 @@ const RequestList: FC = () => {
                         {/* <td>{request.Reason}</td> */}
                         <td>
                             {/* Open the modal using document.getElementById('ID').showModal() method */}
-                            <button className="btn" onClick={()=>document.getElementById('my_modal_2').showModal()}>Reason</button>
+                            {/* <button className="btn" onClick={()=>document.getElementById('my_modal_2').showModal()}>Reason</button> */}
+                            <button className="btn" onClick={() => (document.getElementById('my_modal_2') as HTMLDialogElement)?.showModal()}>Reason</button>
                             <dialog id="my_modal_2" className="modal">
                                 <div className="modal-box">
                                     <h3 className="font-bold text-lg">Reason</h3>
@@ -108,8 +126,8 @@ const RequestList: FC = () => {
                                 </form>
                             </dialog>
                         </td>
-                        <td><button className="btn btn-sm btn-error" onClick={() => deleteRequest(request)}>Cancel</button></td>
-                        <td><button className="btn btn-sm btn-success" onClick={() => deleteRequest(request)}>Approve</button></td>
+                        <td><button className="btn btn-sm btn-error" onClick={() => deleteRequest(request,"cancelled")}>Cancel</button></td>
+                        <td><button className="btn btn-sm btn-success" onClick={() => deleteRequest(request,"Approved")}>Approve</button></td>
                     </tr>
                 ))}
                 </tbody>
