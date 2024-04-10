@@ -70,13 +70,13 @@ const AppointmentList: FC = () => {
   }, []);
   
   return (
-    <div className=" backdrop-blur-sm bg-slate-500/5 rounded-3xl ">
+    <div className=" backdrop-blur-sm bg-slate-500/5 rounded-3xl p-5 h-full">
     {appointments.length > 0 ? (
         <table className="table">
             <thead>
             <tr className="bg-base-200">
                 <th></th>
-                <th>Ambassador</th>
+                <th>Employee</th>
                 <th>Date</th>
                 <th>Time</th>
                 <th>Form</th>
@@ -97,7 +97,7 @@ const AppointmentList: FC = () => {
             </tbody>
         </table>
     ):(
-        <div className="text-center py-4">No Scheduled Appointments</div>
+        <div className="flex items-center justify-center h-3/6 text-2xl font-bold text-gray-800">No Scheduled Appointments</div>
     )}
 </div>
 );

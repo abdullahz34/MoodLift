@@ -10,10 +10,12 @@ import BookedAppointmentsEmployee from "@/components/BookedAppointmentsEmployee"
 //Admin Imports
 import ViewAmbassadors from "@/components/ViewAmbassador/index"
 
+//Ambassador Imports
 import Calendar from '@/components/Calendar/index'
 import BookedAppointments from '@/components/BookedAppointments/index'
 import AmbassadorProfileDisplay from '@/components/AmbassadorProfileDisplay/index'
 import AmbassadorProfileEdit from '@/components/AmbassadorProfileEdit/index'
+import AmbassadorRequestView from '@/components/AmbassadorRequestView/index'
 
 // Employee components = RequestAmbassador, BookedAppointments
 // Admin = ViewAmbassadors
@@ -49,6 +51,8 @@ export default async function Appointment() {
         </div>
 
         <div className='flex flex-row px-20 pb-10 justify-center '>
+          <div className='pr-20'><AmbassadorRequestView/></div>
+
           <div className='pr-20'>   <AmbassadorProfileDisplay/>   </div>
 
           <div>   <AmbassadorProfileEdit/>  </div>

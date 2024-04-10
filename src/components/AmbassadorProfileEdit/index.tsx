@@ -1,15 +1,24 @@
 'use client';
-import React, { FC, useState,} from "react"
+import { FC, useState , useEffect } from "react"
+import { useSession } from "next-auth/react";
 
 interface indexProps{};
 
 const index: FC<indexProps> = ({}) => { 
+
+    const { data: session, status } = useSession();
 
     const [username,setUsername]=useState('')
     const [name,setName]=useState('')
     const [gender,setGender]=useState('')
     const [age,setAge]=useState('')
     const [description,setDescription]=useState('')
+
+    useEffect(() => {
+        if (session?.user) {
+            setUsername(session.user.username as string);
+        }
+    }, [session]);
 
 
     const handleSubmit = async () => {
@@ -44,11 +53,6 @@ const index: FC<indexProps> = ({}) => {
                     <label className="">Name</label>
                     <input type="string"    value={name}    onChange={(e) => setName(e.target.value)}      placeholder="Type here"  className="input input-bordered w-full max-w-xs" />
 
-
-                    <label className="pt-3">Username</label>
-                    <input type="string"    value={username}    onChange={(e) => setUsername(e.target.value)}       placeholder="Type here"    className="input input-bordered w-full max-w-xs" />
-
-
                     <label className="pt-3">Gender</label>
                     <input type="string"    value={gender}    onChange={(e) => setGender(e.target.value)}       placeholder="Type here"    className="input input-bordered w-full max-w-xs" />
 
@@ -57,7 +61,7 @@ const index: FC<indexProps> = ({}) => {
 
                 
                     <label className="pt-3">Description</label>
-                    <textarea   value={description}  onChange={(e) => setDescription(e.target.value)}  className="textarea textarea-bordered textarea-md w-full max-w-md"   placeholder="Bio"></textarea>
+                    <textarea   value={description}  onChange={(e) => setDescription(e.target.value)}  className="textarea text-pretty textarea-bordered textarea-md w-full max-w-md h-full"   placeholder="Bio"></textarea>
                     <div className="p-5"><button    type="submit"  onClick={handleSubmit}   className="btn btn-wide">Submit</button></div>
                 </div>
         </div>

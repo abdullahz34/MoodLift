@@ -29,3 +29,15 @@ export async function POST(request) {
     return NextResponse.json({ error: "Error in adding/editing Request" }, { status: 500 });
     }
 }
+
+export async function DELETE(request) {
+    try{
+        const { Ambassador_username, Employee_username,Severity,Reason, Appointment_Preference} = await request.json();
+        await connect();
+        await RequestAmbassadorSchema.findOneAndDelete({ Ambassador_username, Employee_username,Severity,Reason, Appointment_Preference});
+        return NextResponse.json({ message: "Request cancelled" }, { status: 200 });
+    } catch (error){
+        console.error("Error in deleting request", error);
+        return NextResponse.json({ error: "Error in deleting request" }, { status: 500 });
+    }
+}
