@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
+import { withAuth } from "@/components/WithAuth";
 
 async function getData(date, username) {
   const response = await fetch(
@@ -202,4 +203,4 @@ const SleepTracker = () => {
                   Data logged on this date for sleep:
                 </h2> <ul> <li className="text-base font-medium"> Sleep hours:{" "} <span className="font-semibold ml-1"> {sleepData.hoursSlept} </span> </li> <li className="text-base font-medium"> Sleep Quality:{" "} <span className="font-semibold ml-1"> {sleepData.sleepQuality} </span> </li> </ul> </div>) : (<p>No logs on this date!</p>)} </div> </div> </div> </div>);
 };
-export default SleepTracker;
+export default withAuth(SleepTracker);
