@@ -1,4 +1,5 @@
 "use client"
+import { withAuth } from "@/components/WithAuth";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 
@@ -54,4 +55,4 @@ const resources = () => {
     )
 }
 
-export default resources
+export default withAuth(resources);

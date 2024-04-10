@@ -1,4 +1,5 @@
 'use client';
+import { withAuth } from "@/components/WithAuth";
 import React, { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 
@@ -166,4 +167,4 @@ const Journal = () => {
   );
 };
 
-export default Journal;
+export default withAuth(Journal);

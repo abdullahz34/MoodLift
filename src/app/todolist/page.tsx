@@ -1,4 +1,5 @@
 'use client';
+import { withAuth } from "@/components/WithAuth";
 import React, { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { TrashIcon, PencilIcon } from '@heroicons/react/outline';
@@ -244,4 +245,4 @@ const TodoList = () => {
   );
 };
 
-export default TodoList;
+export default withAuth(TodoList);

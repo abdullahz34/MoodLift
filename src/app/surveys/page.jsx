@@ -1,19 +1,18 @@
 
 import React from 'react';
-
-
+import { redirect } from "next/navigation";
 import SurveyList from "../../components/SurveyList";
-
 import { getServerSession } from "next-auth";
 import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 import SurveyListLite from '../../components/SurveyListLite';
 
 export default async function Home() {
   const session = await getServerSession(authOptions);
+  if (!session) redirect("/");
 //add a way to refresh auto here on server comp if possible
 //not a requirement, optional for security
   
-  if (session && (session.user.type === 'Admin' || session.user.type === 'Ambassador')) {
+  if (session && (session.user.type === 'Admin' || session.user.type === 'Ambassador' || session.user.type === 'Superadmin')) {
     
     return <SurveyList />;
   } else if (session && session.user.type === 'Employee') {

@@ -1,4 +1,5 @@
 "use client"
+import { withAuth } from "@/components/WithAuth";
 import {useState} from "react";
 import { useRouter } from "next/navigation";
 import ReturnButton from "@/components/ReturnButton";
@@ -132,4 +133,4 @@ const CreateRecipe = () => {
     )
 }
 
-export default CreateRecipe;
+export default withAuth(CreateRecipe);

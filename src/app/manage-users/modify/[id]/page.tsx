@@ -1,3 +1,4 @@
+import BackButton from '@/components/backButton';
 import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
@@ -25,11 +26,12 @@ export default async function Edit({params}) {
 
   const { id } = params;
   const { user } = await getUser(id);
-  const { username, name, password, type } = user;
+  const { username, name, type } = user;
 
   return (
     <main>
-      <EditUser id={id} username={username} name={name} password={password} type={type}/>
+      <BackButton route="/manage-users/modify" label="Search users"/>
+      <EditUser id={id} username={username} name={name} type={type}/>
     </main>
   )
 }

@@ -30,6 +30,10 @@ export default function LoginForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if(error==="All fields are required") {
+      return;
+    }
+
     try {
       const res = await signIn("credentials", {
         username,

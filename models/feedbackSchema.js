@@ -6,6 +6,7 @@ const feedbackSchema = mongoose.Schema({
             type: String,
             required: [true]
         },
+        username: {type:String},
     },{timestamps: true})
 
 
