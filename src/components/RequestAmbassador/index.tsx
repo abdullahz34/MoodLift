@@ -1,9 +1,7 @@
 'use client';
 import { FC, useState , useEffect } from "react"
 import { useSession } from "next-auth/react";
-import { profile } from "console";
 
-interface indexProps{};
 
 interface Profile {
     username: string;
@@ -17,10 +15,9 @@ const Request_Ambassador: FC = () => {
 
     const [Profiles, setProfiles] = useState<Profile[]>([]);
 
-    const [Ambassador_username,setAmbassadorUsername]= useState('34')
     const [Employee_username, setEmployeeUsername]= useState('')
     const [Severity,SetSeverity]=useState('')
-    const [Reason, setReason]=useState('2')
+    const [Reason, setReason]=useState('')
     const [Appointment_Preference, setAppointmentPref]=useState('')
 
     const { data: session, status } = useSession();
@@ -111,7 +108,7 @@ const Request_Ambassador: FC = () => {
         <div>
             {Profiles.map((Profile, index) => (
                 <div key={index} className="py-2">
-                    <div className="collapse bg-base-200">
+                    <div className="collapse collapse-plus bg-base-200">
                         <input type="checkbox" /> 
                         <div className="collapse-title text-xl font-semibold">
                             {Profile.name}  {Profile.gender} {Profile.age}

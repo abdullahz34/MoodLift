@@ -72,7 +72,7 @@ export default async function Appointment() {
       return (
         <main>
           <div className='flex flex-row px-20 pb-10 justify-center '>
-              <ViewAmbassadors/>
+              <div className='backdrop-blur-sm bg-slate-500/5 px-20 pb-15 rounded-3xl pt-10 pb-10'><ViewAmbassadors/></div>
           </div>
         </main>
   )}
