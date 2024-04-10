@@ -74,6 +74,7 @@ async function main(userMessage, username, firstname) {
     { role: 'system', content: `Here is your recipes data, obtained from resources : ${JSON.stringify(recipeData, null, 2)}` },
     { role: 'system', content: `Here is your articles data, obtained from resources : ${JSON.stringify(articleData, null, 2)}` },
     { role: 'system', content: `Here is your goal data, obtained from resources : ${JSON.stringify(goalData, null, 2)}` },
+    { role: 'system', content: "The unit for the steps goal is steps, water goal is mL, and sleep goal is hours"},
     { role: "user", content: userMessage },
     { role: "system", content: `The current user is ${username}.` },
   ]
