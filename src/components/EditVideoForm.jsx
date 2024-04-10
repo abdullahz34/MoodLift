@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import {useRouter} from "next/navigation";
+import ReturnButton from "./ReturnButton";
 
 export default function EditVideoForm({id, newTitle, newVideoURL, newDescription}){
 
@@ -65,6 +66,7 @@ export default function EditVideoForm({id, newTitle, newVideoURL, newDescription
                 <textarea id="description" name="description" value={formData.description} onChange={handleChange} className="textarea textarea-bordered" required/>
 
                 <button type="submit" className="btn">Edit Video</button>
+                <ReturnButton/>
             </form>
         </div>
     )

@@ -2,6 +2,7 @@
 import { withAuth } from "@/components/WithAuth";
 import {useState} from "react";
 import { useRouter } from "next/navigation";
+import ReturnButton from "@/components/ReturnButton";
 
 const CreateVideo = () => {
 
@@ -71,6 +72,7 @@ const CreateVideo = () => {
                 <textarea id="description" name="description" onChange={handleChange} className="textarea textarea-bordered" required/>
 
                 <button type="submit" className="btn">Add Video</button>
+                <ReturnButton/>
             </form>
         </div>
         

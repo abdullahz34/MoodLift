@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import {useRouter} from "next/navigation";
+import ReturnButton from "./ReturnButton";
 
 export default function EditRecipeForm({id, newTitle, newPrep, newCalories, newIngredients, newInstructions, newImgURL}){
 
@@ -117,6 +118,7 @@ export default function EditRecipeForm({id, newTitle, newPrep, newCalories, newI
                 <input type="text" id="imgURL" name="imgURL" value={formData.imgURL} onChange={handleChange} className="input input-bordered" required/>
 
                 <button type="submit" className="btn">Edit Recipe</button>
+                <ReturnButton/>
             </form>
         </div>
     )

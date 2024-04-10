@@ -2,6 +2,7 @@
 import { withAuth } from "@/components/WithAuth";
 import {useState} from "react";
 import { useRouter } from "next/navigation";
+import ReturnButton from "@/components/ReturnButton";
 
 const CreateRecipe = () => {
 
@@ -125,6 +126,7 @@ const CreateRecipe = () => {
                 <input type="text" id="imgURL" name="imgURL" onChange={handleChange} className="input input-bordered" required/>
 
                 <button type="submit" className="btn">Add Recipe</button>
+                <ReturnButton/>
             </form>
         </div>
         
