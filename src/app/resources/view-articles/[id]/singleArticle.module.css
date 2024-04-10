@@ -1,0 +1,10 @@
+.articleContent h1,
+.articleContent h2,
+.articleContent h3{
+  font-weight: bold;
+}
+
+.articleContent ul {
+    list-style-type: disc;
+    list-style-position: inside;
+  }

@@ -8,10 +8,10 @@ export const GET = async (request) => {
     const users = await Logbook.find();
     return NextResponse.json(users);
   } catch (error) {
-    console.error("Error in fetching logbook:", error); // Log detailed error message
+    console.error("Error in fetching logbook:", error); 
 
     const errorMessage =
-      error.message || "An error occurred while fetching logbooks"; // Provide a generic error message if needed
-    return NextResponse.json({ error: errorMessage }, { status: 500 }); // Return a JSON response with the error message
+      error.message || "An error occurred while fetching logbooks"; 
+    return NextResponse.json({ error: errorMessage }, { status: 500 }); 
   }
 };

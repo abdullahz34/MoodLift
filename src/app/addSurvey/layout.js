@@ -1,4 +1,4 @@
-// surveys/layout.js
+
 import React from 'react';
 import SurveyNavbar from "../../components/SurveyNavbar";
 import { getServerSession } from "next-auth";

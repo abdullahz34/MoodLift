@@ -102,8 +102,9 @@ const CreateRecipe = () => {
 
                 <label htmlFor="ingredients">Ingredients</label>
                 {formData.ingredients.map((ingredient, i) => (
-                    <div>
-                        <input key={i} type="text" name="ingredients" id={`ingredient-${i}`} value={ingredient} onChange={(event) => handleArrayItem(event, i, "ingredients")} className="input input-bordered" required/>
+                   <div key={i} className="flex items-center">
+                   <input type="text" name="ingredients" id={`ingredient-${i}`} value={ingredient} onChange={(event) => handleArrayItem(event,i, "ingredients")} 
+                   className="input input-bordered w-full" required/>
                         <button onClick={() => handleDelete(i, "ingredients")} type="button">x</button>
                     </div>
                 ))}
@@ -112,8 +113,9 @@ const CreateRecipe = () => {
 
                 <label htmlFor="instructions">Instructions</label>
                 {formData.instructions.map((instruction, i) =>(
-                    <div>
-                        <input key={i} type="text" name="instructions" id={`instruction-${i}`} value={instruction} onChange={(event) => handleArrayItem(event,i, "instructions")} className="input input-bordered" required/>
+                    <div key={i} className="flex items-center">
+                        <input type="text" name="instructions" id={`instruction-${i}`} value={instruction} onChange={(event) => handleArrayItem(event,i, "instructions")} 
+                        className="input input-bordered w-full" required/>
                         <button onClick={() => handleDelete(i, "instructions")} type="button">x</button>
                     </div>
                 ))}

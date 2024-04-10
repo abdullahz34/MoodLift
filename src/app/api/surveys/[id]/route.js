@@ -28,7 +28,7 @@ export async function GET(request, { params }) {
 //answer a specific survey
 export async function POST(request, { params }) {
   const { id } = params;
-  const { answers } = await request.json();
+  const { answers, username } = await request.json();
 
   await connectMongoDB();
   const survey = await Survey.findById(id);
@@ -37,8 +37,10 @@ export async function POST(request, { params }) {
     return NextResponse.json({ message: "Survey not found" }, { status: 404 });
   }
 
-  const newResponse = { answers };
+  const newResponse = { answers, username};
   survey.responses.push(newResponse);
+  //console.log(survey.responses)
+  //console.log(newResponse)
   await survey.save();
 
   return NextResponse.json({ message: "Survey response saved" }, { status: 200 });

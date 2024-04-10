@@ -8,6 +8,7 @@ import { IoMenu } from "react-icons/io5";
 
 
 
+
 const capitalFirst = (string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
 };
@@ -58,7 +59,7 @@ export default async function SurveyList() {
 <Link className="btn btn-ghost text-lg text-bg-secondary font-bold" 
         href={`/completeSurvey/${s._id}`}
   >
-            Complete Survey
+            View Survey
           </Link>
 
         </div>
