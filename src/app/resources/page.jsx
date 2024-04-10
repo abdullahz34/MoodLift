@@ -14,7 +14,7 @@ const resources = () => {
                 <h2 className="card-title">Recipes</h2>
                 <p>Healthy recipes that anyone can do</p>
                 <figure><img src=""></img></figure>
-                {(userType==="Admin" || userType==="Ambassador") && <div className="card-actions justify-end">
+                {(userType==="Superadmin" || userType==="Admin" || userType==="Ambassador") && <div className="card-actions justify-end">
                     <Link href="resources/create-recipe"><button className="btn btn-primary">Create</button></Link>
                 </div>}
                 
@@ -28,7 +28,7 @@ const resources = () => {
                 <h2 className="card-title">Videos</h2>
                 <p>Follow these videos to improve your fitness</p>
                 <figure><img src=""></img></figure>
-                {(userType==="Admin" || userType==="Ambassador") && <div className="card-actions justify-end">
+                {(userType==="Superadmin" || userType==="Admin" || userType==="Ambassador") && <div className="card-actions justify-end">
                     <Link href="resources/create-video"><button className="btn btn-primary">Create</button></Link>
                 </div>}
                 
@@ -42,7 +42,7 @@ const resources = () => {
                 <h2 className="card-title">Articles</h2>
                 <p>Explore articles to help improve your wellbeing</p>
                 <figure><img src=""></img></figure>
-                {(userType==="Admin" || userType==="Ambassador") && <div className="card-actions justify-end">
+                {userType==="Superadmin" || (userType==="Admin" || userType==="Ambassador") && <div className="card-actions justify-end">
                     <Link href="resources/create-article"><button className="btn btn-primary">Create</button></Link>
                 </div>}
                 

@@ -21,7 +21,7 @@ const singlePage = async({params}) => {
     const {article} = await getData(id);
 
     const session = await getServerSession(authOptions);
-    if (session && (session.user.type === 'Admin' || session.user.type === 'Ambassador')) {
+    if (session && (session.user.type === 'Superadmin' || session.user.type === 'Admin' || session.user.type === 'Ambassador')) {
     return(
       <div className="flex justify-center h-screen">
         <div className="w-1/2">

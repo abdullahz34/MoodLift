@@ -3,6 +3,7 @@ import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import "react-quill/dist/quill.snow.css";
 import dynamic from "next/dynamic";
+import ReturnButton from "@/components/ReturnButton";
 
 const CreateArticle = () => {
     const [title, setTitle] = useState('');
@@ -49,6 +50,7 @@ const CreateArticle = () => {
                   <ReactQuill value={content} onChange={setContent} placeholder="Write your article"/>
                 </div>
                 <button type="submit" className="btn mt-1.5">Create article</button>
+                <ReturnButton/>
             </form>
         </div>
     )
