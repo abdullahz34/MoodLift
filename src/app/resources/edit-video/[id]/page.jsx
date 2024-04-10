@@ -1,5 +1,8 @@
 import EditVideoForm from "@/components/EditVideoForm";
 import EditVideeForm from "@/components/EditVideoForm";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 const getVideoById = async (id) => {
     try {
@@ -18,6 +21,9 @@ const getVideoById = async (id) => {
   };
 
 export default async function EditVideo({ params }){
+    const session = await getServerSession(authOptions);
+    if (!session) redirect("/");
+    
     const {id} = params;
     const {video} = await getVideoById(id);
     const {title, videoURL, description} = video;

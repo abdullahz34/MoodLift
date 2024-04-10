@@ -1,7 +1,7 @@
 'use client'
+import { withAuth } from "@/components/WithAuth";
 import React, { useState, useEffect } from 'react'
 import { useSession } from "next-auth/react";
-
 
 async function getData(date, username) {
   const response = await fetch(`http://localhost:3000/api/logging?date=${date}&username=${username}`, { cache: "no-store" });
@@ -26,7 +26,7 @@ const SleepTracker = () => {
   const [loading, setLoading] = useState(true);
 
   const { data: session } = useSession();
-  const username = session?.user?.name;
+  const username = session?.user?.username;
 
   const fetchData = async () => {
     try {
@@ -141,4 +141,4 @@ const SleepTracker = () => {
   )
 }
 
-export default SleepTracker
+export default withAuth(SleepTracker);

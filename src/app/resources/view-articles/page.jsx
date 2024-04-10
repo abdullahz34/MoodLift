@@ -1,4 +1,7 @@
-import Link from "next/link";
+import Link from "next/link"
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 const getArticles = async () => {
     try {
@@ -17,6 +20,9 @@ const getArticles = async () => {
   };
 
 const articles = async () => {
+    const session = await getServerSession(authOptions);
+    if (!session) redirect("/");
+  
 
     const {articles} = await getArticles();
 

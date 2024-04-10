@@ -1,4 +1,5 @@
 'use client'
+import { withAuth } from "@/components/WithAuth";
 import React, { useState, useEffect } from 'react'
 import { useSession } from "next-auth/react";
 import axios from 'axios';
@@ -33,7 +34,7 @@ const NutritionTracker = () => {
   const [errorMessage, setErrorMessage] = useState('');
 
   const { data: session } = useSession();
-  const username = session?.user?.name;
+  const username = session?.user?.username;
 
   useEffect(() => {
     if (food) {
@@ -237,4 +238,4 @@ const NutritionTracker = () => {
   )
 }
 
-export default NutritionTracker
+export default withAuth(NutritionTracker);

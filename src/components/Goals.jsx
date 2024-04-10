@@ -56,7 +56,7 @@ export default function Goals() {
         setWaterGoal(waterValue)
         setSleepGoal(sleepValue)
 
-        const data = await getData(date, session?.user?.name)
+        const data = await getData(date, session?.user?.username)
   
         if (data) {
           setFitnessData(data.fitness);
