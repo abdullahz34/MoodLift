@@ -35,7 +35,7 @@ const FitnessPage = () => {
   const [steps, setSteps] = useState(0);
 
   const { data: session } = useSession();
-  const username = session?.user?.name;
+  const username = session?.user?.username;
 
   const fetchData = async () => {
     try {
