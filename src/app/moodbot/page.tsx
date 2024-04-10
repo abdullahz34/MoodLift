@@ -35,6 +35,15 @@ async function getData(endpoint) {
   return data || {};
 }
 
+async function getGoalData(username) {
+  const resGoals = await fetch(`/api/goals/allgoals?username=${username}`, {
+    method: "GET"
+  })
+  const goals = await resGoals.json();
+  console.log('Goal data from getGoalData: ', goals);
+  return goals || []
+}
+
 
 async function main(userMessage, username, firstname) {
   const endpoint = "https://testingpoc.openai.azure.com/"
@@ -50,6 +59,7 @@ async function main(userMessage, username, firstname) {
   const videoData = await getData('videos');
   const recipeData = await getData('recipes');
   const articleData = await getData('articles');
+  const goalData = await getGoalData(username);
 
   const messages = [
     { role: "system", content: "You are Moodbot for the application Moodlift, a personal wellbeing assistant, helping users with their well being enquiries." },
@@ -63,6 +73,8 @@ async function main(userMessage, username, firstname) {
     { role: 'system', content: `Here is your videos data, obtained from resources: ${JSON.stringify(videoData, null, 2)}` },
     { role: 'system', content: `Here is your recipes data, obtained from resources : ${JSON.stringify(recipeData, null, 2)}` },
     { role: 'system', content: `Here is your articles data, obtained from resources : ${JSON.stringify(articleData, null, 2)}` },
+    { role: 'system', content: `Here is your goal data, obtained from resources : ${JSON.stringify(goalData, null, 2)}` },
+    { role: 'system', content: "The unit for the steps goal is steps, water goal is mL, and sleep goal is hours"},
     { role: "user", content: userMessage },
     { role: "system", content: `The current user is ${username}.` },
   ]

@@ -32,7 +32,7 @@ const HydrationTracker = () => {
   const [waterML, setWaterML] = useState(0);
 
   const { data: session } = useSession();
-  const username = session?.user?.name;
+  const username = session?.user?.username;
 
   const fetchData = async () => {
     try {
