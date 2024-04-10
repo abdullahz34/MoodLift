@@ -1,7 +1,6 @@
-
-
 import Link from "next/link";
 import React from 'react';
+
 
 const capitalFirst = (string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -26,19 +25,33 @@ const getSurveys = async () => {
 export default async function SurveyList() {
   const { surveys } = await getSurveys();
 
+
+
+
+
+
+  
   return (
     <div>
       {surveys.map((survey) => (
-        <div key={survey._id} className="border-2 border-gray-300 p-4 mb-4">
-          <h3 className="text-lg font-bold mb-2">{(survey.title)}</h3>
+        <div key={survey._id} className="border-2 bg-neutral-content border-gray-300 p-4 mb-4">
+          <h3 className="text-lg font-bold mb-2">{survey.title}</h3>
           {survey.responses && survey.responses.length > 0 ? (
             survey.responses.map((response, index) => (
-              <div key={index} className="mb-2 ">
-                <p className="font-bold">{(response.username)} </p>
-                <p className="px-2 py-1 rounded-md">
-  <span className="bg-success text-white">Completed</span>
-</p>
-                <p>{response.answer}</p>
+              <div key={index} className="mb-2">
+                <p className="font-bold">{response.username}</p>
+                <button>View Results</button>
+                {response.answers.map((answer, i) => (
+                  <div 
+                    key={i}
+                    className={`px-2 py-1 rounded-md mb-2 bg-neutral-200`}
+                    
+                  >
+                    <span>
+                      {survey.questions[i].text}: {answer}
+                    </span>
+                  </div>
+                ))}
               </div>
             ))
           ) : (
@@ -49,5 +62,3 @@ export default async function SurveyList() {
     </div>
   );
 }
-
-
