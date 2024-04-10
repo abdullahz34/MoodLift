@@ -1,8 +1,6 @@
 'use client';
 import React, { FC, useEffect, useState } from "react";
 import {format} from 'date-fns';
-import { getServerSession } from "next-auth";
-import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 
 interface Appointment {
   Ambassador_username: string;
@@ -11,19 +9,18 @@ interface Appointment {
   JustDate: string;
   Appointment_form: string;
 }
-
 const AppointmentList: FC = () => {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
 
   
   const fetchAppointments = async () => {
     try {
-      const response = await fetch("http://localhost:3000/api/BookedAppointment");
+      const response = await fetch("http://localhost:3000/api/BookedAppointmentEmployee");
       if (!response.ok) {
         throw new Error("Failed to fetch appointments");
       }
       const appointments = await response.json();
-      
+      // console.log("Fetched appointments:", appointments); // Add this line
       return appointments;
       
     } catch (error) {
@@ -61,6 +58,8 @@ const AppointmentList: FC = () => {
         const appointmentsData = await fetchAppointments();
         setAppointments(appointmentsData);
         
+        
+          
       } catch (error) {
         console.error("Error fetching appointments:", error);
       }
@@ -70,86 +69,40 @@ const AppointmentList: FC = () => {
   }, []);
   
   return (
-    <div className=" backdrop-blur-sm bg-slate-500/5 rounded-3xl p-5 h-full">
-    {appointments.length > 0 ? (
-        <table className="table">
-            <thead>
-            <tr className="bg-base-200">
-                <th></th>
-                <th>Employee</th>
-                <th>Date</th>
-                <th>Time</th>
-                <th>Form</th>
-                <th>Cancel</th>
-            </tr>
-            </thead>
-            <tbody>
-            {appointments.map((appointment, index) => (
-                <tr key={index}>
-                    <td>{index+1}</td>
-                    <td className="pr-2">{appointment.Ambassador_username}</td>
-                    <td>{appointment.JustDate}</td>
-                    <td>{format(appointment.Date_Time,'kk:mm')}</td>
-                    <td>{appointment.Appointment_form}</td>
-                    <td><button className="btn btn-sm btn-error" onClick={() => deleteAppointment(appointment)}>Cancel</button></td>
+    <div className=" backdrop-blur-sm bg-slate-500/5 rounded-3xl ">
+        {appointments.length > 0 ? (
+            <table className="table">
+                <thead>
+                <tr className="bg-base-200">
+                    <th></th>
+                    <th>Ambassador</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Form</th>
+                    <th>Cancel</th>
                 </tr>
-            ))}
-            </tbody>
-        </table>
-    ):(
-        <div className="flex items-center justify-center h-3/6 text-2xl font-bold text-gray-800">No Scheduled Appointments</div>
-    )}
-</div>
-);
+                </thead>
+                <tbody>
+                {appointments.map((appointment, index) => (
+                    <tr key={index}>
+                        <td>{index+1}</td>
+                        <td className="pr-2">{appointment.Ambassador_username}</td>
+                        <td>{appointment.JustDate}</td>
+                        <td>{format(appointment.Date_Time,'kk:mm')}</td>
+                        <td>{appointment.Appointment_form}</td>
+                        <td><button className="btn btn-sm btn-error" onClick={() => deleteAppointment(appointment)}>Cancel</button></td>
+                    </tr>
+                ))}
+                </tbody>
+            </table>
+        ):(
+            <div className="text-center py-4">No Scheduled Appointments</div>
+        )}
+    </div>
+  );
 };
 
 export default AppointmentList;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//     <div className=" backdrop-blur-sm bg-slate-500/5 rounded-3xl ">
-//       <table className="table">
-//         <thead>
-//           <tr className="bg-base-200">
-//             <th></th>
-//             <th>Employee</th>
-//             <th>Date</th>
-//             <th>Time</th>
-//             <th>Form</th>
-//             <th>Cancel</th>
-//           </tr>
-//         </thead>
-//         <tbody>
-//           {appointments.map((appointment, index) => (
-//             <tr key={index}>
-//                 <td>{index+1}</td>
-//                 <td className="pr-2">{appointment.Employee_username}</td>
-//                 <td>{appointment.JustDate}</td>
-//                 <td>{format(appointment.Date_Time,'kk:mm')}</td>
-//                 <td>{appointment.Appointment_form}</td>
-//                 <td><button className="btn btn-sm btn-error" onClick={() => deleteAppointment(appointment)}>Cancel</button></td>
-//             </tr>
-//           ))}
-//         </tbody>
-//       </table>
-//     </div>
-//   );
-// };
-
-// export default AppointmentList;
 
 
 

@@ -32,7 +32,7 @@ export async function DELETE(request) {
         console.error("Error in deleting appointment", error);
         return NextResponse.json({ error: "Error in deleting appointment" }, { status: 500 });
     }
-  }
+}
 
 // fetch all booked appointment times for a given day
 // export const GET= async (request) => {
