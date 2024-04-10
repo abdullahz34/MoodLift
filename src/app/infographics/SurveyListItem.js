@@ -18,7 +18,7 @@ const SurveyListItem = ({ survey }) => {
   const getUsernameColour = (answers) => {
     const numericValues = answers.filter((answer) => !isNaN(Number(answer))).map(Number);
     const totalValue = numericValues.reduce((sum, value) => sum + value, 0);
-    const colourIndex = totalValue % 8;
+    const colourIndex = totalValue % 6;
         if (colourIndex < 4) {
             return 'bg-error';
         } else if (colourIndex >= 3 && colourIndex <= 5) {
