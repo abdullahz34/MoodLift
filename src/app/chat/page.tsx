@@ -1,4 +1,5 @@
 'use client'
+import { withAuth } from "@/components/WithAuth";
 import React, { useState, useEffect, useRef } from 'react';
 import * as io from 'socket.io-client';
 import './styles.css';
@@ -318,4 +319,4 @@ const Chat = () => {
   );
 };
 
-export default Chat;
+export default withAuth(Chat);

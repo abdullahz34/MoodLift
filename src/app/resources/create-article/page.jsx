@@ -1,4 +1,5 @@
 "use client"
+import { withAuth } from "@/components/WithAuth";
 import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import "react-quill/dist/quill.snow.css";
@@ -54,4 +55,4 @@ const CreateArticle = () => {
     )
 }
 
-export default CreateArticle;
+export default withAuth(CreateArticle);

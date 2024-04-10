@@ -1,4 +1,5 @@
 "use client"
+import { withAuth } from "@/components/WithAuth";
 import {useState} from "react";
 import { useRouter } from "next/navigation";
 
@@ -76,4 +77,4 @@ const CreateVideo = () => {
     )
 }
 
-export default CreateVideo;
+export default withAuth(CreateVideo);
