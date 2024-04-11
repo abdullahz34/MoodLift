@@ -44,6 +44,7 @@ const Chat = () => {
       }
     };
 
+    
     fetchCurrentUser();
   }, []);
 
@@ -106,9 +107,13 @@ const Chat = () => {
         const ambassadorsData = await ambassadorsResponse.json();
         let listReturn = [];
         if (currentUserRole !== 'Employee' && currentUserRole !== null) {
-          // match search query with username and name 
+          if (searchQuery !== '') {
           for (let i = 0; i < results.length; i++) {
             if (results[i].username.toLowerCase().includes(searchQuery) || results[i].name.toLowerCase().includes(searchQuery)) {
+              listReturn.push(ambassadorsData[i]);
+            }
+          }} else {
+            for (let i = 0; i < ambassadorsData.length; i++) {
               listReturn.push(ambassadorsData[i]);
             }
           }
