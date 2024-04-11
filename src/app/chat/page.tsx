@@ -105,7 +105,7 @@ const Chat = () => {
         const ambassadorsResponse = await fetch(`/ambassadors`);
         const ambassadorsData = await ambassadorsResponse.json();
         let listReturn = [];
-        if (currentUserRole !== 'Employee' && currentUserRole !== null) {
+        if ((currentUserRole !== 'Employee' || currentUserRole !== 'Ambassador') && currentUserRole !== null) {
           // match search query with username and name 
           for (let i = 0; i < results.length; i++) {
             if (results[i].username.toLowerCase().includes(searchQuery) || results[i].name.toLowerCase().includes(searchQuery)) {
