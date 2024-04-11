@@ -59,10 +59,13 @@ const Chat = () => {
         const ambassadorsResponse = await fetch('/ambassadors');
         const ambassadorsData = await ambassadorsResponse.json();
         let listReturn = [];
-        if (currentUserRole !== 'Employee') {
+        if (currentUserRole !== 'Employee' && currentUserRole !== null) {
           for (let i = 0; i < ambassadorsData.length; i++) {
-            listReturn.push(ambassadorsData[i]);
+            listAllUsersFound.push(ambassadorsData[i]);
           }
+          console.log('User is an ambassador', listAllUsersFound, currentUserRole);
+        } else if (currentUserRole === null) {
+          console.log('User not logged in');
         } else {
           for (let i = 0; i < ambassadorsData.length; i++) {
             if (true) {
@@ -102,16 +105,27 @@ const Chat = () => {
         const ambassadorsResponse = await fetch(`/ambassadors`);
         const ambassadorsData = await ambassadorsResponse.json();
         let listReturn = [];
-        for (let i = 0; i < ambassadorsData.length; i++) {
-          if (ambassadorsData[i].username.toLowerCase().includes(searchQuery) || ambassadorsData[i].name.toLowerCase().includes(searchQuery)) {
-            if (true) {
-              const apptStatus = await getAppointments(currentUser, ambassadorsData[i].username);
-              if (apptStatus) {
-                listReturn.push(ambassadorsData[i]);
-              }
+        if (currentUserRole !== 'Employee' && currentUserRole !== null) {
+          // match search query with username and name 
+          for (let i = 0; i < results.length; i++) {
+            if (results[i].username.toLowerCase().includes(searchQuery) || results[i].name.toLowerCase().includes(searchQuery)) {
+              listReturn.push(ambassadorsData[i]);
             }
+          }
+        } else if (currentUserRole === null) {
+          console.log('User not logged in');
+        } else {
+          for (let i = 0; i < ambassadorsData.length; i++) {
+            if (ambassadorsData[i].username.toLowerCase().includes(searchQuery) || ambassadorsData[i].name.toLowerCase().includes(searchQuery)) {
+              if (true) {
+                const apptStatus = await getAppointments(currentUser, ambassadorsData[i].username);
+                if (apptStatus) {
+                  listReturn.push(ambassadorsData[i]);
+                }
+              }
+            };
           };
-        };
+        }
         for (let i = 0; i < listReturn.length; i++) {
           results.push(listReturn[i]);
         }
