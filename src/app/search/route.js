@@ -1,6 +1,7 @@
 import User from '../../../models/userSchema';
 import connect from "../../../db";
 import { NextResponse } from 'next/server';
+import { all } from 'axios';
 
 
 export async function GET(req) {
@@ -21,25 +22,15 @@ export async function GET(req) {
         const users = await User.find({ username: { $regex: query, $options: 'i' }, type: "Employee"});
         const usersByName = await User.find({ name: { $regex: query, $options: 'i' }, type: "Employee"});
         allUsers.push(...users);
+        // adding all usersByName to allUsers, but not adding duplicates
         usersByName.forEach(user => {
-            if (!(allUsers.includes(user.username))) {
+            if (allUsers.includes(user)) {
                 allUsers.push(user);
             }
         });
-        const sortedList = [];
-        allUsers.forEach(user => {
-            console.log(user.username, user.name);
-            if (!(sortedList.includes(user.username))) {
-                sortedList.push({username: user.username, name: user.name});
-        }
-        });
-        console.log(sortedList);
-        // remove currentUser from the list
-        allUsers.filter(user => sortedList.includes(user.username));
-        // sort name alphabetically
         allUsers.sort((a, b) => a.name.localeCompare(b.name));
-        // sort username alphabetically
         allUsers.sort((a, b) => a.username.localeCompare(b.username));
+        console.log(allUsers);
         return NextResponse.json(allUsers);
 
     } catch (error) {
