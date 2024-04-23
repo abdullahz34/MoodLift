@@ -1,4 +1,4 @@
-## MoodLift
+# MoodLift
 A well-being application designed for our client FDM. 
 Web app with:
 - Employee, Admin and Ambassador accounts with different priveledges and access
@@ -12,7 +12,7 @@ Web app with:
 - Journal w; mood tracker and streaks for gamification
 
 
-# Tech Stack
+## Tech Stack
 - NextJS (React, Tailwind CSS etc.,)
 - MongoDB
 - NextAuth.js
